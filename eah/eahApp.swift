@@ -1,14 +1,14 @@
 //
-//  eat_at_handApp.swift
-//  eat_at_hand
+//  eahApp.swift
+//  eah
 //
-//  Created by Danil Ilichev on 21.04.2021.
+//  Created by Danil Ilichev on 22.04.2021.
 //
 
 import SwiftUI
 
 @main
-struct eat_at_handApp: App {
+struct eahApp: App {
     @StateObject var viewModel = ContentViewModel()
     
     var body: some Scene {
