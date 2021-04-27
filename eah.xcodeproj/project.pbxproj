@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		691B8B1826342F8500415B05 /* ThirdScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 691B8B1726342F8500415B05 /* ThirdScreen.swift */; };
+		69511B6926386C9300FD2E68 /* NavigationBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69511B6826386C9300FD2E68 /* NavigationBarView.swift */; };
+		69511B6D2638934700FD2E68 /* FourthScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69511B6C2638934700FD2E68 /* FourthScreen.swift */; };
+		69511B72263897A000FD2E68 /* FifthScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69511B71263897A000FD2E68 /* FifthScreen.swift */; };
 		69A9EA372631E513003D37E2 /* eahApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69A9EA362631E513003D37E2 /* eahApp.swift */; };
 		69A9EA3B2631E517003D37E2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 69A9EA3A2631E517003D37E2 /* Assets.xcassets */; };
 		69A9EA3E2631E517003D37E2 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 69A9EA3D2631E517003D37E2 /* Preview Assets.xcassets */; };
@@ -30,6 +34,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		691B8B1726342F8500415B05 /* ThirdScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThirdScreen.swift; sourceTree = "<group>"; };
+		69511B6826386C9300FD2E68 /* NavigationBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationBarView.swift; sourceTree = "<group>"; };
+		69511B6C2638934700FD2E68 /* FourthScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FourthScreen.swift; sourceTree = "<group>"; };
+		69511B71263897A000FD2E68 /* FifthScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FifthScreen.swift; sourceTree = "<group>"; };
 		69A9EA332631E513003D37E2 /* eah.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = eah.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		69A9EA362631E513003D37E2 /* eahApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = eahApp.swift; sourceTree = "<group>"; };
 		69A9EA3A2631E517003D37E2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -65,6 +73,30 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		691B8B1626342F4700415B05 /* ThirdScreen */ = {
+			isa = PBXGroup;
+			children = (
+				691B8B1726342F8500415B05 /* ThirdScreen.swift */,
+			);
+			path = ThirdScreen;
+			sourceTree = "<group>";
+		};
+		69511B6B2638932F00FD2E68 /* Fourth screen */ = {
+			isa = PBXGroup;
+			children = (
+				69511B6C2638934700FD2E68 /* FourthScreen.swift */,
+			);
+			path = "Fourth screen";
+			sourceTree = "<group>";
+		};
+		69511B702638978600FD2E68 /* Fifth screen */ = {
+			isa = PBXGroup;
+			children = (
+				69511B71263897A000FD2E68 /* FifthScreen.swift */,
+			);
+			path = "Fifth screen";
+			sourceTree = "<group>";
+		};
 		69A9EA2A2631E513003D37E2 = {
 			isa = PBXGroup;
 			children = (
@@ -128,10 +160,13 @@
 			children = (
 				69A9EA592631E5E3003D37E2 /* FirstScreen */,
 				69A9EA612631E646003D37E2 /* SecondScreen */,
+				691B8B1626342F4700415B05 /* ThirdScreen */,
+				69511B6B2638932F00FD2E68 /* Fourth screen */,
+				69511B702638978600FD2E68 /* Fifth screen */,
 				69A9EA6C2631E690003D37E2 /* MealScreen */,
 				69A9EA892631ECD1003D37E2 /* ListOfMeals1.swift */,
-				69A9EA7A2631E7AC003D37E2 /* MealPlanner.swift */,
 				69A9EA7E2631E7D3003D37E2 /* Star.swift */,
+				69511B6826386C9300FD2E68 /* NavigationBarView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -142,6 +177,7 @@
 				69A9EA5A2631E61D003D37E2 /* RecomendationRecipe.swift */,
 				69A9EA5E2631E632003D37E2 /* FirstScreen.swift */,
 				69A9EA742631E771003D37E2 /* Popular.swift */,
+				69A9EA7A2631E7AC003D37E2 /* MealPlanner.swift */,
 			);
 			path = FirstScreen;
 			sourceTree = "<group>";
@@ -248,7 +284,9 @@
 				69A9EA552631E5C6003D37E2 /* Extensions.swift in Sources */,
 				69A9EA832631E838003D37E2 /* ContentViewModel.swift in Sources */,
 				69A9EA672631E66F003D37E2 /* ForMealPlannerBlock.swift in Sources */,
+				69511B6D2638934700FD2E68 /* FourthScreen.swift in Sources */,
 				69A9EA8A2631ECD1003D37E2 /* ListOfMeals1.swift in Sources */,
+				69511B72263897A000FD2E68 /* FifthScreen.swift in Sources */,
 				69A9EA752631E771003D37E2 /* Popular.swift in Sources */,
 				69A9EA502631E59D003D37E2 /* Common.swift in Sources */,
 				69A9EA6A2631E681003D37E2 /* ForMealPlannerFreeBlock.swift in Sources */,
@@ -256,6 +294,8 @@
 				69A9EA722631E6D1003D37E2 /* IngridientView.swift in Sources */,
 				69A9EA6E2631E6AF003D37E2 /* MealView.swift in Sources */,
 				69A9EA472631E53A003D37E2 /* MainView.swift in Sources */,
+				69511B6926386C9300FD2E68 /* NavigationBarView.swift in Sources */,
+				691B8B1826342F8500415B05 /* ThirdScreen.swift in Sources */,
 				69A9EA7B2631E7AC003D37E2 /* MealPlanner.swift in Sources */,
 				69A9EA372631E513003D37E2 /* eahApp.swift in Sources */,
 				69A9EA4B2631E551003D37E2 /* Helper.swift in Sources */,

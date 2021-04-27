@@ -2,6 +2,7 @@ import SwiftUI
 
 struct ForMealPlannerBlock: View {
     var item: Meal
+    var color: String
     
     var body: some View {
         HStack(spacing: 15){
@@ -9,9 +10,10 @@ struct ForMealPlannerBlock: View {
                 .resizable()
                 .aspectRatio(contentMode: .fill)
                 .padding(.all, 8)
-                .background(Color("breakfastColor"))
+                .background(Color(color))
                 .frame(width: 75, height: 75, alignment: .center)
                 .cornerRadius(15)
+                .padding(.leading, 12)
             
             VStack(alignment: .leading, spacing: 5) {
                 Text(item.name).font(.system(size: 14))
@@ -26,7 +28,7 @@ struct ForMealPlannerBlock: View {
         }.frame(width: 230, height: 100, alignment: .leading)
         .background(Color.white)
         .cornerRadius(16)
-        .shadow(color: Color.black.opacity(0.1), radius: 5, x: 5, y: 5)
+        .shadow(color: Color.black.opacity(0.1), radius: 5, x: 3, y: 3)
         .padding(.bottom)
         
     }

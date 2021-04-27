@@ -2,10 +2,15 @@ import SwiftUI
 
 struct MealView: View {
     let item: Meal
+    
+    @GestureState private var dragOffset = CGSize.zero
+    @Environment(\.presentationMode) var mode: Binding<PresentationMode>
+
 
     var body: some View {
         
-        
+
+    //    NavigationView {
         ScrollView {
             VStack(){
                 
@@ -56,7 +61,7 @@ struct MealView: View {
                 .frame(width: UIScreen.screenWidth - 60, height: 73, alignment: .center)
                 .background(Color.white)
                 .cornerRadius(20)
-                .shadow(color: Color.black.opacity(0.1), radius: 5, x: 5, y: 5)
+                .shadow(color: Color.black.opacity(0.1), radius: 5, x: 3, y: 3)
                 
                 HStack{
                 VStack(alignment: .leading) {
@@ -82,8 +87,62 @@ struct MealView: View {
                 
             }.padding()
             
+            
         }
-    }
+//            .navigationBarTitleDisplayMode(.inline).navigationBarHidden(true)
+            
+            
+        .navigationViewStyle(StackNavigationViewStyle())        .navigationBarTitle(item.name).navigationBarTitleDisplayMode(.inline)
+        
+        .navigationBarBackButtonHidden(true)
+        .navigationBarItems(leading: Button(action : {
+            self.mode.wrappedValue.dismiss()
+        }){
+            Image(systemName: "chevron.left")
+                .frame(width: 32, height: 32, alignment: .center)
+                .background(Color(UIColor.systemGray).opacity(0.12))
+                .cornerRadius(9.5)
+                .foregroundColor(.black)
+        }
+        )
+        .gesture(DragGesture().updating($dragOffset, body: { (value, state, transaction) in
+            if(value.startLocation.x < 20 && value.translation.width > 100) {
+                self.mode.wrappedValue.dismiss()
+            }
+            
+        }))
+        }
+        
+        
+
+    //    .navigationViewStyle(StackNavigationViewStyle())
+//        .navigationBarTitle(item.name).navigationBarTitleDisplayMode(.inline)
+//
+//        .navigationBarBackButtonHidden(true)
+//        .navigationBarItems(leading: Button(action : {
+//            self.mode.wrappedValue.dismiss()
+//        }){
+//            Image(systemName: "chevron.left")
+//
+//                .frame(width: 40, height: 40, alignment: .center)
+//                .background(Color(UIColor.systemGray).opacity(0.12))
+//                .cornerRadius(9.5)
+//                .foregroundColor(.black)
+//        }
+//
+//
+//        ).edgesIgnoringSafeArea(.top)
+//        .gesture(DragGesture().updating($dragOffset, body: { (value, state, transaction) in
+//            if(value.startLocation.x < 20 && value.translation.width > 100) {
+//                self.mode.wrappedValue.dismiss()
+//            }
+//
+//        }))
+        
+        
+        
+        
+  //  }
 }
 
 struct MealView_Previews: PreviewProvider {

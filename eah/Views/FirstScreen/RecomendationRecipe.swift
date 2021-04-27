@@ -43,7 +43,7 @@ struct RecomendationRecipe: View {
         }.padding(.all,8).padding(.bottom, 10)
         .background(Color.white)
         .cornerRadius(16)
-        .shadow(color: Color.black.opacity(0.1), radius: 5, x: 5, y: 5)
+        .shadow(color: Color.black.opacity(0.1), radius: 5, x: 3, y: 3)
     }
     
 }

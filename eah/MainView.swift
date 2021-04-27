@@ -4,14 +4,29 @@ struct MainView: View {
     var body: some View {
         TabView {
             FirstScreen()
+                
                 .tabItem {
-                    Label("Menu", systemImage: "list.dash")
+                    Image(systemName: "square.grid.2x2.fill")
+               //     Label("Popular", systemImage: "list.dash")
                 }
             SecondScreen()
                 .tabItem {
-                    Label("Order", systemImage: "cart.fill")
+                    Image(systemName: "doc.text.fill")
             }
-        }
+            ThirdScreen()
+                .tabItem {
+                    Image(systemName: "bag.fill")
+            }
+            FourthScreen()
+                .tabItem {
+                    Image(systemName: "rectangle.grid.1x2.fill")
+            }
+            FifthScreen()
+                .tabItem {
+                    Image(systemName: "person.fill")
+            }
+            
+        }.accentColor(Color("mainColor"))
     }
 }
 
