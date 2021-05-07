@@ -2,12 +2,12 @@ import SwiftUI
 
 struct Popular: View {
     var item: Meal
-
+    
     var body: some View {
         
         HStack {
             
-        
+            
             Image(item.image)
             
             VStack(alignment: .leading, spacing: 5){
@@ -31,18 +31,18 @@ struct Popular: View {
             Color.white
                 .cornerRadius(16)
                 .padding(.leading,20)
-            )
+        )
         .cornerRadius(16)
         .shadow(color: Color.black.opacity(0.1), radius: 5, x: 3, y: 3)
     }
-
+    
 }
 
 
 
 struct Popular_Previews: PreviewProvider {
     static var previews: some View {
-        FirstScreen()
+        Popular(item: ContentViewModel().allItems[0])
     }
 }
 

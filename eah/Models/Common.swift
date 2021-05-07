@@ -2,6 +2,11 @@ import SwiftUI
 
 
 struct Meal: Identifiable, Codable, Equatable {
+
+    static func ==(lhs: Meal, rhs: Meal) -> Bool {
+        return lhs.id == rhs.id
+    }
+    
     var id = UUID().uuidString
     var name: String
     var time: String
@@ -16,10 +21,18 @@ struct Meal: Identifiable, Codable, Equatable {
     var description: String?
     var ingridients: [String]?
     
+    var dayOfWeek: [DayOfWeek] = []
+    
     var recommendation: Bool
     var popular: Bool
-    var mealPlanner: Bool
+    var favorites: Bool?
     
+    var mealPlanner: Bool
+}
+
+struct DayOfWeek: Codable {
+    var week: Week
+    var foodIntake: String
 }
 
 struct Week: Identifiable, Codable {

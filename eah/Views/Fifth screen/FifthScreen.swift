@@ -15,12 +15,24 @@ struct FifthScreen: View {
     
     var body: some View {
         NavigationView{
+            VStack{
+            
+            HStack {
+                Spacer()
+                Text("Account").fontWeight(.semibold)
+                Spacer()
+            }.padding().frame(width: UIScreen.screenWidth, height: 50, alignment: .center)
+            
             ScrollView{
-                VStack(spacing: 8) {
+                VStack(spacing: 10) {
+                    
+
+                    
                 Image(systemName: "person.fill")
                     .frame(width: 72, height: 72, alignment: .center)
                     .background(Color(.systemGray5))
                     .cornerRadius(36)
+                    .padding(.bottom, 10)
                 Text("Syarina Gonzales")
                     .font(.system(size: 17))
                     .fontWeight(.semibold)
@@ -34,14 +46,14 @@ struct FifthScreen: View {
                                     Text(self.numbers[index]).tag(index)
                                 }
                             }
-                            .pickerStyle(SegmentedPickerStyle())
-                .padding(.horizontal, 19)
+                .pickerStyle(SegmentedPickerStyle())
+                .padding(.horizontal, 19).padding(.top, 25)
                           
                             // 3.
                 if selectorIndex == 0 {
                     ScrollView(.horizontal, showsIndicators: false, content: {
                         HStack(spacing: 16){
-                            ForEach(viewModel.mealPlanner){
+                            ForEach(viewModel.favoriteMeals){
                                 item in
 
                                 NavigationLink(
@@ -126,14 +138,15 @@ struct FifthScreen: View {
                 
                 
               
-            }            .navigationBarTitle("Popular")
-            .navigationBarTitleDisplayMode(.inline)
-            .padding()
+            }.navigationBarHidden(true)
+//            .navigationBarTitle("Popular")
+//            .navigationBarTitleDisplayMode(.inline)
+            
             
                 
 
         }.navigationViewStyle(StackNavigationViewStyle())
-        
+        }
 
     }
 }

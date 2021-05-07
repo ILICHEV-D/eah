@@ -1,83 +1,74 @@
 import Foundation
 import SwiftUI
-import Combine
+//import Combine
 
 class ContentViewModel: ObservableObject {
         
-    
-
     init() {
         
-        let allItemsInit = Bundle.main.decode([Meal].self, from: "menu.json") //!!!
-        self.allItems = allItemsInit
-        
-        self.recomendationItems = allItemsInit.filter {$0.recommendation == true}
-        self.popular = allItemsInit.filter {$0.popular == true}
-        self.mealPlanner = allItemsInit.filter {$0.mealPlanner == true}
-
-
+        self.allItems = Bundle.main.decode([Meal].self, from: "menu.json") //!!!
         
         self.week = [
             Week(name: "Monday"), Week(name: "Tuesday"), Week(name: "Wednesday"), Week(name: "Thursday"), Week(name: "Friday"), Week(name: "Saturday"), Week(name: "Sunday")
         ]
         
-        self.selectedDay = week.first!
-        
         self.allIngredients = ["cucumber", "chickenThigh", "tomato", "chili", "egg", "avocado", "orange", "cheese", "bread", "watermelon", "corn", "potatoes"]
-        
-        self.suggestedIngredients = allIngredients
-        
-        self.breakfast = self.allItems
 
+        self.selectedDay = self.week[self.week.firstIndex(where: {
+            $0.name == DateFormatter().weekdaySymbols[Calendar.current.component(.weekday, from: Date())]
+        }) ?? 0]
         
+        print(DateFormatter().weekdaySymbols[Calendar.current.component(.weekday, from: Date())])
+        self.suggestedIngredients = allIngredients
+        self.suggestedForBuyIngredients = allIngredients
     }
     
     @Published var allItems: [Meal] = []
     
-    @Published var recomendationItems: [Meal] = []
-    
-    @Published var breakfast: [Meal] = []
-    @Published var lunch: [Meal] = []
-    @Published var dinner: [Meal] = []
+    var recomendationItems: [Meal] {return allItems.filter {$0.recommendation == true}}
+    var popular: [Meal] {return allItems.filter {$0.popular == true}}
+    var mealPlanner: [Meal] {return allItems.filter {$0.mealPlanner == true}}
     
     
+    func mealPlannerFunc(day: Week) -> ([Meal], [Meal], [Meal]) {
+        var breakfast: [Meal] = []
+        var lunch: [Meal] = []
+        var dinner: [Meal] = []
+
+        for item in self.allItems {
+                for i in item.dayOfWeek {
+                    if i.week.name == day.name {
+                        if i.foodIntake == "breakfast" {
+                            breakfast.append(item)
+                        }
+                        else if i.foodIntake == "lunch" {
+                            lunch.append(item)
+                        }
+                        else if i.foodIntake == "dinner" {
+                            dinner.append(item)
+                        }
+                    }
+                
+            }
+        }
+        return (breakfast, lunch, dinner)
+    }
+
+    var breakfast: [Meal] {return mealPlannerFunc(day: selectedDay).0}
+    var lunch: [Meal] {return mealPlannerFunc(day: selectedDay).1}
+    var dinner: [Meal] {return mealPlannerFunc(day: selectedDay).2}
+    
+    var favoriteMeals: [Meal] {return allItems.filter {$0.favorites == true}}
     
     @Published var allIngredients: [String] = []
-    
     @Published var suggestedIngredients: [String] = []
     @Published var selectedIngredients: [String] = []
     
-//
-//    @Published var recomendationItems = [
-//        Meal(name: "Mie Ayam", time: "20-30 min", type: "Korean-Food", timeFoodIntake: FoodIntake.breakfast, star: 4.5, image: "pop1", calories: 120, protein: 120, fat: 120, carbs: 110, description: "Chicken noodles is a food made from noodles and a mixture of traditional Indonesian spices", ingridients: ["chickenThigh", "cucumber", "tomato", "egg", "chili" ]),
-//
-//        Meal(name: "Mie Ayam", time: "20-30 min", type: "Korean-Food", timeFoodIntake: FoodIntake.breakfast, star: 4.5, image: "pop1", calories: 120, protein: 120, fat: 120, carbs: 110, description: "Chicken noodles is a food made from noodles and a mixture of traditional Indonesian spices", ingridients: ["chickenThigh", "cucumber", "tomato", "egg", "chili" ]),
-//
-//        Meal(name: "Mie Ayam", time: "20-30 min", type: "Korean-Food", timeFoodIntake: FoodIntake.breakfast, star: 4.5, image: "pop1", calories: 120, protein: 120, fat: 120, carbs: 110, description: "Chicken noodles is a food made from noodles and a mixture of traditional Indonesian spices", ingridients: ["chickenThigh", "cucumber", "tomato", "egg", "chili"]),
-//
-//        Meal(name: "Mie Ayam", time: "20-30 min", type: "Korean-Food", timeFoodIntake: FoodIntake.breakfast, star: 4.5, image: "pop1", calories: 120, protein: 120, fat: 120, carbs: 110, description: "Chicken noodles is a food made from noodles and a mixture of traditional Indonesian spices", ingridients: ["chickenThigh", "cucumber", "tomato", "egg", "chili" ])
-//    ]
+    @Published var suggestedForBuyIngredients: [String] = []
+    @Published var selectedForBuyIngredients: [String] = []
     
-    @Published var popular: [Meal] = [
-//        Meal(name: "Mie Ayam", time: "20-30 min", type: "Korean-Food", timeFoodIntake: FoodIntake.breakfast, star: 4.5, image: "pop1", calories: 120, protein: 120, fat: 120, carbs: 110, description: "Chicken noodles is a food made from noodles and a mixture of traditional Indonesian spices", ingridients: ["chickenThigh", "cucumber", "tomato", "egg", "chili" ]),
-//
-//        Meal(name: "Mie Ayam", time: "20-30 min", type: "Korean-Food", timeFoodIntake: FoodIntake.breakfast, star: 4.5, image: "pop1", calories: 120, protein: 120, fat: 120, carbs: 110, description: "Chicken noodles is a food made from noodles and a mixture of traditional Indonesian spices", ingridients: ["chickenThigh", "cucumber", "tomato", "egg", "chili" ]),
-//
-//        Meal(name: "Mie Ayam", time: "20-30 min", type: "Korean-Food", timeFoodIntake: FoodIntake.breakfast, star: 4.5, image: "pop1", calories: 120, protein: 120, fat: 120, carbs: 110, description: "Chicken noodles is a food made from noodles and a mixture of traditional Indonesian spices", ingridients: ["chickenThigh", "cucumber", "tomato", "egg", "chili"]),
-//
-//        Meal(name: "Mie Ayam", time: "20-30 min", type: "Korean-Food", timeFoodIntake: FoodIntake.breakfast, star: 4.5, image: "pop1", calories: 120, protein: 120, fat: 120, carbs: 110, description: "Chicken noodles is a food made from noodles and a mixture of traditional Indonesian spices", ingridients: ["chickenThigh", "cucumber", "tomato", "egg", "chili" ])
-    ]
-
-    @Published var mealPlanner: [Meal] = [
-//        Meal(name: "Egg with Avocado", time: "20-30 min", type: "Indo-Food", timeFoodIntake: FoodIntake.breakfast, image: "mealPlanner1", protein: 120, fat: 120, carbs: 110, description: "Chicken noodles is a food made from noodles and a mixture of traditional Indonesian spices", ingridients: ["chickenThigh", "cucumber", "tomato", "egg", "chili" ]),
-//
-//        Meal(name: "Tuna poke", time: "20-30 min", type: "Korean-Food", timeFoodIntake: FoodIntake.lunch, image: "mealPlanner2", protein: 120, fat: 120, carbs: 110, description: "Chicken noodles is a food made from noodles and a mixture of traditional Indonesian spices", ingridients: ["chickenThigh", "cucumber", "tomato", "egg", "chili" ]),
-//
-//        Meal(name: "Egg with Avocado", time: "20-30 min", type: "Indo-Food", timeFoodIntake: FoodIntake.breakfast, image: "mealPlanner3", protein: 120, fat: 120, carbs: 110, description: "Chicken noodles is a food made from noodles and a mixture of traditional Indonesian spices", ingridients: ["chickenThigh", "cucumber", "tomato", "egg", "chili" ])
-    ]
+    @Published var shoppingList: [String: Int] = [:]
 
     @Published var week: [Week]
-    
-    @Published var selectedDay: Week = Week(name: "Monday") //!!!
-    
+    @Published var selectedDay: Week = Week(name: "Monday")
 }

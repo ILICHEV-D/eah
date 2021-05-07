@@ -8,12 +8,14 @@ struct ForMealPlannerBlock: View {
         HStack(spacing: 15){
             Image(item.image)
                 .resizable()
+                .cornerRadius(14)
+                .frame(width: 60, height: 60, alignment: .center)
                 .aspectRatio(contentMode: .fill)
                 .padding(.all, 8)
                 .background(Color(color))
-                .frame(width: 75, height: 75, alignment: .center)
-                .cornerRadius(15)
+                .cornerRadius(16)
                 .padding(.leading, 12)
+
             
             VStack(alignment: .leading, spacing: 5) {
                 Text(item.name).font(.system(size: 14))

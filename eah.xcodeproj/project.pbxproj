@@ -31,6 +31,7 @@
 		69A9EA832631E838003D37E2 /* ContentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69A9EA822631E838003D37E2 /* ContentViewModel.swift */; };
 		69A9EA872631E961003D37E2 /* menu.json in Resources */ = {isa = PBXBuildFile; fileRef = 69A9EA862631E961003D37E2 /* menu.json */; };
 		69A9EA8A2631ECD1003D37E2 /* ListOfMeals1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69A9EA892631ECD1003D37E2 /* ListOfMeals1.swift */; };
+		69ADFBE72641A9D300D1AE0B /* CustomNavigationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69ADFBE62641A9D300D1AE0B /* CustomNavigationView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -60,6 +61,7 @@
 		69A9EA822631E838003D37E2 /* ContentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentViewModel.swift; sourceTree = "<group>"; };
 		69A9EA862631E961003D37E2 /* menu.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = menu.json; path = ../../../../Downloads/idine/menu.json; sourceTree = "<group>"; };
 		69A9EA892631ECD1003D37E2 /* ListOfMeals1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListOfMeals1.swift; sourceTree = "<group>"; };
+		69ADFBE62641A9D300D1AE0B /* CustomNavigationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomNavigationView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -167,6 +169,7 @@
 				69A9EA892631ECD1003D37E2 /* ListOfMeals1.swift */,
 				69A9EA7E2631E7D3003D37E2 /* Star.swift */,
 				69511B6826386C9300FD2E68 /* NavigationBarView.swift */,
+				69ADFBE62641A9D300D1AE0B /* CustomNavigationView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -174,8 +177,8 @@
 		69A9EA592631E5E3003D37E2 /* FirstScreen */ = {
 			isa = PBXGroup;
 			children = (
-				69A9EA5A2631E61D003D37E2 /* RecomendationRecipe.swift */,
 				69A9EA5E2631E632003D37E2 /* FirstScreen.swift */,
+				69A9EA5A2631E61D003D37E2 /* RecomendationRecipe.swift */,
 				69A9EA742631E771003D37E2 /* Popular.swift */,
 				69A9EA7A2631E7AC003D37E2 /* MealPlanner.swift */,
 			);
@@ -298,6 +301,7 @@
 				691B8B1826342F8500415B05 /* ThirdScreen.swift in Sources */,
 				69A9EA7B2631E7AC003D37E2 /* MealPlanner.swift in Sources */,
 				69A9EA372631E513003D37E2 /* eahApp.swift in Sources */,
+				69ADFBE72641A9D300D1AE0B /* CustomNavigationView.swift in Sources */,
 				69A9EA4B2631E551003D37E2 /* Helper.swift in Sources */,
 				69A9EA7F2631E7D3003D37E2 /* Star.swift in Sources */,
 			);
