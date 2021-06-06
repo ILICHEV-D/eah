@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		69050BD52668E64A00A2D268 /* menu.json in Resources */ = {isa = PBXBuildFile; fileRef = 69050BD42668E64A00A2D268 /* menu.json */; };
 		691B8B1826342F8500415B05 /* ThirdScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 691B8B1726342F8500415B05 /* ThirdScreen.swift */; };
 		69511B6926386C9300FD2E68 /* NavigationBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69511B6826386C9300FD2E68 /* NavigationBarView.swift */; };
 		69511B6D2638934700FD2E68 /* FourthScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69511B6C2638934700FD2E68 /* FourthScreen.swift */; };
@@ -29,12 +30,12 @@
 		69A9EA7B2631E7AC003D37E2 /* MealPlanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69A9EA7A2631E7AC003D37E2 /* MealPlanner.swift */; };
 		69A9EA7F2631E7D3003D37E2 /* Star.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69A9EA7E2631E7D3003D37E2 /* Star.swift */; };
 		69A9EA832631E838003D37E2 /* ContentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69A9EA822631E838003D37E2 /* ContentViewModel.swift */; };
-		69A9EA872631E961003D37E2 /* menu.json in Resources */ = {isa = PBXBuildFile; fileRef = 69A9EA862631E961003D37E2 /* menu.json */; };
 		69A9EA8A2631ECD1003D37E2 /* ListOfMeals1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69A9EA892631ECD1003D37E2 /* ListOfMeals1.swift */; };
 		69ADFBE72641A9D300D1AE0B /* CustomNavigationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69ADFBE62641A9D300D1AE0B /* CustomNavigationView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		69050BD42668E64A00A2D268 /* menu.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = menu.json; sourceTree = "<group>"; };
 		691B8B1726342F8500415B05 /* ThirdScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThirdScreen.swift; sourceTree = "<group>"; };
 		69511B6826386C9300FD2E68 /* NavigationBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationBarView.swift; sourceTree = "<group>"; };
 		69511B6C2638934700FD2E68 /* FourthScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FourthScreen.swift; sourceTree = "<group>"; };
@@ -59,7 +60,6 @@
 		69A9EA7A2631E7AC003D37E2 /* MealPlanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealPlanner.swift; sourceTree = "<group>"; };
 		69A9EA7E2631E7D3003D37E2 /* Star.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Star.swift; sourceTree = "<group>"; };
 		69A9EA822631E838003D37E2 /* ContentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentViewModel.swift; sourceTree = "<group>"; };
-		69A9EA862631E961003D37E2 /* menu.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = menu.json; path = ../../../../Downloads/idine/menu.json; sourceTree = "<group>"; };
 		69A9EA892631ECD1003D37E2 /* ListOfMeals1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListOfMeals1.swift; sourceTree = "<group>"; };
 		69ADFBE62641A9D300D1AE0B /* CustomNavigationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomNavigationView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -125,7 +125,7 @@
 				69A9EA532631E5AC003D37E2 /* Services */,
 				69A9EA812631E80C003D37E2 /* ModelViews */,
 				69A9EA3A2631E517003D37E2 /* Assets.xcassets */,
-				69A9EA862631E961003D37E2 /* menu.json */,
+				69050BD42668E64A00A2D268 /* menu.json */,
 				69A9EA3F2631E517003D37E2 /* Info.plist */,
 				69A9EA3C2631E517003D37E2 /* Preview Content */,
 			);
@@ -269,7 +269,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				69A9EA872631E961003D37E2 /* menu.json in Resources */,
+				69050BD52668E64A00A2D268 /* menu.json in Resources */,
 				69A9EA3E2631E517003D37E2 /* Preview Assets.xcassets in Resources */,
 				69A9EA3B2631E517003D37E2 /* Assets.xcassets in Resources */,
 			);
@@ -463,7 +463,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = f.eah;
+				PRODUCT_BUNDLE_IDENTIFIER = fdsdds.eah;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

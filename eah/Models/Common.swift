@@ -7,6 +7,7 @@ struct Meal: Identifiable, Codable, Equatable {
         return lhs.id == rhs.id
     }
     
+    
     var id = UUID().uuidString
     var name: String
     var time: String
@@ -31,9 +32,14 @@ struct Meal: Identifiable, Codable, Equatable {
 }
 
 struct DayOfWeek: Codable {
-    var week: Week
-    var foodIntake: String
+    let date: Date
+    let time: String
 }
+
+//struct DayOfWeek: Codable {
+//    var week: Week
+//    var foodIntake: String
+//}
 
 struct Week: Identifiable, Codable {
     var id = UUID().uuidString

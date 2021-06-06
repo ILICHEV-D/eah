@@ -66,7 +66,7 @@ struct FirstScreen: View {
                             ForEach(viewModel.recomendationItems){
                                 item in
                                 NavigationLink(
-                                    destination: MealView(item: item),
+                                    destination: MealView(item: item, fromMealPlanner: false),
                                     label: {
                                         RecomendationRecipe(item: item)
                                     }
@@ -96,7 +96,7 @@ struct FirstScreen: View {
                             ForEach(viewModel.popular){
                                 item in
                                 NavigationLink(
-                                    destination: MealView(item: item),
+                                    destination: MealView(item: item, fromMealPlanner: false),
                                     label: {
                                         Popular(item: item)
                                     }
@@ -147,7 +147,7 @@ struct FirstScreen: View {
                                     item in
                                     
                                     NavigationLink(
-                                        destination: MealView(item: item),
+                                        destination: MealView(item: item, fromMealPlanner: false),
                                         label: {
                                             MealPlanner(item: item, time: "Breakfast")
                                         }
@@ -158,7 +158,7 @@ struct FirstScreen: View {
                                     item in
                                     
                                     NavigationLink(
-                                        destination: MealView(item: item),
+                                        destination: MealView(item: item, fromMealPlanner: false),
                                         label: {
                                             MealPlanner(item: item, time: "Lunch")
                                         }
@@ -169,28 +169,12 @@ struct FirstScreen: View {
                                     item in
                                     
                                     NavigationLink(
-                                        destination: MealView(item: item),
+                                        destination: MealView(item: item, fromMealPlanner: false),
                                         label: {
                                             MealPlanner(item: item, time: "Dinner")
                                         }
                                     )
                                 }
-                                //                            }
-                                //                            else {
-                                //                                Button(action: {
-                                //
-                                //                                }) {
-                                //                                    HStack(spacing: 20) {
-                                //                                        Image("Component1")
-                                //                                        VStack(alignment: .leading, spacing: 5) {
-                                //                                            Image("rectangle3")
-                                //                                            Image("rectangle2")
-                                //                                            Image("rectangle1")
-                                //                                        }
-                                //                                        Spacer()
-                                //                                    }.padding()
-                                //                                }
-                                //           }
                             }
                         }
                     }).padding(.leading).padding(.bottom).padding(.trailing)
@@ -198,26 +182,7 @@ struct FirstScreen: View {
                 )
                 
             }.navigationBarHidden(true)
-            //
-            //            .navigationBarItems(leading:
-            //                                    Image(systemName: "list.bullet")
-            //                                    .font(.title2)
-            //                                    .frame(width: 35, height: 35, alignment: .center).cornerRadius(9.5)
-            //                                    .background(Color(UIColor.systemGray).opacity(0.12))
-            //                                    .foregroundColor(.black)
-            //                                    .cornerRadius(9.5)
-            //                                , trailing:
-            //                                    Button(action: {}, label: {
-            //                                        Image(systemName: "magnifyingglass")
-            //                                            .font(.title2)
-            //                                            .frame(width: 35, height: 35, alignment: .center).cornerRadius(9.5)
-            //                                            .background(Color(UIColor.systemGray).opacity(0.12))
-            //                                            .foregroundColor(.black)
-            //                                    }).cornerRadius(9.5)
-            //            )
-            //            .navigationBarTitle("Popular")
-            //            .navigationBarTitleDisplayMode(.inline)
-            //
+        
             
             
         }.navigationViewStyle(StackNavigationViewStyle())

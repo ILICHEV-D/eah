@@ -5,12 +5,15 @@
 //  Created by Danil Ilichev on 27.04.2021.
 //
 
+
+
 import SwiftUI
 
 struct FifthScreen: View {
     
+    
     @EnvironmentObject var viewModel: ContentViewModel
-    @State private var selectorIndex = 0
+    @State private var selectorIndex = 1
     @State private var numbers = ["Favorites", "Recipe", "Support"]
     
     var body: some View {
@@ -25,9 +28,6 @@ struct FifthScreen: View {
             
             ScrollView{
                 VStack(spacing: 10) {
-                    
-
-                    
                 Image(systemName: "person.fill")
                     .frame(width: 72, height: 72, alignment: .center)
                     .background(Color(.systemGray5))
@@ -51,13 +51,14 @@ struct FifthScreen: View {
                           
                             // 3.
                 if selectorIndex == 0 {
+                    VStack {
                     ScrollView(.horizontal, showsIndicators: false, content: {
                         HStack(spacing: 16){
                             ForEach(viewModel.favoriteMeals){
                                 item in
 
                                 NavigationLink(
-                                    destination: MealView(item: item),
+                                    destination: MealView(item: item, fromMealPlanner: false),
                                     label: {
                                         MealPlanner(item: item)
                                     }
@@ -65,15 +66,43 @@ struct FifthScreen: View {
                             }
                         }.padding()
                     })
+//
+//                                                                    NavigationLink(
+//                                                                        destination: ListOfMeals(),
+//                                                                        label: {
+                        NavigationLink(destination: ListOfMeals(items: viewModel.allItems)){
+                                                    HStack {
+                                                        Text("Explore more recipe")
+                                                            .font(.system(size: 16))
+                                                            .fontWeight(.semibold)
+                                                            .foregroundColor(.white)
+                                                        Spacer()
+                                                        Image("arrow")
+                                                    }.padding()
+                                                    .frame(width: UIScreen.screenWidth - 100, height: 55, alignment: .center)
+                                                    .background(Color("mainColor"))
+                                                    .cornerRadius(16)
+                                                    .shadow(color: Color("mainColor").opacity(0.2), radius: 5, x: 3, y: 3)
+                        }
+                                                          //              })
+                    }
+                                                
                 }
                 else if selectorIndex == 1 {
                     ScrollView(.horizontal, showsIndicators: false, content: {
+                        
                         HStack(spacing: 16){
+                            
+                            Image("frameAddRecipe")
+                                .resizable()
+                                .frame(width: 220, height: 300, alignment: .center)
+
+                            
                             ForEach(viewModel.mealPlanner){
                                 item in
 
                                 NavigationLink(
-                                    destination: MealView(item: item),
+                                    destination: MealView(item: item, fromMealPlanner: false),
                                     label: {
                                         MealPlanner(item: item)
                                     }
@@ -90,54 +119,9 @@ struct FifthScreen: View {
                             .fontWeight(.semibold)
                     }.padding(.top, 50)
                 }
-                    
-                    if selectorIndex == 0 || selectorIndex == 1 {
-                    
-//                    NavigationLink(
-//                        destination: ListOfMeals(),
-//                        label: {
-                            HStack {
-                                Text("Explore more recipe")
-                                    .font(.system(size: 16))
-                                    .fontWeight(.semibold)
-                                    .foregroundColor(.white)
-                                    
-                                Spacer()
-                                
-                                Image("arrow")
-                                
-                            }.padding()
-                            .frame(width: UIScreen.screenWidth - 100, height: 55, alignment: .center)
-                            
-                            
-                            .background(Color("mainColor"))
-                            .cornerRadius(16)
-                            .shadow(color: Color("mainColor").opacity(0.2), radius: 5, x: 3, y: 3)
-                    }
-//                        })
-//            }.padding()
-                
-//                HStack {
-//                    Text("Search with \(viewModel.selectedIngredients.count) ingridients")
-//                        .font(.system(size: 16))
-//                        .fontWeight(.semibold)
-//                        .foregroundColor(.white)
-//
-//                    Spacer()
-//
-//                    Image("arrow")
-//
-//                }.padding()
-//                .frame(width: UIScreen.screenWidth - 100, height: 55, alignment: .center)
-//                .background(Color("mainColor"))
-//                .cornerRadius(16)
-//                .shadow(color: Color("mainColor").opacity(0.2), radius: 5, x: 3, y: 3)
-                
-                
+
                 }
-                
-                
-              
+
             }.navigationBarHidden(true)
 //            .navigationBarTitle("Popular")
 //            .navigationBarTitleDisplayMode(.inline)

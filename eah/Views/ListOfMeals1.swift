@@ -102,7 +102,7 @@ struct ListOfMeals: View {
                         if check == nil {
                             
                             NavigationLink(
-                                destination: MealView(item: item),
+                                destination: MealView(item: item, fromMealPlanner: false),
                                 label: {
                                     RecomendationRecipe(item: item).gesture(DragGesture().updating($dragOffset, body: { (value, state, transaction) in
                                         if(value.startLocation.x < 60 && value.translation.width > 20) {
@@ -116,7 +116,14 @@ struct ListOfMeals: View {
                         else { //!!!
                             Button(action: {
                                     
-                                    viewModel.allItems[viewModel.allItems.firstIndex(where: { $0.id == item.id })!].dayOfWeek.append(DayOfWeek(week: viewModel.selectedDay, foodIntake: check!))
+                                    viewModel.allItems[viewModel.allItems.firstIndex(where: { $0.id == item.id })!]
+                                        .dayOfWeek.append(DayOfWeek(date: Date().getWeekDate(week: viewModel.selectedDay.name), time: check!))
+                                    
+                              //      viewModel.allItems[viewModel.allItems.firstIndex(where: { $0.id == item.id })!]
+                              //          .dayOfWeek[Date().getWeekDate(week: viewModel.selectedDay.name)] = check!
+                                    
+                                    viewModel.selectedDay = viewModel.selectedDay //!!!
+                                    
                                     presentationMode.wrappedValue.dismiss()}) {
                                 RecomendationRecipe(item: item).gesture(DragGesture().updating($dragOffset, body: { (value, state, transaction) in
                                     if(value.startLocation.x < 60 && value.translation.width > 20) {

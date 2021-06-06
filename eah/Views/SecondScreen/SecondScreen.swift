@@ -165,7 +165,7 @@ struct SecondScreenScroll: View {
                 ForEach(items){
                     item in
                     NavigationLink(
-                        destination: MealView(item: item),
+                        destination: MealView(item: item, fromMealPlanner: true),
                         label: {
                             ForMealPlannerBlock(item: item, color: nameOfColor)
                         }

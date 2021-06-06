@@ -35,30 +35,26 @@ struct FourthScreen: View {
             
             if viewModel.shoppingList.count == 0 {
             
-
-                
                 HStack {
                     Spacer()
                     Text("Shopping list").fontWeight(.semibold)
                     Spacer()
                 }.padding().frame(width: UIScreen.screenWidth, height: 50, alignment: .center)
                 
-                ScrollView{
                 
                 Spacer()
                 VStack(spacing: 20.0) {
-                    Image("basket")
                     
+                    Image("basket").resizable().frame(width: 230, height: 230, alignment: .center)
+
                     Text("Your shopping - list will be here")
                         .multilineTextAlignment(.center)
                         .fixedSize(horizontal: false, vertical: true)
                         .font(.system(size: 18))
                         .foregroundColor(.black)
-                }.padding()
+                }.padding(.horizontal).padding(.vertical)
                 Spacer()
-                }
                 
-
             }
 
                 else {
@@ -94,6 +90,15 @@ struct FourthScreen: View {
                                             if viewModel.shoppingList[key]! != 0 {
                                                 viewModel.shoppingList[key]! -= 1
                                             }
+                                            
+                                            if viewModel.shoppingList[key]! == 0 {
+                                            viewModel.shoppingList[key] = nil
+                                            if let index = viewModel.selectedForBuyIngredients.firstIndex(of: key) {
+                                                viewModel.selectedForBuyIngredients.remove(at: index)
+                                                viewModel.suggestedForBuyIngredients.append(key)
+                                            }}
+                                            
+                                            
                                         }, label: {
                                             Image(systemName: "minus")
                                                 .font(.system(size: 14, weight: .medium))

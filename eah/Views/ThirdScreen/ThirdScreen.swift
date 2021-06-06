@@ -318,9 +318,9 @@ struct ThirdScreen: View {
                             Image("plus")
                         }.padding()
                         .frame(width: UIScreen.screenWidth - 100, height: 55, alignment: .center)
-                        .background(Color(getColor()))
+                        .background(Color(getColorForBuy()))
                         .cornerRadius(16)
-                        .shadow(color: Color(getColor()).opacity(0.2), radius: 5, x: 3, y: 3)
+                        .shadow(color: Color(getColorForBuy()).opacity(0.2), radius: 5, x: 3, y: 3)
                     }).padding().onDisappear {
                         viewModel.shoppingList = viewModel.selectedForBuyIngredients.reduce(into: [String: Int]()) { $0[$1] = 1 }
 
@@ -339,6 +339,12 @@ struct ThirdScreen: View {
             return "arrowGrayColor"
         }}
 
+    func getColorForBuy() -> String {
+        if viewModel.selectedForBuyIngredients.count != 0 {
+            return  "mainColor"}
+        else {
+            return "arrowGrayColor"
+        }}
     
 }
 

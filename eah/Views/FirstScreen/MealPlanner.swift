@@ -28,11 +28,13 @@ struct MealPlanner: View {
                             .font(.system(size: 14))
                             .foregroundColor(.white)
                             .padding(.leading, 18)
+                        
                         Text(item.time)
                             .fontWeight(.medium)
                             .font(.system(size: 11))
                             .foregroundColor(.gray)
                             .padding(.leading, 18)
+                        
                     })
                     
                 }
@@ -47,7 +49,8 @@ struct MealPlanner: View {
                 
             })
             
-            Text(time ?? "")
+            if (time != nil) {
+            Text(time!)
                 .fontWeight(.medium)
                 .font(.system(size: 14))
                 .foregroundColor(.white)
@@ -57,7 +60,7 @@ struct MealPlanner: View {
                 .background(BlurView(style: .systemUltraThinMaterial).cornerRadius(7))
                 .padding(.leading, 14)
                 .padding(.top, 12)
-            
+            }
             
             
             

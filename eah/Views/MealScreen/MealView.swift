@@ -2,11 +2,13 @@ import SwiftUI
 
 struct MealView: View {
     let item: Meal
+    let fromMealPlanner: Bool
     
     @GestureState private var dragOffset = CGSize.zero
     @Environment(\.presentationMode) var mode: Binding<PresentationMode>
     @State private var like = true
     @EnvironmentObject var viewModel: ContentViewModel
+    
 
 
 
@@ -29,6 +31,31 @@ struct MealView: View {
             Spacer()
             Text(item.name).fontWeight(.semibold)
             Spacer()
+            
+            if fromMealPlanner == true {
+            
+                
+                Button(action: {
+                    
+                    let indexOfMeal = viewModel.allItems.firstIndex(where: { $0.id == item.id })!
+                    let selectedD = viewModel.allItems[indexOfMeal].dayOfWeek.firstIndex(where: {$0.date == Date().getWeekDate(week: viewModel.selectedDay.name)})
+                        
+                    viewModel.allItems[indexOfMeal].dayOfWeek.remove(at: selectedD!)
+                    self.mode.wrappedValue.dismiss()
+                    
+                }, label: {
+                    Image(systemName: "trash")
+                        .font(.title2)
+                        .frame(width: 40, height: 40, alignment: .center).cornerRadius(9.5)
+                        .background(Color(UIColor.systemGray).opacity(0.12))
+                        .foregroundColor(.black)
+                    
+                }).cornerRadius(9.5)
+                
+                
+                
+            }
+            else {
             Button(action: {
                 if let i  = viewModel.allItems.firstIndex(where: { $0.id == item.id }){
                     if viewModel.favoriteMeals.contains(item){
@@ -55,6 +82,7 @@ struct MealView: View {
                     .foregroundColor(.black)
                 }
             }).cornerRadius(9.5)
+            }
 
 
         }.padding().frame(width: UIScreen.screenWidth, height: 50, alignment: .center)
