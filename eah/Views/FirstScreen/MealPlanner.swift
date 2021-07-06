@@ -24,13 +24,13 @@ struct MealPlanner: View {
                     
                     VStack (alignment: .leading, spacing: 6, content: {
                         Text(item.name)
-                            .fontWeight(.medium)
+                            .fontWeight(.semibold)
                             .font(.system(size: 14))
                             .foregroundColor(.white)
                             .padding(.leading, 18)
                         
                         Text(item.time)
-                            .fontWeight(.medium)
+                            .fontWeight(.semibold)
                             .font(.system(size: 11))
                             .foregroundColor(.gray)
                             .padding(.leading, 18)

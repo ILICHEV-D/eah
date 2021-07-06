@@ -22,12 +22,13 @@ struct RecomendationRecipe: View {
                     .padding(.leading,0)
                     .background(Color(red: 1, green: 1, blue: 1, opacity: 0.7))
                     .cornerRadius(8, corners: [.bottomLeft, .topRight])
-                    .font(.system(size: 11, weight: .medium, design: .default))
+                    .font(Font.custom("Manrope-Bold", size: 11))
+
             })
             
             HStack {
                 Text(item.name)
-                    .font(.system(size: 14))
+                    .font(Font.custom("Manrope-Bold", size: 14))
                     .fontWeight(.medium)
                     .foregroundColor(Color(UIColor.black))
                 Spacer()
@@ -39,8 +40,8 @@ struct RecomendationRecipe: View {
                 
                 Spacer()
                 
-                Text(item.type)
-                    .font(.system(size: 12, weight: .light, design: .default))
+                Text(item.type ?? "")
+                    .font(Font.custom("Manrope-Regular", size: 12)).fontWeight(.light)
                     .foregroundColor(Color(UIColor.systemGray))
             }
         }.padding(.all,8).padding(.bottom, 10)

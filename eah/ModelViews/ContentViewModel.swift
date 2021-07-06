@@ -1,24 +1,34 @@
 import Foundation
 import SwiftUI
+import Combine
 
 class ContentViewModel: ObservableObject {
         
+    @Published var allItems: [Meal] = [] {
+    didSet {
+        print("posts --> \(self.allItems.count)")
+    }
+    }
+//    @Published var indexEndpoint: Int = 0
+    
     init() {
         
-    //    self.allItems = Bundle.main.decode([Meal].self, from: "menu.json") //!!!
-
+        self.allItems = Bundle.main.decode([Meal].self, from: "menu.json") //!!!
 
         if let data = UserDefaults.standard.value(forKey:"allItems") as? Data {
             self.allItems = try! PropertyListDecoder().decode(Array<Meal>.self, from: data)
             print("from storage")
         } else {
             self.allItems = Bundle.main.decode([Meal].self, from: "menu.json") //!!!
+
             print("from json")
         }
+    
+
 
         
         self.week = [
-            Week(name: "Monday"), Week(name: "Tuesday"), Week(name: "Wednesday"), Week(name: "Thursday"), Week(name: "Friday"), Week(name: "Saturday"), Week(name: "Sunday")
+            Week(name: "Monday", russianName: "Пн"), Week(name: "Tuesday", russianName: "Вт"), Week(name: "Wednesday", russianName: "Ср"), Week(name: "Thursday", russianName: "Чт"), Week(name: "Friday", russianName: "Пт"), Week(name: "Saturday", russianName: "Сб"), Week(name: "Sunday", russianName: "Вс")
         ]
         
         self.allIngredients = ["cucumber", "chickenThigh", "tomato", "chili", "egg", "avocado", "orange", "cheese", "bread", "watermelon", "corn", "potatoes"]
@@ -29,9 +39,23 @@ class ContentViewModel: ObservableObject {
         
         self.suggestedIngredients = allIngredients
         self.suggestedForBuyIngredients = allIngredients
+        
+        
+        
+//        $indexEndpoint
+//         .flatMap { (indexEndpoint) -> AnyPublisher<[Meal], Never> in
+//              MealAPI.shared.fetchMeals(from:
+//                                  Endpoint( index: indexEndpoint)!)
+//         }
+//       .assign(to: \.allItems, on: self)
+//       .store(in: &self.cancellableSet)
+        
     }
     
-    @Published var allItems: [Meal] = []
+
+    private var cancellableSet: Set<AnyCancellable> = []
+
+    
     
     var recomendationItems: [Meal] {return allItems.filter {$0.recommendation == true}}
     var popular: [Meal] {return allItems.filter {$0.popular == true}}
@@ -100,7 +124,7 @@ class ContentViewModel: ObservableObject {
     @Published var shoppingList: [String: Int] = [:]
 
     @Published var week: [Week]
-    @Published var selectedDay: Week = Week(name: "Monday")
+    @Published var selectedDay: Week = Week(name: "Monday", russianName: "Понедельник")
     
     
     func saveData() {

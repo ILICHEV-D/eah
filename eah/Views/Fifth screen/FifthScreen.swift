@@ -22,7 +22,7 @@ struct FifthScreen: View {
             
             HStack {
                 Spacer()
-                Text("Account").fontWeight(.semibold)
+                Text("Аккаунт").fontWeight(.semibold)
                 Spacer()
             }.padding().frame(width: UIScreen.screenWidth, height: 50, alignment: .center)
             
@@ -33,10 +33,10 @@ struct FifthScreen: View {
                     .background(Color(.systemGray5))
                     .cornerRadius(36)
                     .padding(.bottom, 10)
-                Text("Syarina Gonzales")
+                Text("Юлия Гаврилова")
                     .font(.system(size: 17))
                     .fontWeight(.semibold)
-                Text("Master Chef Indoensia")
+                Text("Дизайнер")
                     .font(.system(size: 14))
                     .foregroundColor(.gray)
                     .padding(.top, -6)
@@ -72,7 +72,7 @@ struct FifthScreen: View {
 //                                                                        label: {
                         NavigationLink(destination: ListOfMeals(items: viewModel.allItems)){
                                                     HStack {
-                                                        Text("Explore more recipe")
+                                                        Text("Больше рецептов")
                                                             .font(.system(size: 16))
                                                             .fontWeight(.semibold)
                                                             .foregroundColor(.white)
@@ -114,7 +114,7 @@ struct FifthScreen: View {
                 else  if selectorIndex == 2 {
                     VStack{
                         Image("supportHeadphones")
-                        Text("How can we help you?")
+                        Text("Как мы можем вам помочь?")
                             .font(.system(size: 20))
                             .fontWeight(.semibold)
                     }.padding(.top, 50)

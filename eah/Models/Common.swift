@@ -1,20 +1,37 @@
 import SwiftUI
 
 
+
+//struct Meal1: Codable, Equatable {
+//    var id: Int
+//    var name: String
+//    var kind: String
+//    var time: Int
+//
+//}
+
+//struct MealJSON: Codable, Equatable {
+//    var status: Bool
+//    var response: [Meal1]
+//}
+
+struct MealResponse: Codable {
+    let results: [Meal]
+}
+
 struct Meal: Identifiable, Codable, Equatable {
 
     static func ==(lhs: Meal, rhs: Meal) -> Bool {
         return lhs.id == rhs.id
     }
     
-    
     var id = UUID().uuidString
     var name: String
     var time: String
-    var type: String
+    var type: String?
     var timeFoodIntake: String?
     var star: Double?
-    var image: String
+    var image: String = "backColor"
     var calories: Int?
     var protein: Int?
     var fat: Int?
@@ -24,11 +41,11 @@ struct Meal: Identifiable, Codable, Equatable {
     
     var dayOfWeek: [DayOfWeek] = []
     
-    var recommendation: Bool
-    var popular: Bool
+    var recommendation: Bool?
+    var popular: Bool?
     var favorites: Bool?
     
-    var mealPlanner: Bool
+    var mealPlanner: Bool?
 }
 
 struct DayOfWeek: Codable {
@@ -44,6 +61,7 @@ struct DayOfWeek: Codable {
 struct Week: Identifiable, Codable {
     var id = UUID().uuidString
     var name: String
+    var russianName: String
 }
 
 
@@ -78,29 +96,29 @@ struct Ingridient {
 func convertIngridient(item: helpEnumIngredients) -> Ingridient {
     switch item {
     case .chickenThigh:
-        return(Ingridient(name: "Chicken thigh", imageSmile: "🍗", color: Color("breadColor")))
+        return(Ingridient(name: "Куриное бедро", imageSmile: "🍗", color: Color("breadColor")))
     case .cucumber:
-        return(Ingridient(name: "Cucumber", imageSmile: "🥒", color: Color("cucumberColor")))
+        return(Ingridient(name: "Огурец", imageSmile: "🥒", color: Color("cucumberColor")))
     case .tomato:
-        return(Ingridient(name: "Tomato", imageSmile: "🍅", color: Color("tomatoColor")))
+        return(Ingridient(name: "Помидор", imageSmile: "🍅", color: Color("tomatoColor")))
     case .chili:
-        return(Ingridient(name: "Chili", imageSmile: "🌶", color: Color("chiliColor")))
+        return(Ingridient(name: "Перец Чили", imageSmile: "🌶", color: Color("chiliColor")))
     case .egg:
-        return(Ingridient(name: "Egg", imageSmile: "🥚", color: Color("eggColor")))
+        return(Ingridient(name: "Яйцо", imageSmile: "🥚", color: Color("eggColor")))
     case .potatoes:
-        return(Ingridient(name: "Potatoes", imageSmile: "🍠", color: Color("potatoesColor")))
+        return(Ingridient(name: "Картофель", imageSmile: "🍠", color: Color("potatoesColor")))
     case .avocado:
-        return(Ingridient(name: "Avocado", imageSmile: "🥑", color: Color("avocadoColor")))
+        return(Ingridient(name: "Авокадо", imageSmile: "🥑", color: Color("avocadoColor")))
     case .orange:
-        return(Ingridient(name: "Orange", imageSmile: "🍊", color: Color("orangeColor")))
+        return(Ingridient(name: "Апельсин", imageSmile: "🍊", color: Color("orangeColor")))
     case .cheese:
-        return(Ingridient(name: "Cheese", imageSmile: "🧀", color: Color("cheeseColor")))
+        return(Ingridient(name: "Сыр", imageSmile: "🧀", color: Color("cheeseColor")))
     case .bread:
-        return(Ingridient(name: "Bread", imageSmile: "🍞", color: Color("breadColor")))
+        return(Ingridient(name: "Хлеб", imageSmile: "🍞", color: Color("breadColor")))
     case .watermelon:
-        return(Ingridient(name: "Watermelon", imageSmile: "🍉", color: Color("watermelonColor")))
+        return(Ingridient(name: "Арбуз", imageSmile: "🍉", color: Color("watermelonColor")))
     case .corn:
-        return(Ingridient(name: "Corn", imageSmile: "🌽", color: Color("cornColor")))
+        return(Ingridient(name: "Кукуруза", imageSmile: "🌽", color: Color("cornColor")))
     }
     
     

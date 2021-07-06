@@ -14,7 +14,7 @@ struct SecondScreen: View {
             VStack{
                 HStack {
                     Spacer()
-                    Text("Meal Planner").fontWeight(.semibold)
+                    Text("План питания").fontWeight(.semibold)
                     Spacer()
                 }.padding().frame(width: UIScreen.screenWidth, height: 50, alignment: .center)
                 
@@ -30,7 +30,7 @@ struct SecondScreen: View {
                                             withAnimation(.spring()){
                                                 viewModel.selectedDay = item
                                             }}, label: {
-                                                Text(item.name.prefix(3))
+                                                Text(item.russianName.prefix(3))
                                                     .font(.system(size: 16))
                                                     .fontWeight(.semibold)
                                                     .foregroundColor(viewModel.selectedDay.id == item.id ? Color("mainColor") : .gray)
@@ -46,12 +46,12 @@ struct SecondScreen: View {
                         }).padding()
                         
                         HStack{
-                            Text("For Breakfast").font(.system(size: 18)).fontWeight(.semibold)
+                            Text("Завтрак").font(.system(size: 18)).fontWeight(.semibold)
                             Spacer()
                             NavigationLink(
                                 destination: ListOfMeals(items: viewModel.allItems, check: "breakfast"),
                                 label: {
-                                    Text("Add more")
+                                    Text("Добавить")
                                         .foregroundColor(Color("mainColor"))
                                         .font(.system(size: 12))
                                         .fontWeight(.medium)
@@ -80,12 +80,12 @@ struct SecondScreen: View {
                         Divider()
                         
                         HStack{
-                            Text("For Lunch").font(.system(size: 18)).fontWeight(.semibold)
+                            Text("Обед").font(.system(size: 18)).fontWeight(.semibold)
                             Spacer()
                             NavigationLink(
                                 destination: ListOfMeals(items: viewModel.allItems, check: "lunch"),
                                 label: {
-                                    Text("Add more")
+                                    Text("Добавить")
                                         .foregroundColor(Color("mainColor"))
                                         .font(.system(size: 12))
                                         .fontWeight(.medium)
@@ -112,12 +112,12 @@ struct SecondScreen: View {
                         Divider()
                         
                         HStack{
-                            Text("For Dinner").font(.system(size: 18)).fontWeight(.semibold)
+                            Text("Завтрак").font(.system(size: 18)).fontWeight(.semibold)
                             Spacer()
                             NavigationLink(
                                 destination: ListOfMeals(items: viewModel.allItems, check: "dinner"),
                                 label: {
-                                    Text("Add more")
+                                    Text("Добавить")
                                         .foregroundColor(Color("mainColor"))
                                         .font(.system(size: 12))
                                         .fontWeight(.medium)

@@ -17,13 +17,16 @@ struct Popular: View {
             
                 
                 Text(item.name)
+              //      .font(Font.custom("Manrope-Regular", size: 14))
                     .font(.system(size: 14))
                     .foregroundColor(Color(UIColor.black))
-                    .fontWeight(.medium)
+                    .fontWeight(.semibold)
                 
             Text(item.time)
                 .foregroundColor(Color.gray)
-                .font(.system(size: 12, weight: .medium, design: .default))
+            //    .font(Font.custom("Manrope-Regular", size: 12))
+                .font(.system(size: 12))
+                .fontWeight(.semibold)
             
                 Star(star: item.star)
                 

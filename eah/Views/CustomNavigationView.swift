@@ -17,7 +17,7 @@ struct CustomNavigationView: View {
                 .font(.system(size: 23, weight: .bold))
                 .foregroundColor(.gray)
             
-            TextField("Search", text: $searchQuery)
+            TextField("Поиск", text: $searchQuery)
         }
         .padding(.vertical, 10)
         .padding(.horizontal)

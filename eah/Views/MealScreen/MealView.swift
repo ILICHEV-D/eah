@@ -4,6 +4,9 @@ struct MealView: View {
     let item: Meal
     let fromMealPlanner: Bool
     
+    @State private var selection = 0
+    
+    
     @GestureState private var dragOffset = CGSize.zero
     @Environment(\.presentationMode) var mode: Binding<PresentationMode>
     @State private var like = true
@@ -14,6 +17,7 @@ struct MealView: View {
 
     var body: some View {
         
+        VStack {
 
         HStack {
            
@@ -102,7 +106,8 @@ struct MealView: View {
                     .padding(.bottom, 1)
 
                 
-                Text("Calories  \(item.calories ?? 0) g 🔥").font(.system(size: 12))
+                
+                Text("Калории  \(item.calories ?? 0) г 🔥").font(.system(size: 12))
                     .padding(.bottom, 20)
 
                 
@@ -117,22 +122,22 @@ struct MealView: View {
                 
                 HStack(spacing: 20){
                     VStack(spacing: 7){
-                        Text("Protein").font(.system(size: 14))
-                        Text("🍗 \(item.protein ?? 0) g").font(.system(size: 12)).foregroundColor(.gray)
+                        Text("Белки").font(.system(size: 14))
+                        Text("🍗 \(item.protein ?? 0) г").font(.system(size: 12)).foregroundColor(.gray)
                     }
                     
                     ChangeDivider()
                     
                     VStack(spacing: 7){
-                        Text("Fat").font(.system(size: 14))
-                        Text("🍖 \(item.fat ?? 0) g").font(.system(size: 12)).foregroundColor(.gray)
+                        Text("Жиры").font(.system(size: 14))
+                        Text("🍖 \(item.fat ?? 0) г").font(.system(size: 12)).foregroundColor(.gray)
                     }
                     
                     ChangeDivider()
                     
                     VStack(spacing: 7){
-                        Text("Carbs").font(.system(size: 14))
-                        Text("🍞 \(item.protein ?? 0) g").font(.system(size: 12)).foregroundColor(.gray)
+                        Text("Углеводы").font(.system(size: 14))
+                        Text("🍞 \(item.protein ?? 0) г").font(.system(size: 12)).foregroundColor(.gray)
                     }
                     
                     
@@ -144,11 +149,11 @@ struct MealView: View {
                 
                 HStack{
                     VStack(alignment: .leading, spacing: 2) {
-                    Text("Ingredients")
+                    Text("Ингредиенты")
                         .font(.system(size: 18))
                         .fontWeight(.bold)
                     
-                    Text("\(item.ingridients?.count ?? 0) items")
+                    Text("\(item.ingridients?.count ?? 0) порций")
                         .font(.system(size: 12))
                         .foregroundColor(.gray)
                 }
@@ -162,9 +167,58 @@ struct MealView: View {
                         ingr in
                         IngridientView(item: convertIngridient(item: helpEnumIngredients.init(rawValue: ingr)!))
                     }
+                    
+
                 }.padding(.leading).padding(.bottom).padding(.trailing)
                 
-            }.padding()
+                HStack{
+                    VStack(alignment: .leading, spacing: 2) {
+                    Text("Рецепт")
+                        .font(.system(size: 18))
+                        .fontWeight(.bold)
+
+                }
+                    Spacer()
+                }.padding(.leading).padding(.trailing)
+                
+                TabView(selection : $selection){
+                    ForEach(0..<5){ i in
+                        VStack(){
+                            HStack(spacing: 16.0){
+                                Text(String(selection + 1))
+                                    .foregroundColor(.white)
+                                    .fontWeight(.semibold)
+                                    .font(.system(size: 18))
+                                    .frame(width: 50, height: 50, alignment: .center)
+                                    .background(Color("mainColor"))
+                                    .cornerRadius(16)
+                                    .shadow(color: Color("mainColor").opacity(0.2), radius: 5, x: 3, y: 3)
+                                Text("Порежьте ингредиенты")
+                                    .fontWeight(.semibold)
+                                Spacer()
+                            }.padding(.bottom, 5)
+                            Text("Isinya penjelasan tentang menjadi Chef setiap hari dan menjelaskan betapa mudahnya masak Chef setiap hari dan menjelaskan betapa mudahnya masak")
+                                .multilineTextAlignment(.leading)
+                                .fixedSize(horizontal: false, vertical: true)
+                                .font(.system(size: 14))
+                                .foregroundColor(.gray)
+                                .padding(.bottom, 5)
+                            
+                            Image("stepRecipe")
+                                .resizable()
+                                .padding(.trailing, 5)
+                        }
+                    }
+                }          //       .padding(.leading, -15).padding(.trailing, -15)
+
+                .tabViewStyle(PageTabViewStyle(indexDisplayMode: .automatic))
+              .indexViewStyle(PageIndexViewStyle(backgroundDisplayMode: .always))
+                .frame(height: 320)
+                .padding()
+
+            }.padding(.leading).padding(.trailing)
+            
+
             
             
         }.navigationBarHidden(true)
@@ -175,63 +229,16 @@ struct MealView: View {
             }
         }))
             
-            
-//        .navigationViewStyle(StackNavigationViewStyle())        .navigationBarTitle(item.name).navigationBarTitleDisplayMode(.inline)
-//
-//        .navigationBarBackButtonHidden(true)
-//        .navigationBarItems(leading: Button(action : {
-//            self.mode.wrappedValue.dismiss()
-//        }){
-//            Image(systemName: "chevron.left")
-//                .frame(width: 32, height: 32, alignment: .center)
-//                .background(Color(UIColor.systemGray).opacity(0.12))
-//                .cornerRadius(9.5)
-//                .foregroundColor(.black)
-//        }
-//        )
-//        .gesture(DragGesture().updating($dragOffset, body: { (value, state, transaction) in
-//            if(value.startLocation.x < 20 && value.translation.width > 100) {
-//                self.mode.wrappedValue.dismiss()
-//            }
-//
-//        }))
-        }
-        
-        
 
-//        .navigationViewStyle(StackNavigationViewStyle())
-//        .navigationBarTitle(item.name).navigationBarTitleDisplayMode(.inline)
-//
-//        .navigationBarBackButtonHidden(true)
-//        .navigationBarItems(leading: Button(action : {
-//            self.mode.wrappedValue.dismiss()
-//        }){
-//            Image(systemName: "chevron.left")
-//
-//                .frame(width: 40, height: 40, alignment: .center)
-//                .background(Color(UIColor.systemGray).opacity(0.12))
-//                .cornerRadius(9.5)
-//                .foregroundColor(.black)
-//        }
-//
-//
-//        ).edgesIgnoringSafeArea(.top)
-//        .gesture(DragGesture().updating($dragOffset, body: { (value, state, transaction) in
-//            if(value.startLocation.x < 20 && value.translation.width > 100) {
-//                self.mode.wrappedValue.dismiss()
-//            }
-//
-//        }))
-        
-        
-        
-        
-  //  }
+
+    }
+    }
 }
 
 struct MealView_Previews: PreviewProvider {
     static var previews: some View {
-        FirstScreen().environmentObject(ContentViewModel())
+        MealView(item: ContentViewModel().allItems[0], fromMealPlanner: true)
+//        FirstScreen().environmentObject(ContentViewModel())
     }
 }
 

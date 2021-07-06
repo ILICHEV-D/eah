@@ -11,10 +11,14 @@ struct FirstScreen: View {
             
             VStack {
                 
+                
                 ZStack {
-                    
                     Spacer()
-                    Text("Popular").fontWeight(.semibold)
+                   // Text("Популярное").font(Font.custom("Manrope-Regular", size: 20)).fontWeight(.semibold)
+                    Text("Популярное")
+                        .fontWeight(.semibold)
+          
+
                     Spacer()
                     
                     NavigationLink(
@@ -35,25 +39,30 @@ struct FirstScreen: View {
                 
                 ScrollView(.vertical, showsIndicators: false, content: {
                     VStack(spacing: 7.0){
-                        Text("Hello Danil")
+                        Text("Привет Данил")
+                          //  .font(Font.custom("Manrope-Regular", size: 20)).
                             .font(.system(size: 20))
-                            .fontWeight(.medium)
+                            .fontWeight(.semibold)
                             .foregroundColor(Color("mainColor"))
                         
-                        Text("Wanna make some delicious food?")
+                        Text("Хочешь приготовить что-нибудь?")
+                        //    .font(Font.custom("Manrope-Regular", size: 20)).fontWeight(.bold)
                             .font(.system(size: 20))
+                            .fontWeight(.semibold)
+                        
+                        
                     }.padding()
                     
                     HStack{
                         
-                        Text("Recomendation Recipe").font(.system(size: 18)).fontWeight(.semibold)
-                        
+                        Text("Рекомендации")
+                            .fontWeight(.semibold)
                         Spacer()
                         
                         
                         NavigationLink(destination: ListOfMeals(items: viewModel.recomendationItems)){
-                            Text("See all").font(.system(size: 12))
-                                .fontWeight(.medium)
+                            Text("Посмотреть все")
+                                //.font(Font.custom("Manrope-Regular", size: 16))
                                 .foregroundColor(Color("mainColor"))
                         }
                         
@@ -79,12 +88,16 @@ struct FirstScreen: View {
                     
                     
                     HStack{
-                        Text("Popular").font(.system(size: 18)).fontWeight(.semibold)
+                        Text("Популярное")
+                          //  .font(Font.custom("Manrope-Regular", size: 16))
+                            .font(.system(size: 16))
+                            .fontWeight(.semibold)
                         Spacer()
                         
                         NavigationLink(destination: ListOfMeals(items: viewModel.popular)){
-                            Text("See all").font(.system(size: 12))
-                                .fontWeight(.medium)
+                            Text("Посмотреть все")
+                                //.font(Font.custom("Manrope-Regular", size: 16))
+                                .font(.system(size: 16))
                                 .foregroundColor(Color("mainColor"))
                         }
                         
@@ -110,7 +123,11 @@ struct FirstScreen: View {
                     //                    if (viewModel.breakfast + viewModel.lunch + viewModel.dinner).count != 0 {
                     
                     HStack{
-                        Text("Your Meal Planner").font(.system(size: 18)).fontWeight(.semibold)
+                        Text("Ваш план питания")
+                            //.font(Font.custom("Manrope-Regular", size: 16))
+                            .fontWeight(.semibold)
+                            .font(.system(size: 16))
+
                         Spacer()
                     }.padding(.trailing).padding(.leading)
                     
@@ -122,9 +139,10 @@ struct FirstScreen: View {
                                 Button(action: {                                withAnimation(.spring()){
                                     viewModel.selectedDay = item
                                 }}, label: {
-                                    Text(item.name.prefix(3))
+                                    Text(item.russianName.prefix(3))
+                                    //    .font(Font.custom("Manrope-Regular", size: 16)).fontWeight(.bold)
                                         .font(.system(size: 16))
-                                        .fontWeight(.medium)
+                                        .fontWeight(.semibold)
                                         .foregroundColor(viewModel.selectedDay.id == item.id ? Color("mainColor") : .gray)
                                     
                                     
@@ -164,6 +182,7 @@ struct FirstScreen: View {
                                         }
                                     )
                                 }
+                                
                                 
                                 ForEach(viewModel.dinner){
                                     item in

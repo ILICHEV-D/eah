@@ -37,7 +37,7 @@ struct ListOfMeals: View {
                 }).cornerRadius(9.5)
                 
                 Spacer()
-                Text("Meals").fontWeight(.semibold)
+                Text("Рецепты").fontWeight(.semibold)
                 Spacer()
                 Button(action: {
                     searchStatus = true
@@ -62,7 +62,7 @@ struct ListOfMeals: View {
                         .font(.system(size: 23, weight: .bold))
                         .foregroundColor(.gray)
                     
-                    TextField("Search", text: $searchQuery, onCommit:  {
+                    TextField("Поиск", text: $searchQuery, onCommit:  {
                         UIApplication.shared.endEditing()
                     })
                 }

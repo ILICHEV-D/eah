@@ -31,7 +31,7 @@ struct ThirdScreen: View {
                 
                 HStack {
                     Spacer()
-                    Text("Choose ingridients").fontWeight(.semibold)
+                    Text("Выбрать ингредиенты").fontWeight(.semibold)
                     Spacer()
                     
                 }.padding().frame(width: UIScreen.screenWidth, height: 50, alignment: .center)
@@ -42,7 +42,7 @@ struct ThirdScreen: View {
                             .font(.system(size: 23, weight: .bold))
                             .foregroundColor(.gray)
                         
-                        TextField("Search", text: $searchQuery, onCommit:  {
+                        TextField("Поиск", text: $searchQuery, onCommit:  {
                             UIApplication.shared.endEditing()
                         })
                         
@@ -71,7 +71,7 @@ struct ThirdScreen: View {
                     
                     if viewModel.selectedIngredients.count != 0 {
                         HStack {
-                            Text("Selected Ingredients").font(.system(size: 18))
+                            Text("Выбранные ингредиенты").font(.system(size: 18))
                                 .fontWeight(.semibold)
                             Spacer()
                         }
@@ -121,7 +121,7 @@ struct ThirdScreen: View {
                     })
                     
                     HStack{
-                        Text("Suggested for you").font(.system(size: 18))
+                        Text("Предложения для вас").font(.system(size: 18))
                             .fontWeight(.semibold)
                         Spacer()
                     }.padding(.trailing).padding(.top).padding(.leading)
@@ -178,7 +178,7 @@ struct ThirdScreen: View {
                         
                         if viewModel.selectedForBuyIngredients.count != 0 {
                             HStack {
-                                Text("Selected Ingredients").font(.system(size: 18))
+                                Text("Выбранные ингредиенты").font(.system(size: 18))
                                     .fontWeight(.semibold)
                                 Spacer()
                             }
@@ -227,7 +227,7 @@ struct ThirdScreen: View {
                         })
                         
                         HStack{
-                            Text("Suggested for you").font(.system(size: 18))
+                            Text("Предложения для вас").font(.system(size: 18))
                                 .fontWeight(.semibold)
                             Spacer()
                         }.padding(.trailing).padding(.top).padding(.leading)
@@ -287,8 +287,8 @@ struct ThirdScreen: View {
                                                             
                     )){
                         HStack {
-                            Text("Search with \(viewModel.selectedIngredients.count) ingridients")
-                                .font(.system(size: 16))
+                            Text("Искать с \(viewModel.selectedIngredients.count) ингредиентами")
+                                .font(.system(size: 14))
                                 .fontWeight(.semibold)
                                 .foregroundColor(.white)
                             Spacer()
@@ -310,8 +310,8 @@ struct ThirdScreen: View {
               //          print("111111")
                     }, label: {
                         HStack {
-                            Text("Add \(viewModel.selectedForBuyIngredients.count) ingridients")
-                                .font(.system(size: 16))
+                            Text("Добавить \(viewModel.selectedForBuyIngredients.count) ингредиентов")
+                                .font(.system(size: 14))
                                 .fontWeight(.semibold)
                                 .foregroundColor(.white)
                             Spacer()

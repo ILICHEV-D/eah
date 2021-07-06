@@ -37,7 +37,7 @@ struct FourthScreen: View {
             
                 HStack {
                     Spacer()
-                    Text("Shopping list").fontWeight(.semibold)
+                    Text("Список покупок").fontWeight(.semibold)
                     Spacer()
                 }.padding().frame(width: UIScreen.screenWidth, height: 50, alignment: .center)
                 
@@ -47,7 +47,7 @@ struct FourthScreen: View {
                     
                     Image("basket").resizable().frame(width: 230, height: 230, alignment: .center)
 
-                    Text("Your shopping - list will be here")
+                    Text("Вам список покупок будет здесь")
                         .multilineTextAlignment(.center)
                         .fixedSize(horizontal: false, vertical: true)
                         .font(.system(size: 18))
@@ -60,7 +60,7 @@ struct FourthScreen: View {
                 else {
                         ZStack{
                             Spacer()
-                            Text("Shopping list").fontWeight(.semibold)
+                            Text("Список покупок").fontWeight(.semibold)
                             Spacer()
                         }.ignoresSafeArea().padding().frame(width: UIScreen.screenWidth, height: 50, alignment: .center)
 
@@ -130,8 +130,8 @@ struct FourthScreen: View {
                 self.show_modal = true
             }) {
                 HStack {
-                    Text("Add ingridients")
-                        .font(.system(size: 16))
+                    Text("Добавить ингредиенты")
+                        .font(.system(size: 14))
                         .fontWeight(.semibold)
                         .foregroundColor(.white)
                         .padding()
