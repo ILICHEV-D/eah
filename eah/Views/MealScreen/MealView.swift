@@ -5,6 +5,7 @@ struct MealView: View {
     let fromMealPlanner: Bool
     
     @State private var selection = 0
+    @State private var countServings = 1
     
     
     @GestureState private var dragOffset = CGSize.zero
@@ -153,11 +154,47 @@ struct MealView: View {
                         .font(.system(size: 18))
                         .fontWeight(.bold)
                     
-                    Text("\(item.ingridients?.count ?? 0) порций")
+                    Text("\(item.ingridients?.count ?? 0) предметов")
                         .font(.system(size: 12))
                         .foregroundColor(.gray)
                 }
+                    
                     Spacer()
+                    
+                    HStack {
+                        Text(String(countServings))
+                            .foregroundColor(.white)
+                            .fontWeight(.bold)
+                        Text("порций")
+                            .foregroundColor(.white)
+                            .font(.system(size: 14))
+                        
+                        Button(action: {
+                            countServings += 1
+                        }, label: {
+                            Image(systemName: "plus")
+                                .font(.system(size: 14, weight: .medium))
+                                .frame(width: 24, height: 24, alignment: .center)
+                                .cornerRadius(9.5)
+                                .background(Color(UIColor.systemGray5).opacity(0.12))
+                                .foregroundColor(.white)
+                        }).cornerRadius(4)
+
+                        Button(action: {
+                            if countServings != 0 {
+                                countServings -= 1}
+                            
+                        }, label: {
+                            Image(systemName: "minus")
+                                .font(.system(size: 14, weight: .medium))
+                                .frame(width: 24, height: 24, alignment: .center).cornerRadius(9.5)
+                                .background(Color(UIColor.systemGray5).opacity(0.12))
+                                .foregroundColor(.white)
+                        }).cornerRadius(4)
+                    }
+                    .frame(width: 160, height: 42, alignment: .center)
+                    .background(Color("mainColor"))
+                    .cornerRadius(16)
                 }.padding()
                 
                 
@@ -173,7 +210,7 @@ struct MealView: View {
                 
                 HStack{
                     VStack(alignment: .leading, spacing: 2) {
-                    Text("Рецепт")
+                    Text("Этапы")
                         .font(.system(size: 18))
                         .fontWeight(.bold)
 

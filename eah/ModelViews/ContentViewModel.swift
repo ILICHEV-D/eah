@@ -40,8 +40,6 @@ class ContentViewModel: ObservableObject {
         self.suggestedIngredients = allIngredients
         self.suggestedForBuyIngredients = allIngredients
         
-        
-        
 //        $indexEndpoint
 //         .flatMap { (indexEndpoint) -> AnyPublisher<[Meal], Never> in
 //              MealAPI.shared.fetchMeals(from:

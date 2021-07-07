@@ -47,7 +47,7 @@ struct FourthScreen: View {
                     
                     Image("basket").resizable().frame(width: 230, height: 230, alignment: .center)
 
-                    Text("Вам список покупок будет здесь")
+                    Text("Ваш список покупок будет здесь")
                         .multilineTextAlignment(.center)
                         .fixedSize(horizontal: false, vertical: true)
                         .font(.system(size: 18))
