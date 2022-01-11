@@ -25,12 +25,7 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UIAppFonts</key>
-	<array>
-		<string>FiraSansCondensed-Bold.ttf</string>
-		<string>FiraSansCondensed-Regular.ttf</string>
-		<string>Manrope-Bold.ttf</string>
-		<string>Manrope-Regular.ttf</string>
-	</array>
+	<array/>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
@@ -55,5 +50,7 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>UIUserInterfaceStyle</key>
+	<string>Light</string>
 </dict>
 </plist>

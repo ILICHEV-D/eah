@@ -11,17 +11,13 @@ struct MealPlanner: View {
         ZStack(alignment: .topLeading ){
             
             ZStack(alignment: Alignment(horizontal: .center, vertical: .bottom), content: {
-                
-                Image(item.image)
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
+                ArticleImage(imageLoader: ImageLoaderCache.shared.loaderFor(
+                    article: item))
                     .frame(width: 220, height: 300, alignment: .center)
                     .cornerRadius(16)
                 
                 ZStack(alignment: .leading) {
-                    
                     BlurView(style: .regular).frame(width: 197, height: 55)
-                    
                     VStack (alignment: .leading, spacing: 6, content: {
                         Text(item.name)
                             .fontWeight(.semibold)
@@ -29,41 +25,31 @@ struct MealPlanner: View {
                             .foregroundColor(.white)
                             .padding(.leading, 18)
                         
-                        Text(item.time)
+                        Text(String(item.stringTime ?? ""))
                             .fontWeight(.semibold)
                             .font(.system(size: 11))
                             .foregroundColor(.gray)
                             .padding(.leading, 18)
-                        
                     })
-                    
                 }
-                
-                
                 .frame(width: 197, height: 55, alignment: .leading)
                 .cornerRadius(12)
-                
                 .padding(.bottom, 23)
                 .font(.system(size: 11, weight: .medium, design: .default))
                 .cornerRadius(12)
-                
             })
             
             if (time != nil) {
-            Text(time!)
-                .fontWeight(.medium)
-                .font(.system(size: 14))
-                .foregroundColor(.white)
-                .padding(.horizontal, 8)
-                .padding(.vertical, 5)
-                
-                .background(BlurView(style: .systemUltraThinMaterial).cornerRadius(7))
-                .padding(.leading, 14)
-                .padding(.top, 12)
+                Text(time!)
+                    .fontWeight(.medium)
+                    .font(.system(size: 14))
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 5)
+                    .background(BlurView(style: .systemUltraThinMaterial).cornerRadius(7))
+                    .padding(.leading, 14)
+                    .padding(.top, 12)
             }
-            
-            
-            
         }
     }
 }
@@ -76,7 +62,6 @@ struct MealPlanner_Previews: PreviewProvider {
 
 
 struct BlurView: UIViewRepresentable {
-    
     let style: UIBlurEffect.Style
     
     func makeUIView(context: UIViewRepresentableContext<BlurView>) -> UIView {
@@ -95,7 +80,5 @@ struct BlurView: UIViewRepresentable {
     
     func updateUIView(_ uiView: UIView,
                       context: UIViewRepresentableContext<BlurView>) {
-        
     }
-    
 }

@@ -1,62 +1,125 @@
 import SwiftUI
 
-
-
-//struct Meal1: Codable, Equatable {
-//    var id: Int
-//    var name: String
-//    var kind: String
-//    var time: Int
-//
-//}
-
-//struct MealJSON: Codable, Equatable {
-//    var status: Bool
-//    var response: [Meal1]
-//}
+// MARK: - Meal
 
 struct MealResponse: Codable {
-    let results: [Meal]
+    let status : Bool?
+    let response : [Meal]?
+    
+    enum CodingKeys: String, CodingKey {
+        case status = "status"
+        case response = "response"
+    }
+    
+    init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        status = try values.decodeIfPresent(Bool.self, forKey: .status)
+        response = try values.decodeIfPresent([Meal].self, forKey: .response)
+    }
 }
 
 struct Meal: Identifiable, Codable, Equatable {
-
-    static func ==(lhs: Meal, rhs: Meal) -> Bool {
-        return lhs.id == rhs.id
+    static func == (lhs: Meal, rhs: Meal) -> Bool {
+        return lhs.uid == rhs.uid
+    }
+    let uid, name: String
+    let time: Int?
+    var stringTime: String? { get {
+        if ((time ?? 0) / 3600 ) >= 1 {
+            if (time ?? 0) % 3600 == 0 {
+                return String("\(((time ?? 0) / 3600 )) ч")
+            }
+            else {
+                return String("\(((time ?? 0) / 3600 )) ч \(((time ?? 0) % 3600) / 60) мин")
+            }
+        } else {
+            return String("\((time ?? 0) / 60) мин")
+        }
+    }
+    }
+    let ePower: EPower?
+    var ingredients: [Ingredient]?
+    let likesCount: Int?
+    let cookingStages: [CookingStage]?
+    let previewImageURL: String?
+    
+    enum CodingKeys: String, CodingKey {
+        case uid = "Uid"
+        case name = "Name"
+        case time = "Time"
+        case ePower = "EPower"
+        case ingredients = "Ingredients"
+        case likesCount = "LikesCount"
+        case cookingStages = "CookingStages"
+        case previewImageURL = "PreviewImageUrl"
     }
     
-    var id = UUID().uuidString
-    var name: String
-    var time: String
+    var id: String? = UUID().uuidString
     var type: String?
-    var timeFoodIntake: String?
     var star: Double?
-    var image: String = "backColor"
-    var calories: Int?
-    var protein: Int?
-    var fat: Int?
-    var carbs: Int?
     var description: String?
-    var ingridients: [String]?
-    
-    var dayOfWeek: [DayOfWeek] = []
-    
+    var dayOfWeek: DayOfWeek?
     var recommendation: Bool?
     var popular: Bool?
     var favorites: Bool?
-    
-    var mealPlanner: Bool?
 }
+
+struct CookingStage: Codable, Hashable {
+    let text: String?
+    let imageLink: String?
+    
+    enum CodingKeys: String, CodingKey {
+        case text = "Text"
+        case imageLink = "ImageLink"
+    }
+}
+
+struct EPower: Codable {
+    let uid: String?
+    let calories, fats, proteins, carbonhydrates: Double?
+    
+    enum CodingKeys: String, CodingKey {
+        case uid = "Uid"
+        case calories = "Calories"
+        case fats = "Fats"
+        case proteins = "Proteins"
+        case carbonhydrates = "Carbonhydrates"
+    }
+}
+
+// MARK: - Ingredient
+
+struct IngredientResponse: Codable {
+    let status: Bool?
+    let response: [Ingredient]?
+}
+
+struct Ingredient: Codable, Hashable, Identifiable {
+    static func > (lhs: Ingredient, rhs: Ingredient) -> Bool {
+        return lhs.name > rhs.name
+    }
+    var id: String? = UUID().uuidString
+    let uid: String?
+    let name: String
+    var amount: Double?
+    let unit: String?
+    var imageSmile: String = "🥒"
+    var color: Color?
+    
+    enum CodingKeys: String, CodingKey {
+        case uid = "Uid"
+        case name = "Name"
+        case amount = "Amount"
+        case unit = "Unit"
+    }
+}
+
+// MARK: - Week
 
 struct DayOfWeek: Codable {
     let date: Date
     let time: String
 }
-
-//struct DayOfWeek: Codable {
-//    var week: Week
-//    var foodIntake: String
-//}
 
 struct Week: Identifiable, Codable {
     var id = UUID().uuidString
@@ -64,65 +127,58 @@ struct Week: Identifiable, Codable {
     var russianName: String
 }
 
-
 enum FoodIntake {
-    static let breakfast = "Breakfast"
-    static let lunch = "Lunch"
-    static let dinner = "Dinner"
+    static let breakfast = "Завтрак"
+    static let lunch = "Обед"
+    static let dinner = "Ужин"
 }
 
+// MARK: - AuthModel
 
-enum helpEnumIngredients: String {
-    case chickenThigh = "chickenThigh"
-    case cucumber = "cucumber"
-    case tomato = "tomato"
-    case chili = "chili"
-    case egg = "egg"
-    case avocado = "avocado"
-    case orange = "orange"
-    case cheese = "cheese"
-    case bread = "bread"
-    case watermelon = "watermelon"
-    case corn = "corn"
-    case potatoes = "potatoes"
+struct AuthModel: Codable {
+    let status: Bool
+    let response: AuthResponse
 }
 
-struct Ingridient {
-    var name: String
-    var imageSmile: String
-    var color: Color?
-}
-
-func convertIngridient(item: helpEnumIngredients) -> Ingridient {
-    switch item {
-    case .chickenThigh:
-        return(Ingridient(name: "Куриное бедро", imageSmile: "🍗", color: Color("breadColor")))
-    case .cucumber:
-        return(Ingridient(name: "Огурец", imageSmile: "🥒", color: Color("cucumberColor")))
-    case .tomato:
-        return(Ingridient(name: "Помидор", imageSmile: "🍅", color: Color("tomatoColor")))
-    case .chili:
-        return(Ingridient(name: "Перец Чили", imageSmile: "🌶", color: Color("chiliColor")))
-    case .egg:
-        return(Ingridient(name: "Яйцо", imageSmile: "🥚", color: Color("eggColor")))
-    case .potatoes:
-        return(Ingridient(name: "Картофель", imageSmile: "🍠", color: Color("potatoesColor")))
-    case .avocado:
-        return(Ingridient(name: "Авокадо", imageSmile: "🥑", color: Color("avocadoColor")))
-    case .orange:
-        return(Ingridient(name: "Апельсин", imageSmile: "🍊", color: Color("orangeColor")))
-    case .cheese:
-        return(Ingridient(name: "Сыр", imageSmile: "🧀", color: Color("cheeseColor")))
-    case .bread:
-        return(Ingridient(name: "Хлеб", imageSmile: "🍞", color: Color("breadColor")))
-    case .watermelon:
-        return(Ingridient(name: "Арбуз", imageSmile: "🍉", color: Color("watermelonColor")))
-    case .corn:
-        return(Ingridient(name: "Кукуруза", imageSmile: "🌽", color: Color("cornColor")))
+struct AuthResponse: Codable {
+    let email: String
+    let firstName: String?
+    let age: Int?
+    let sex: Bool?
+    let token: String
+    
+    enum CodingKeys: String, CodingKey {
+        case email = "Email"
+        case firstName = "FirstName"
+        case age = "Age"
+        case sex = "Sex"
+        case token = "Token"
     }
-    
-    
+}
+
+struct AuthSimpleResponse: Codable {
+    let status: Bool
+    let response: String?
+
+}
+
+struct LikesModel: Codable {
+    let status: Bool?
+    let response: [Response]
 }
 
 
+// MARK: - Response
+struct Response: Codable {
+    let uid, userUid, user, recipeUid: String?
+    let recipe, createDate: String?
 
+    enum CodingKeys: String, CodingKey {
+        case uid = "Uid"
+        case userUid = "UserUid"
+        case user = "User"
+        case recipeUid = "RecipeUid"
+        case recipe = "Recipe"
+        case createDate = "CreateDate"
+    }
+}

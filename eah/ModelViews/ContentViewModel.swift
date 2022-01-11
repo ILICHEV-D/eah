@@ -3,36 +3,102 @@ import SwiftUI
 import Combine
 
 class ContentViewModel: ObservableObject {
-        
+    
+    @Published var userName = "" {
+        didSet {print("printUserName --> \(userName)")}
+    }
+    
+    @Published var searchName: String = ""
+    @Published var searchIngredients: String = ""
+    
+    @Published var searchStringMealsWithIngr: String = "" {
+        didSet {print("searchStringMealsWithIngr --> \(searchStringMealsWithIngr.count)")}
+    }
+    
     @Published var allItems: [Meal] = [] {
-    didSet {
-        print("posts --> \(self.allItems.count)")
+        didSet {print("allItems --> \(self.allItems.count)")}
     }
+    
+    @Published var mealPlannerItems: [Meal] = [] {
+        didSet {print("mealPlannerItems --> \(self.mealPlannerItems.count)")
+            var days: [Date] = []
+            var time: [String] = []
+            mealPlannerItems.forEach({
+                if let dayOfWeek = $0.dayOfWeek {
+                    days.append(dayOfWeek.date)
+                    time.append(dayOfWeek.time)
+                }})
+            
+            UserDefaults.standard.setValue(days, forKey:"days")
+            UserDefaults.standard.setValue(time, forKey:"time")
+            UserDefaults.standard.set(try? PropertyListEncoder().encode(mealPlannerItems), forKey:"mealPlanner")
+            print("saved")
+        }
     }
-//    @Published var indexEndpoint: Int = 0
+    
+    @Published var recomendationItems: [Meal] = [] {
+        didSet {print("recomendationItems --> \(self.recomendationItems.count)")}
+    }
+    
+    @Published var popular: [Meal] = [] {
+        didSet {print("popular --> \(self.popular.count)")}
+    }
+    
+    @Published var searchItems: [Meal] = [] {
+        didSet {print("searchItems --> \(self.searchItems.count)")}
+    }
+    
+    @Published var searchIngredientsItems: [Ingredient] = [] {
+        didSet {print("searchIngredientsItems --> \(self.searchIngredientsItems.count)")}
+    }
+    
+    @Published var allIngredients: [Ingredient] = [] {
+        didSet {print("allIngredients --> \(self.allIngredients.count)")}
+    }
+    
+    @Published var mealWithIngredients: [Meal] = [] {
+        didSet {print("mealWithIngredients --> \(self.mealWithIngredients.count)")}
+    }
+    
+    @Published var endpoint0: Endpoint = Endpoint(index: 0, limit: 1)!
+    @Published var endpoint1: Endpoint = Endpoint(index: 1, limit: 1)!
+    @Published var endpoint2: Endpoint = Endpoint(index: 2, limit: 1)!
+    @Published var endpoint3: Endpoint = Endpoint(index: 5, limit: 1)!
+    @Published var endpoint6: Endpoint = Endpoint(index: 6, limit: 1)!
+    
+    private var cancellableSet0: Set<AnyCancellable> = []
+    private var cancellableSet1: Set<AnyCancellable> = []
+    private var cancellableSet2: Set<AnyCancellable> = []
+    private var cancellableSet3: Set<AnyCancellable> = []
+    private var cancellableSet4: Set<AnyCancellable> = []
+    private var cancellableSet5: Set<AnyCancellable> = []
+    private var cancellableSet6: Set<AnyCancellable> = []
+    
+    var breakfast: [Meal] {return self.mealPlannerFunc(day: selectedDay).0}
+    var lunch: [Meal] {return self.mealPlannerFunc(day: selectedDay).1}
+    var dinner: [Meal] {return self.mealPlannerFunc(day: selectedDay).2}
+    
+    @Published var favoriteMeals: [Meal] = []
+    
+    @Published var suggestedIngredients: [Ingredient] = []
+    @Published var selectedIngredients: [Ingredient] = []
+    
+    @Published var suggestedForBuyIngredients: [Ingredient] = []
+    @Published var selectedForBuyIngredients: [Ingredient] = []
+    
+    @Published var shoppingList: [Ingredient: Int] = [:]
+    
+    @Published var week: [Week]
+    @Published var selectedDay: Week = Week(name: "Monday", russianName: "Понедельник")
+    
     
     init() {
-        
-        self.allItems = Bundle.main.decode([Meal].self, from: "menu.json") //!!!
-
-        if let data = UserDefaults.standard.value(forKey:"allItems") as? Data {
-            self.allItems = try! PropertyListDecoder().decode(Array<Meal>.self, from: data)
-            print("from storage")
-        } else {
-            self.allItems = Bundle.main.decode([Meal].self, from: "menu.json") //!!!
-
-            print("from json")
-        }
-    
-
-
+        // MARK: - WeekInit
         
         self.week = [
             Week(name: "Monday", russianName: "Пн"), Week(name: "Tuesday", russianName: "Вт"), Week(name: "Wednesday", russianName: "Ср"), Week(name: "Thursday", russianName: "Чт"), Week(name: "Friday", russianName: "Пт"), Week(name: "Saturday", russianName: "Сб"), Week(name: "Sunday", russianName: "Вс")
         ]
         
-        self.allIngredients = ["cucumber", "chickenThigh", "tomato", "chili", "egg", "avocado", "orange", "cheese", "bread", "watermelon", "corn", "potatoes"]
-
         self.selectedDay = self.week[self.week.firstIndex(where: {
             $0.name == DateFormatter().weekdaySymbols[Calendar.current.component(.weekday, from: Date())-1]
         }) ?? 0]
@@ -40,93 +106,162 @@ class ContentViewModel: ObservableObject {
         self.suggestedIngredients = allIngredients
         self.suggestedForBuyIngredients = allIngredients
         
-//        $indexEndpoint
-//         .flatMap { (indexEndpoint) -> AnyPublisher<[Meal], Never> in
-//              MealAPI.shared.fetchMeals(from:
-//                                  Endpoint( index: indexEndpoint)!)
-//         }
-//       .assign(to: \.allItems, on: self)
-//       .store(in: &self.cancellableSet)
+        // MARK: - NetworkInit
+        
+        $endpoint0
+            .flatMap { (endpoint0) -> AnyPublisher<[Meal], Never> in
+                MealAPI.shared.fetchMeals(from: endpoint0)}
+            .assign(to: \.allItems, on: self)
+            .store(in: &self.cancellableSet0)
+        
+        $endpoint1
+            .flatMap { (endpoint1) -> AnyPublisher<[Meal], Never> in
+                return MealAPI.shared.fetchMeals(from: endpoint1)}
+            .sink(receiveValue: { meals in
+                self.recomendationItems.append(contentsOf: meals)})
+            .store(in: &self.cancellableSet1)
+        
+        $endpoint2
+            .flatMap { (endpoint2) -> AnyPublisher<[Meal], Never> in
+                MealAPI.shared.fetchMeals(from: endpoint2)}
+            .assign(to: \.popular, on: self)
+            .store(in: &self.cancellableSet2)
+        
+        $endpoint3
+            .flatMap { (endpoint3) -> AnyPublisher<[Ingredient], Never> in
+                MealAPI.shared.fetchIngredients(from: endpoint3)}
+            .assign(to: \.allIngredients, on: self)
+            .store(in: &self.cancellableSet5)
+        
+        $endpoint6
+            .flatMap { (endpoint6) -> AnyPublisher<[Meal], Never> in
+                MealAPI.shared.fetchMeals(from: .mealWithIngredients(limit: 1, searchString: self.searchStringMealsWithIngr))}
+            .assign(to: \.mealWithIngredients, on: self)
+            .store(in: &self.cancellableSet6)
+        
+        $searchName
+            .debounce(for: 0.1, scheduler: RunLoop.main)
+            .removeDuplicates()
+            .flatMap { (searchName) -> AnyPublisher<[Meal], Never> in
+                Future<[Meal], Never> { (promise) in
+                    if 2...30 ~= searchName.count {
+                        MealAPI.shared.fetchMeals(from:.search(limit: 1, searchString: searchName))
+                            .sink(receiveValue: {value in promise(.success(value))})
+                            .store(in: &self.cancellableSet3)
+                    }
+                    else {promise(.success([Meal]()))
+                        
+                    }
+                }.eraseToAnyPublisher()
+            }.assign(to: \.searchItems, on: self)
+            .store(in: &self.cancellableSet3)
+        
+        $searchIngredients
+            .debounce(for: 0.1, scheduler: RunLoop.main)
+            .removeDuplicates()
+            .flatMap { (searchIngredients) -> AnyPublisher<[Ingredient], Never> in
+                Future<[Ingredient], Never> { (promise) in
+                    if 2...30 ~= searchIngredients.count {
+                        MealAPI.shared.fetchIngredients(from:.searchIngredients(limit: 1, searchString: searchIngredients))
+                            .sink(receiveValue: {value in promise(.success(value))})
+                            .store(in: &self.cancellableSet4)
+                    }
+                    else {promise(.success([Ingredient]()))
+                        
+                    }
+                }.eraseToAnyPublisher()
+            }.assign(to: \.searchIngredientsItems, on: self)
+            .store(in: &self.cancellableSet4)
+        
+        if AuthApi.token != nil {
+        AuthApi.getLikes(completion: { result in
+            switch result {
+            case .success(let response):
+                if response.status == false {
+                    print(response)
+                } else {
+                    for i in response.response {
+                        AuthApi.getMealFromUid(uid: i.recipeUid!) { result in
+                            switch result {
+                            case .success(let meal):                                
+                                if !self.favoriteMeals.contains(meal) {
+                                DispatchQueue.main.async {
+                                    self.favoriteMeals.append(meal)
+                                      }
+                                }
+                            case .failure(let error):
+                                print(error.localizedDescription)
+                            }
+                        }
+                    }
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        })
+        }
+        
+        loadName()
+        
+        
+        var days: [Date] = []
+        var time: [String] = []
+
+        if let day = UserDefaults.standard.value(forKey:"days") as? [Date] {
+            days = day
+        }
+        
+        if let t = UserDefaults.standard.value(forKey:"time") as? [String] {
+            time = t
+        }
+        
+        if let meals = UserDefaults.standard.value(forKey:"mealPlanner") as? Data {
+            mealPlannerItems = try! PropertyListDecoder().decode(Array<Meal>.self, from: meals)
+            for i in 0..<mealPlannerItems.count {
+                mealPlannerItems[i].dayOfWeek = DayOfWeek(date: days[i], time: time[i])
+            }
+        }
+        
+
         
     }
     
-
-    private var cancellableSet: Set<AnyCancellable> = []
-
-    
-    
-    var recomendationItems: [Meal] {return allItems.filter {$0.recommendation == true}}
-    var popular: [Meal] {return allItems.filter {$0.popular == true}}
-    var mealPlanner: [Meal] {return allItems.filter {$0.mealPlanner == true}}
-    
-    
-    func mealPlannerFunc(day: Week) -> ([Meal], [Meal], [Meal]) {
+    private func mealPlannerFunc(day: Week) -> ([Meal], [Meal], [Meal]) {
         var breakfast: [Meal] = []
         var lunch: [Meal] = []
         var dinner: [Meal] = []
-
-        for item in self.allItems {
-                for i in item.dayOfWeek {
-                    if getTodayWeekDay(date: i.date) == day.name {
-                        if i.time == "breakfast" {
-                            breakfast.append(item)
-                        }
-                        else if i.time == "lunch" {
-                            lunch.append(item)
-                        }
-                        else if i.time == "dinner" {
-                            dinner.append(item)
-                        }
+        
+        for item in self.mealPlannerItems {
+            if let i = item.dayOfWeek {
+                if getTodayWeekDay(date: i.date) == day.name {
+                    if i.time == "breakfast" {
+                        breakfast.append(item)
                     }
-                    
-                
+                    else if i.time == "lunch" {
+                        lunch.append(item)
+                    }
+                    else if i.time == "dinner" {
+                        dinner.append(item)
+                    }
+                }
             }
         }
         return (breakfast, lunch, dinner)
     }
     
-    func jsonDateToSwiftDate(jsonDate: String) -> Date? {
+    private func getTodayWeekDay(date: Date)-> String{
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
-
-        if let date = dateFormatter.date(from: jsonDate) {
-            return date
+        dateFormatter.dateFormat = "EEEE"
+        let weekDay = dateFormatter.string(from: date)
+        return weekDay
+    }
+    
+    private func loadName() {
+        if let nameFromUD = UserDefaults.standard.value(forKey:"name") as? String {
+            self.userName = nameFromUD
         }
-        else {return nil}
-        
+        else {
+            print("name не авторизован")
+        }
     }
-    
-    func getTodayWeekDay(date: Date)-> String{
-           let dateFormatter = DateFormatter()
-           dateFormatter.dateFormat = "EEEE"
-           let weekDay = dateFormatter.string(from: date)
-           return weekDay
-     }
-    
-    
-    
-
-    var breakfast: [Meal] {return self.mealPlannerFunc(day: selectedDay).0}
-    var lunch: [Meal] {return self.mealPlannerFunc(day: selectedDay).1}
-    var dinner: [Meal] {return self.mealPlannerFunc(day: selectedDay).2}
-    
-    var favoriteMeals: [Meal] {return allItems.filter {$0.favorites == true}}
-    
-    @Published var allIngredients: [String] = []
-    @Published var suggestedIngredients: [String] = []
-    @Published var selectedIngredients: [String] = []
-    
-    @Published var suggestedForBuyIngredients: [String] = []
-    @Published var selectedForBuyIngredients: [String] = []
-    
-    @Published var shoppingList: [String: Int] = [:]
-
-    @Published var week: [Week]
-    @Published var selectedDay: Week = Week(name: "Monday", russianName: "Понедельник")
-    
-    
-    func saveData() {
-        UserDefaults.standard.set(try? PropertyListEncoder().encode(allItems), forKey:"allItems")
-    }
-    
 }

@@ -14,12 +14,6 @@ struct ThirdScreen: View {
     var forAddIngridient: Bool?
     @Environment(\.presentationMode) private var presentationMode
     
-    //    @Binding var itemsOfFourhScreen: [String: Int]?
-    
-    
-    //    init(searchTxt: Binding<String?>?) {
-    //        self._searchTxt = searchTxt ?? Binding.constant(nil)
-    //    }
     
     let columns = Array(repeating: GridItem(.flexible()), count: 3)
     
@@ -29,12 +23,15 @@ struct ThirdScreen: View {
             
             VStack{
                 
+                //MARK: - NavigationBar
+    
                 HStack {
                     Spacer()
-                    Text("Выбрать ингредиенты").fontWeight(.semibold)
+                    Text("Выбрать ингредиенты").fontWeight(.medium)
                     Spacer()
-                    
                 }.padding().frame(width: UIScreen.screenWidth, height: 50, alignment: .center)
+                
+                //MARK: - SearchBar
                 
                 HStack {
                     HStack{
@@ -42,12 +39,15 @@ struct ThirdScreen: View {
                             .font(.system(size: 23, weight: .bold))
                             .foregroundColor(.gray)
                         
-                        TextField("Поиск", text: $searchQuery, onCommit:  {
+                        TextField("Поиск", text: $searchQuery.onChange({ someText in
+                            viewModel.searchIngredients = someText
+                        }), onCommit:  {
                             UIApplication.shared.endEditing()
                         })
                         
                         Button(action: {
                             searchQuery = ""
+                            viewModel.searchIngredients = ""
                             UIApplication.shared.endEditing()
                         }, label: {
                             Image(systemName: "xmark")
@@ -63,282 +63,287 @@ struct ThirdScreen: View {
                 }
                 .padding().frame(width: UIScreen.screenWidth, height: 50, alignment: .center)
                 
+                //MARK: - MainCode
+                
                 ZStack(alignment: .bottom, content: {
-                
-                if forAddIngridient == nil { //!!!
-
-                ScrollView(.vertical, showsIndicators: false, content: {
                     
-                    if viewModel.selectedIngredients.count != 0 {
-                        HStack {
-                            Text("Выбранные ингредиенты").font(.system(size: 18))
-                                .fontWeight(.semibold)
-                            Spacer()
-                        }
-                        .padding(.trailing).padding(.top).padding(.leading)
-                    }
+                    //MARK: - NotforAddIngrediants
                     
-                    LazyVGrid(columns: columns, content: {
-                        
-                        ForEach(viewModel.selectedIngredients.sorted {$0 < $1} , id:\.self){
-                            ingr in
-                            let item = convertIngridient(item: helpEnumIngredients.init(rawValue: ingr)!)
-                            
-                            Button(action: {
-                                withAnimation(.spring()) {
-                                    viewModel.suggestedIngredients.append(ingr)
-                                }
-                                if let index = viewModel.selectedIngredients.firstIndex(of: ingr) {
-                                    viewModel.selectedIngredients.remove(at: index)
-                                }
-                                //              }
-                                
-                            }, label: {
-                                
-                                
-                                VStack(spacing: 5){
-                                    Image("close").padding(.trailing, 85).padding(.top, -15)
-                                    
-                                    Text(item.imageSmile)
-                                        .font(.system(size: 26))
-                                        .frame(width: 68, height: 68, alignment: .center)
-                                        .background(item.color)
-                                        .cornerRadius(16)
-                                        .padding(.top, -3)
-                                    
-                                    Text(item.name).font(.system(size: 12))
-                                        .fontWeight(.semibold).padding(.top, 6)
-                                        .foregroundColor(.black)
-                                }
-                                .frame(width: 100, height: 115, alignment: .center)
-                                .background(
-                                    Color.white
-                                        .cornerRadius(16)
-                                        .shadow(color: Color.black.opacity(0.1), radius: 5, x: 3, y: 3)
-                                )
-                            })
-                        }.padding()
-                    })
-                    
-                    HStack{
-                        Text("Предложения для вас").font(.system(size: 18))
-                            .fontWeight(.semibold)
-                        Spacer()
-                    }.padding(.trailing).padding(.top).padding(.leading)
-                    
-                    LazyVGrid(columns: columns, content: {
-                        
-                        ForEach(searchQuery == "" ? viewModel.suggestedIngredients :
-                                    viewModel.suggestedIngredients.filter{$0.lowercased().contains(searchQuery.lowercased())} , id:\.self){
-                            ingr in
-                            let item = convertIngridient(item: helpEnumIngredients.init(rawValue: ingr)!)
-                            Button(action: {
-                                withAnimation(.spring()){
-                                    viewModel.selectedIngredients.append(ingr)
-                                }
-                                if let index = viewModel.suggestedIngredients.firstIndex(of: ingr) {
-                                    viewModel.suggestedIngredients.remove(at: index)
-                                }
-                                
-//                                if forAddIngridient == true {
-//                                    viewModel.shoppingList = viewModel.selectedIngredients.reduce(into: [String: Int]()) { $0[$1] = 0 }
-//                                }
-                                
-                            }, label: {
-                                VStack(spacing: 5){
-                                    Text(item.imageSmile)
-                                        .font(.system(size: 26))
-                                        .frame(width: 68, height: 68, alignment: .center)
-                                        .background(item.color)
-                                        .cornerRadius(16)
-                                    
-                                    Text(item.name).font(.system(size: 12))
+                    if forAddIngridient == nil {
+                        ScrollView(.vertical, showsIndicators: false, content: {
+                            if viewModel.selectedIngredients.count != 0 {
+                                HStack {
+                                    Text("Выбрать ингредиенты").font(.system(size: 18))
                                         .fontWeight(.semibold)
-                                        .foregroundColor(.black)
+                                    Spacer()
                                 }
+                                .padding(.trailing).padding(.top).padding(.leading)
+                            }
+                            
+                            LazyVGrid(columns: columns, content: {
+                                ForEach(viewModel.selectedIngredients , id:\.self){
+                                    ingr in
+                                    let item = convertIngridient(item:  helpEnumIngredients.init(rawValue: ingr.name), ingr: ingr)
+                                    Button(action: {
+                                        withAnimation(.spring()) {
+                                            if !viewModel.suggestedIngredients.contains(where: { ingredients in
+                                                return ingredients.name == ingr.name
+                                            }) {
+                                                viewModel.suggestedIngredients.append(ingr)
+                                            }
+                                        }
+                                        if let index = viewModel.selectedIngredients.firstIndex(of: ingr) {
+                                            viewModel.selectedIngredients.remove(at: index)
+                                        }
+                                        viewModel.searchStringMealsWithIngr = viewModel.selectedIngredients.map{$0.name}.map{String($0)}.joined(separator: ",") //!!!
+                                        
+                                    }, label: {
+                                        
+                                        VStack(spacing: 5){
+                                            Image("close").padding(.trailing, 85).padding(.top, -15)
+                                            
+                                            Text(item.imageSmile)
+                                                .font(.system(size: 26))
+                                                .frame(width: 68, height: 68, alignment: .center)
+                                                .background(item.color)
+                                                .cornerRadius(16)
+                                                .padding(.top, -3)
+                                            
+                                            Text(item.name).font(.system(size: 12))
+                                                .fontWeight(.medium).padding(.top, 6)
+                                                .foregroundColor(.black)
+                                        }
+                                        .frame(width: 100, height: 115, alignment: .center)
+                                        .background(
+                                            Color.white
+                                                .cornerRadius(16)
+                                                .shadow(color: Color.black.opacity(0.1), radius: 5, x: 3, y: 3)
+                                        )
+                                    })
+                                }.padding()
                             })
-                            .frame(width: 100, height: 115, alignment: .center)
-                            .background(Color.white)
-                            .cornerRadius(16)
-                            .shadow(color: Color.black.opacity(0.1), radius: 5, x: 3, y: 3)
-                        }.padding()
-                    })
-                    
-                    Spacer().frame(height: 70)
-                    
-                    
-                }).padding(.leading).padding(.trailing)
-                .onAppear {UIScrollView.appearance().keyboardDismissMode = .interactive}
-                    
-                }
-                
-                else {
-                    
-                    ScrollView(.vertical, showsIndicators: false, content: {
-                        
-                        if viewModel.selectedForBuyIngredients.count != 0 {
-                            HStack {
-                                Text("Выбранные ингредиенты").font(.system(size: 18))
+                            
+                            HStack{
+                                Text("Предложения для вас").font(.system(size: 18))
                                     .fontWeight(.semibold)
                                 Spacer()
-                            }
-                            .padding(.trailing).padding(.top).padding(.leading)
-                        }
-                        
-                        LazyVGrid(columns: columns, content: {
+                            }.padding(.trailing).padding(.top).padding(.leading)
                             
-                            ForEach(viewModel.selectedForBuyIngredients.sorted {$0 < $1} , id:\.self){
-                                ingr in
-                                let item = convertIngridient(item: helpEnumIngredients.init(rawValue: ingr)!)
+                            LazyVGrid(columns: columns, content: {
                                 
-                                Button(action: {
-                                    withAnimation(.spring()) {
-                                        viewModel.suggestedForBuyIngredients.append(ingr)
-                                    }
-                                    if let index = viewModel.selectedForBuyIngredients.firstIndex(of: ingr) {
-                                        viewModel.selectedForBuyIngredients.remove(at: index)
-                                    }
-                                    
-                                }, label: {
-                                    
-                                    
-                                    VStack(spacing: 5){
-                                        Image("close").padding(.trailing, 85).padding(.top, -15)
+                                ForEach(searchQuery == "" ? viewModel.allIngredients :
+                                            viewModel.searchIngredientsItems
+                                ){
+                                    ingr in
+                                    let item = convertIngridient(item:  helpEnumIngredients.init(rawValue: ingr.name), ingr: ingr)
+                                    Button(action: {
+                                        withAnimation(.spring()){
+                                            if !viewModel.selectedIngredients.contains(where: { ingredients in
+                                                return ingredients.name == ingr.name
+                                            }) {
+                                                viewModel.selectedIngredients.append(ingr)
+                                            }
+                                        }
+                                        if let index = viewModel.suggestedIngredients.firstIndex(of: ingr) {
+                                            viewModel.suggestedIngredients.remove(at: index)
+                                        }
                                         
-                                        Text(item.imageSmile)
-                                            .font(.system(size: 26))
-                                            .frame(width: 68, height: 68, alignment: .center)
-                                            .background(item.color)
-                                            .cornerRadius(16)
-                                            .padding(.top, -3)
                                         
-                                        Text(item.name).font(.system(size: 12))
-                                            .fontWeight(.semibold).padding(.top, 6)
-                                            .foregroundColor(.black)
-                                    }
-                                    .frame(width: 100, height: 115, alignment: .center)
-                                    .background(
-                                        Color.white
-                                            .cornerRadius(16)
-                                            .shadow(color: Color.black.opacity(0.1), radius: 5, x: 3, y: 3)
-                                    )
-                                })
-                            }.padding()
-                        })
-                        
-                        HStack{
-                            Text("Предложения для вас").font(.system(size: 18))
-                                .fontWeight(.semibold)
-                            Spacer()
-                        }.padding(.trailing).padding(.top).padding(.leading)
-                        
-                        LazyVGrid(columns: columns, content: {
+                                        viewModel.searchStringMealsWithIngr = viewModel.selectedIngredients.map{$0.name}.map{String($0)}.joined(separator: ",") //!!!
+                                        viewModel.endpoint6 = Endpoint(index: 6, limit: 1)!
+                                        viewModel.endpoint6 = Endpoint(index: 6, limit: 1)!
+                                        
+                                    }, label: {
+                                        VStack(spacing: 5){
+                                            Text(item.imageSmile)
+                                                .font(.system(size: 26))
+                                                .frame(width: 68, height: 68, alignment: .center)
+                                                .background(item.color)
+                                                .cornerRadius(16)
+                                            
+                                            Text(item.name).font(.system(size: 12))
+                                                .fontWeight(.medium)
+                                                .foregroundColor(.black)
+                                        }
+                                    })
+                                        .frame(width: 100, height: 115, alignment: .center)
+                                        .background(Color.white)
+                                        .cornerRadius(16)
+                                        .shadow(color: Color.black.opacity(0.1), radius: 5, x: 3, y: 3)
+                                }.padding()
+                            })
                             
-                            ForEach(searchQuery == "" ? viewModel.suggestedForBuyIngredients :
-                                        viewModel.suggestedForBuyIngredients.filter{$0.lowercased().contains(searchQuery.lowercased())} , id:\.self){
-                                ingr in
-                                let item = convertIngridient(item: helpEnumIngredients.init(rawValue: ingr)!)
-                                Button(action: {
-                                    withAnimation(.spring()){
-                                        viewModel.selectedForBuyIngredients.append(ingr)
-                                    }
-                                    if let index = viewModel.suggestedForBuyIngredients.firstIndex(of: ingr) {
-                                        viewModel.suggestedForBuyIngredients.remove(at: index)
-                                    }
-                                    
-    //                                if forAddIngridient == true {
-    //                                    viewModel.shoppingList = viewModel.selectedIngredients.reduce(into: [String: Int]()) { $0[$1] = 0 }
-    //                                }
-                                    
-                                }, label: {
-                                    VStack(spacing: 5){
-                                        Text(item.imageSmile)
-                                            .font(.system(size: 26))
-                                            .frame(width: 68, height: 68, alignment: .center)
-                                            .background(item.color)
-                                            .cornerRadius(16)
-                                        
-                                        Text(item.name).font(.system(size: 12))
-                                            .fontWeight(.semibold)
-                                            .foregroundColor(.black)
-                                    }
-                                })
-                                .frame(width: 100, height: 115, alignment: .center)
-                                .background(Color.white)
-                                .cornerRadius(16)
-                                .shadow(color: Color.black.opacity(0.1), radius: 5, x: 3, y: 3)
-                            }.padding()
-                        })
+                            Spacer().frame(height: 70)
+                            
+                            
+                        }).padding(.leading).padding(.trailing)
+                            .onAppear {UIScrollView.appearance().keyboardDismissMode = .interactive}
                         
-                        Spacer().frame(height: 70)
                         
-                    }).padding(.leading).padding(.trailing)
-                    .onAppear {UIScrollView.appearance().keyboardDismissMode = .interactive}
-                    
-                }
-                
-                if forAddIngridient == nil {
-                    
-                    NavigationLink(destination: ListOfMeals(items: viewModel.allItems.filter {
-                                                                if let ingr = $0.ingridients {
-                                                                    return Set(viewModel.selectedIngredients).isSubset(of: Set(ingr))
-                                                                }
-                                                                return false}
-                                                            
-                    )){
-                        HStack {
-                            Text("Искать с \(viewModel.selectedIngredients.count) ингредиентами")
-                                .font(.system(size: 14))
-                                .fontWeight(.semibold)
-                                .foregroundColor(.white)
-                            Spacer()
-                            Image("arrow")
-                        }.padding()
-                        .frame(width: UIScreen.screenWidth - 100, height: 55, alignment: .center)
-                        .background(Color(getColor()))
-                        .cornerRadius(16)
-                        .shadow(color: Color(getColor()).opacity(0.2), radius: 5, x: 3, y: 3)
-                    }.padding()
-                }
-                
-                else {
-                    
-                    Button(action: {
-                            self.presentationMode.wrappedValue.dismiss()
-                 //           viewModel.shoppingList = viewModel.selectedIngredients.reduce(into: [String: Int]()) { $0[$1] = 0 }
-
-              //          print("111111")
-                    }, label: {
-                        HStack {
-                            Text("Добавить \(viewModel.selectedForBuyIngredients.count) ингредиентов")
-                                .font(.system(size: 14))
-                                .fontWeight(.semibold)
-                                .foregroundColor(.white)
-                            Spacer()
-                            Image("plus")
-                        }.padding()
-                        .frame(width: UIScreen.screenWidth - 100, height: 55, alignment: .center)
-                        .background(Color(getColorForBuy()))
-                        .cornerRadius(16)
-                        .shadow(color: Color(getColorForBuy()).opacity(0.2), radius: 5, x: 3, y: 3)
-                    }).padding().onDisappear {
-                        viewModel.shoppingList = viewModel.selectedForBuyIngredients.reduce(into: [String: Int]()) { $0[$1] = 1 }
-
+                        NavigationLink(
+                            
+                            destination: ListOfMeals(searchStatus: true, items: viewModel.mealWithIngredients),
+                            
+                            label: {
+                                HStack {
+                                    Text("Добавить \(viewModel.selectedIngredients.count) ингред.")
+                                        .font(.system(size: 14))
+                                        .fontWeight(.semibold)
+                                        .foregroundColor(.white)
+                                    Spacer()
+                                    Image("plus")
+                                }.padding()
+                                    .frame(width: UIScreen.screenWidth - 100, height: 55, alignment: .center)
+                                    .background(Color(getColor()))
+                                    .cornerRadius(16)
+                                    .shadow(color: Color(getColor()).opacity(0.2), radius: 5, x: 3, y: 3)
+                            }).padding()
+                        
                     }
-                }
+                    
+                    //MARK: - ForAddIngrediants
+                    
+                    else {
+                        
+                        ScrollView(.vertical, showsIndicators: false, content: {
+                            
+                            if viewModel.selectedForBuyIngredients.count != 0 {
+                                HStack {
+                                    Text("Выбрать ингредиенты").font(.system(size: 18))
+                                        .fontWeight(.semibold)
+                                    Spacer()
+                                }
+                                .padding(.trailing).padding(.top).padding(.leading)
+                            }
+                            
+                            LazyVGrid(columns: columns, content: {
+                                
+                                ForEach(viewModel.selectedForBuyIngredients.sorted {$0 > $1} , id:\.self){
+                                    ingr in
+                                    let item = convertIngridient(item:  helpEnumIngredients.init(rawValue: ingr.name), ingr: ingr)
+                                    
+                                    Button(action: {
+                                        withAnimation(.spring()) {
+                                            
+                                            if !viewModel.suggestedForBuyIngredients.contains(where: { ingredients in
+                                                return ingredients.name == ingr.name
+                                            }) {
+                                                viewModel.suggestedForBuyIngredients.append(ingr)
+                                            }
+                                        }
+                                        if let index = viewModel.selectedForBuyIngredients.firstIndex(of: ingr) {
+                                            viewModel.selectedForBuyIngredients.remove(at: index)
+                                        }
+                                        
+                                        
+                                    }, label: {
+                                        
+                                        
+                                        VStack(spacing: 5){
+                                            Image("close").padding(.trailing, 85).padding(.top, -15)
+                                            
+                                            Text(item.imageSmile)
+                                                .font(.system(size: 26))
+                                                .frame(width: 68, height: 68, alignment: .center)
+                                                .background(item.color)
+                                                .cornerRadius(16)
+                                                .padding(.top, -3)
+                                            
+                                            Text(item.name).font(.system(size: 12))
+                                                .fontWeight(.medium).padding(.top, 6)
+                                                .foregroundColor(.black)
+                                        }
+                                        .frame(width: 100, height: 115, alignment: .center)
+                                        .background(
+                                            Color.white
+                                                .cornerRadius(16)
+                                                .shadow(color: Color.black.opacity(0.1), radius: 5, x: 3, y: 3)
+                                        )
+                                    })
+                                }.padding()
+                            })
+                            
+                            HStack{
+                                Text("Предложения для вас").font(.system(size: 18))
+                                    .fontWeight(.semibold)
+                                Spacer()
+                            }.padding(.trailing).padding(.top).padding(.leading)
+                            
+                            LazyVGrid(columns: columns, content: {
+                                
+                                ForEach(searchQuery == "" ? viewModel.allIngredients :
+                                            viewModel.searchIngredientsItems
+                                ){
+                                    ingr in
+                                    let item = convertIngridient(item:  helpEnumIngredients.init(rawValue: ingr.name), ingr: ingr)
+                                    Button(action: {
+                                        withAnimation(.spring()){
+                                            
+                                            if !viewModel.selectedForBuyIngredients.contains(where: { ingredients in
+                                                return ingredients.name == ingr.name
+                                            }) {
+                                                viewModel.selectedForBuyIngredients.append(ingr)
+                                            }
+                                        }
+                                        if let index = viewModel.suggestedForBuyIngredients.firstIndex(of: ingr) {
+                                            viewModel.suggestedForBuyIngredients.remove(at: index)
+                                        }
+                                    }, label: {
+                                        VStack(spacing: 5){
+                                            Text(item.imageSmile)
+                                                .font(.system(size: 26))
+                                                .frame(width: 68, height: 68, alignment: .center)
+                                                .background(item.color)
+                                                .cornerRadius(16)
+                                            
+                                            Text(item.name).font(.system(size: 12))
+                                                .fontWeight(.medium)
+                                                .foregroundColor(.black)
+                                        }
+                                    })
+                                        .frame(width: 100, height: 115, alignment: .center)
+                                        .background(Color.white)
+                                        .cornerRadius(16)
+                                        .shadow(color: Color.black.opacity(0.1), radius: 5, x: 3, y: 3)
+                                }.padding()
+                            })
+                            
+                            Spacer().frame(height: 70)
+                            
+                        }).padding(.leading).padding(.trailing)
+                            .onAppear {UIScrollView.appearance().keyboardDismissMode = .interactive}
+                        
+                        Button(action: {
+                            self.presentationMode.wrappedValue.dismiss()
+                        }, label: {
+                            HStack {
+                                Text("Добавить \(viewModel.selectedForBuyIngredients.count) ингред.")
+                                    .font(.system(size: 14))
+                                    .fontWeight(.semibold)
+                                    .foregroundColor(.white)
+                                Spacer()
+                                Image("plus")
+                            }.padding()
+                                .frame(width: UIScreen.screenWidth - 100, height: 55, alignment: .center)
+                                .background(Color(getColorForBuy()))
+                                .cornerRadius(16)
+                                .shadow(color: Color(getColorForBuy()).opacity(0.2), radius: 5, x: 3, y: 3)
+                        }).padding().onDisappear {
+                            viewModel.shoppingList = viewModel.selectedForBuyIngredients.reduce(into: [Ingredient: Int]()) { $0[$1] = 1 }
+                        }
+                    }
                 })
             }.navigationBarHidden(true)
         }
-        
-        
     }
+    
     func getColor() -> String {
         if viewModel.selectedIngredients.count != 0 {
             return  "mainColor"}
         else {
             return "arrowGrayColor"
         }}
-
+    
     func getColorForBuy() -> String {
         if viewModel.selectedForBuyIngredients.count != 0 {
             return  "mainColor"}

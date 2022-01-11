@@ -5,29 +5,29 @@ struct MainView: View {
 
         TabView {
             FirstScreen()
-                
                 .tabItem {
-                    Image(systemName: "square.grid.2x2.fill")
-               //     Label("Popular", systemImage: "list.dash")
+                    Label("Рецепты", systemImage: "house")
                 }
+            
             SecondScreen()
                 .tabItem {
-                    Image(systemName: "doc.text.fill")
-            }
+                    Label("План питания", systemImage: "menucard")
+                }
+            
             ThirdScreen()
                 .tabItem {
-                    Image(systemName: "bag.fill")
-            }
+                    Label("Поиск", systemImage: "fork.knife")
+                }
             FourthScreen()
                 .tabItem {
-                    Image(systemName: "rectangle.grid.1x2.fill")
-            }
+                    Label("Корзина", systemImage: "cart")
+                }
             FifthScreen()
                 .tabItem {
-                    Image(systemName: "person.fill")
-            }
-            
-        }.accentColor(Color("mainColor"))
+                    Label("Аккаунт", systemImage: "person.crop.circle")
+                }
+        }
+        .accentColor(Color("mainColor"))
     }
 }
 
@@ -37,3 +37,5 @@ struct MainView_Previews: PreviewProvider {
             .environmentObject(ContentViewModel())
     }
 }
+
+

@@ -13,125 +13,121 @@ struct FifthScreen: View {
     
     
     @EnvironmentObject var viewModel: ContentViewModel
-    @State private var selectorIndex = 1
-    @State private var numbers = ["Favorites", "Recipe", "Support"]
+    @State private var selectorIndex = 0
+    @State private var numbers = ["Избранные", "Помощь"]
+    @State private var userName: () = AuthApi.loadName()
+    
+    @State private var show_modal: Bool = false
+    
+    
     
     var body: some View {
         NavigationView{
             VStack{
-            
-            HStack {
-                Spacer()
-                Text("Аккаунт").fontWeight(.semibold)
-                Spacer()
-            }.padding().frame(width: UIScreen.screenWidth, height: 50, alignment: .center)
-            
-            ScrollView{
-                VStack(spacing: 10) {
-                Image(systemName: "person.fill")
-                    .frame(width: 72, height: 72, alignment: .center)
-                    .background(Color(.systemGray5))
-                    .cornerRadius(36)
-                    .padding(.bottom, 10)
-                Text("Юлия Гаврилова")
-                    .font(.system(size: 17))
-                    .fontWeight(.semibold)
-                Text("Дизайнер")
-                    .font(.system(size: 14))
-                    .foregroundColor(.gray)
-                    .padding(.top, -6)
                 
-                Picker("Numbers", selection: $selectorIndex) {
-                                ForEach(0 ..< numbers.count) { index in
-                                    Text(self.numbers[index]).tag(index)
+                ZStack {
+                    Spacer()
+                    Text("Аккаунт")
+                        .fontWeight(.semibold)
+                    Spacer()
+                    
+                    Button(action: {
+                        self.show_modal = true
+                    }, label: {
+                        Spacer()
+                        Image(systemName: "person.crop.rectangle")
+                            .font(.title2)
+                            .frame(width: 40, height: 40, alignment: .center).cornerRadius(9.5)
+                            .background(Color(UIColor.systemGray).opacity(0.12))
+                            .foregroundColor(.black)
+                            .cornerRadius(9.5)
+                    }).sheet(isPresented: self.$show_modal) {
+                        AuthScreen()
+                    }
+                }.padding().frame(width: UIScreen.screenWidth, height: 50, alignment: .center)
+                
+                ScrollView{
+                    VStack(spacing: 10) {
+                        Image(systemName: "person.fill")
+                            .frame(width: 72, height: 72, alignment: .center)
+                            .background(Color(.systemGray5))
+                            .cornerRadius(36)
+                            .padding(.bottom, 10)
+                        Text(viewModel.userName)
+                            .font(.system(size: 17))
+                            .fontWeight(.medium)
+                        
+                        Picker("Numbers", selection: $selectorIndex) {
+                            ForEach(0 ..< numbers.count) { index in
+                                Text(self.numbers[index]).fontWeight(.medium).tag(index)
+                            }
+                        }
+                        .pickerStyle(SegmentedPickerStyle())
+                        .padding(.horizontal, 19).padding(.top, 25)
+                        
+                        
+                        // 3.
+                        if selectorIndex == 0 {
+                            VStack {
+                                ScrollView(.horizontal, showsIndicators: false, content: {
+                                    HStack(spacing: 16){
+                                        ForEach(viewModel.favoriteMeals){
+                                            item in
+                                            
+                                            NavigationLink(
+                                                destination: MealView(item: item, fromMealPlanner: false),
+                                                label: {
+                                                    MealPlanner(item: item)
+                                                }
+                                            )
+                                        }
+                                    }.padding()
+                                })
+                                NavigationLink(destination: ListOfMeals(items: viewModel.allItems)){
+                                    HStack {
+                                        Text("Больше рецептов")
+                                            .font(.system(size: 16))
+                                            .fontWeight(.semibold)
+                                            .foregroundColor(.white)
+                                        Spacer()
+                                        Image("arrow")
+                                    }.padding()
+                                        .frame(width: UIScreen.screenWidth - 100, height: 55, alignment: .center)
+                                        .background(Color("mainColor"))
+                                        .cornerRadius(16)
+                                        .shadow(color: Color("mainColor").opacity(0.2), radius: 5, x: 3, y: 3)
                                 }
                             }
-                .pickerStyle(SegmentedPickerStyle())
-                .padding(.horizontal, 19).padding(.top, 25)
-                          
-                            // 3.
-                if selectorIndex == 0 {
-                    VStack {
-                    ScrollView(.horizontal, showsIndicators: false, content: {
-                        HStack(spacing: 16){
-                            ForEach(viewModel.favoriteMeals){
-                                item in
-
-                                NavigationLink(
-                                    destination: MealView(item: item, fromMealPlanner: false),
-                                    label: {
-                                        MealPlanner(item: item)
-                                    }
-                                )
-                            }
-                        }.padding()
-                    })
-//
-//                                                                    NavigationLink(
-//                                                                        destination: ListOfMeals(),
-//                                                                        label: {
-                        NavigationLink(destination: ListOfMeals(items: viewModel.allItems)){
-                                                    HStack {
-                                                        Text("Больше рецептов")
-                                                            .font(.system(size: 16))
-                                                            .fontWeight(.semibold)
-                                                            .foregroundColor(.white)
-                                                        Spacer()
-                                                        Image("arrow")
-                                                    }.padding()
-                                                    .frame(width: UIScreen.screenWidth - 100, height: 55, alignment: .center)
-                                                    .background(Color("mainColor"))
-                                                    .cornerRadius(16)
-                                                    .shadow(color: Color("mainColor").opacity(0.2), radius: 5, x: 3, y: 3)
+                            
+//                        }
+//                        else if selectorIndex == 1 {
+//                            ScrollView(.horizontal, showsIndicators: false, content: {
+//                                HStack(spacing: 16){
+//                                    Image("frameAddRecipe")
+//                                        .resizable()
+//                                        .frame(width: 220, height: 300, alignment: .center)
+//                                }.padding()
+//                            })
+                        } else  if selectorIndex == 1 {
+                            VStack{
+                                Image("supportHeadphones")
+                                Text("Как мы можем вам помочь?")
+                                    .font(.system(size: 20))
+                                    .fontWeight(.medium)
+                                    .padding(.bottom, 20)
+                                
+                                Button(action: {
+                                   EmailHelper.shared.sendEmail(subject: "", body: "", to: "")
+                                 }) {
+                                     Text("Почта")
+                                 }
+                            }.padding(.top, 50)
                         }
-                                                          //              })
                     }
-                                                
-                }
-                else if selectorIndex == 1 {
-                    ScrollView(.horizontal, showsIndicators: false, content: {
-                        
-                        HStack(spacing: 16){
-                            
-                            Image("frameAddRecipe")
-                                .resizable()
-                                .frame(width: 220, height: 300, alignment: .center)
-
-                            
-                            ForEach(viewModel.mealPlanner){
-                                item in
-
-                                NavigationLink(
-                                    destination: MealView(item: item, fromMealPlanner: false),
-                                    label: {
-                                        MealPlanner(item: item)
-                                    }
-                                )
-                            }
-                        }.padding()
-                    })
-                }
-                else  if selectorIndex == 2 {
-                    VStack{
-                        Image("supportHeadphones")
-                        Text("Как мы можем вам помочь?")
-                            .font(.system(size: 20))
-                            .fontWeight(.semibold)
-                    }.padding(.top, 50)
-                }
-
-                }
-
-            }.navigationBarHidden(true)
-//            .navigationBarTitle("Popular")
-//            .navigationBarTitleDisplayMode(.inline)
-            
-            
-                
-
-        }.navigationViewStyle(StackNavigationViewStyle())
+                }.navigationBarHidden(true)
+            }.navigationViewStyle(StackNavigationViewStyle())
         }
-
+        
     }
 }
 

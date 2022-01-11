@@ -6,12 +6,20 @@
 //
 
 import SwiftUI
+import UIKit
 
 @main
 struct eahApp: App {
     @StateObject var viewModel = ContentViewModel()
-    @Environment(\.scenePhase) var scenePhase
-
+    @Environment(\.scenePhase) var scenePhase    
+    
+    init() {
+        if #available(iOS 15.0, *) {
+            let appearance = UITabBarAppearance()
+            UITabBar.appearance().scrollEdgeAppearance = appearance
+        }
+        AuthApi.loadToken()
+    }
     
     var body: some Scene {
         WindowGroup {
@@ -19,10 +27,8 @@ struct eahApp: App {
         }.onChange(of: scenePhase) { (newScenePhase) in
             switch newScenePhase {
             case .background:
-                viewModel.saveData()
                 print("Scene is in background")
             case .inactive:
-                viewModel.saveData()
                 print("Scene is inactive")
             case .active:
                 print("Scene is active")
@@ -30,5 +36,6 @@ struct eahApp: App {
                 print("Some strange problem")
             }
         }
+        
     }
 }

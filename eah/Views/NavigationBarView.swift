@@ -16,19 +16,19 @@ struct NavigationBarView: View {
                 .navigationBarTitle("Master view")
                 .navigationBarTitleDisplayMode(.inline
                 )
-            .navigationBarItems(leading:
-                    Button(action: {
-                        print("SF Symbol button pressed...")
-                    }) {
-                        Image(systemName: "calendar.circle").imageScale(.large)
-                    },
-                trailing:
-                    Button(action: {
-                        print("Edit button pressed...")
-                    }) {
-                        Text("Edit")
-                    }
-            ).background(Color(.gray))
+                .navigationBarItems(leading:
+                                        Button(action: {
+                    print("SF Symbol button pressed...")
+                }) {
+                    Image(systemName: "calendar.circle").imageScale(.large)
+                },
+                                    trailing:
+                                        Button(action: {
+                    print("Edit button pressed...")
+                }) {
+                    Text("Edit")
+                }
+                ).background(Color(.gray))
         }
     }
 }

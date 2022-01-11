@@ -3,21 +3,23 @@ import SwiftUI
 struct SecondScreen: View {
     
     @EnvironmentObject var viewModel: ContentViewModel
-    
-    @State var showView = false
+
     
     var body: some View {
         
         NavigationView{
-            
+            // MARK: - NavigationBar
             
             VStack{
                 HStack {
                     Spacer()
-                    Text("План питания").fontWeight(.semibold)
+                    Text("Ваш план питания").fontWeight(.semibold)
                     Spacer()
                 }.padding().frame(width: UIScreen.screenWidth, height: 50, alignment: .center)
                 
+                // MARK: - MainCode
+                
+                // MARK: Days of week
                 
                 ScrollView(.vertical, showsIndicators: /*@START_MENU_TOKEN@*/true/*@END_MENU_TOKEN@*/, content: {
                     VStack{
@@ -27,16 +29,17 @@ struct SecondScreen: View {
                                 ForEach(viewModel.week){
                                     item in
                                     Button(action: {
-                                            withAnimation(.spring()){
-                                                viewModel.selectedDay = item
-                                            }}, label: {
-                                                Text(item.russianName.prefix(3))
-                                                    .font(.system(size: 16))
-                                                    .fontWeight(.semibold)
-                                                    .foregroundColor(viewModel.selectedDay.id == item.id ? Color("mainColor") : .gray)
-                                                
-                                                
-                                            }).padding(.vertical, 9)
+                                        withAnimation(.spring()){
+                                            viewModel.selectedDay = item
+                                            viewModel.selectedDay = item
+                                        }
+                                        
+                                    }, label: {
+                                            Text(item.russianName.prefix(3))
+                                                .font(.system(size: 16))
+                                                .fontWeight(.semibold)
+                                                .foregroundColor(viewModel.selectedDay.id == item.id ? Color("mainColor") : .gray)
+                                        }).padding(.vertical, 9)
                                         .padding(.horizontal)
                                         .background(viewModel.selectedDay.id == item.id ? Color("backColor") : Color(UIColor.systemGray6))
                                         .cornerRadius(8)
@@ -45,27 +48,12 @@ struct SecondScreen: View {
                             
                         }).padding()
                         
-                        HStack{
-                            Text("Завтрак").font(.system(size: 18)).fontWeight(.semibold)
-                            Spacer()
-                            NavigationLink(
-                                destination: ListOfMeals(items: viewModel.allItems, check: "breakfast"),
-                                label: {
-                                    Text("Добавить")
-                                        .foregroundColor(Color("mainColor"))
-                                        .font(.system(size: 12))
-                                        .fontWeight(.medium)
-                                    
-                                }
-                            )
-                        }.padding(.trailing).padding(.top).padding(.leading)
+                        // MARK: Days
                         
+                        MealAddMore(check: "breakfast", russianName: "Завтрак")
                         
-                        //         if viewModel.breakfast.count != 0 {
                         if viewModel.breakfast.count != 0 {
-                            
-                            SecondScreenScroll(items: viewModel.breakfast, nameOfColor: "breakfastColor")      //!!!
-                            
+                            SecondScreenScroll(items: viewModel.breakfast, nameOfColor: "breakfastColor")
                         }
                         else {
                             NavigationLink(
@@ -76,29 +64,12 @@ struct SecondScreen: View {
                             )
                         }
                         
-                        
                         Divider()
                         
-                        HStack{
-                            Text("Обед").font(.system(size: 18)).fontWeight(.semibold)
-                            Spacer()
-                            NavigationLink(
-                                destination: ListOfMeals(items: viewModel.allItems, check: "lunch"),
-                                label: {
-                                    Text("Добавить")
-                                        .foregroundColor(Color("mainColor"))
-                                        .font(.system(size: 12))
-                                        .fontWeight(.medium)
-                                    
-                                }
-                            )
-                        }.padding(.trailing).padding(.leading)
+                        MealAddMore(check: "lunch", russianName: "Обед")
                         
-                        //     if viewModel.lunch.count != 0 {
                         if viewModel.lunch.count != 0 {
-                            
-                            SecondScreenScroll(items: viewModel.lunch, nameOfColor: "lunchColor")      //!!!
-                            //               SecondScreenScroll(items: viewModel.lunch, nameOfColor: "lunchColor")
+                            SecondScreenScroll(items: viewModel.lunch, nameOfColor: "lunchColor")
                         }
                         else {
                             NavigationLink(
@@ -111,27 +82,10 @@ struct SecondScreen: View {
                         
                         Divider()
                         
-                        HStack{
-                            Text("Завтрак").font(.system(size: 18)).fontWeight(.semibold)
-                            Spacer()
-                            NavigationLink(
-                                destination: ListOfMeals(items: viewModel.allItems, check: "dinner"),
-                                label: {
-                                    Text("Добавить")
-                                        .foregroundColor(Color("mainColor"))
-                                        .font(.system(size: 12))
-                                        .fontWeight(.medium)
-                                    
-                                }
-                            )
-                        }.padding(.trailing).padding(.leading)
+                        MealAddMore(check: "dinner", russianName: "Ужин")
                         
                         if viewModel.dinner.count != 0 {
-                            
-                            //             if viewModel.dinner.count != 0 {
-                            SecondScreenScroll(items: viewModel.dinner, nameOfColor: "dinnerColor")      //!!!
-                            
-                            //             SecondScreenScroll(items: viewModel.dinner, nameOfColor: "dinnerColor")
+                            SecondScreenScroll(items: viewModel.dinner, nameOfColor: "dinnerColor")
                         }
                         else {
                             NavigationLink(
@@ -159,7 +113,6 @@ struct SecondScreenScroll: View {
     var nameOfColor: String
     
     var body: some View {
-        
         ScrollView(.horizontal, showsIndicators: false, content: {
             HStack(spacing: 16){
                 ForEach(items){
@@ -174,5 +127,27 @@ struct SecondScreenScroll: View {
                 }
             }.padding(.leading).padding(.bottom).padding(.trailing)
         })
+    }
+}
+
+struct MealAddMore: View {
+    @EnvironmentObject var viewModel: ContentViewModel
+    var check: String
+    var russianName: String
+    var body: some View {
+        
+        HStack{
+            Text(russianName).font(.system(size: 18)).fontWeight(.semibold)
+            Spacer()
+            NavigationLink(
+                destination: ListOfMeals(items: viewModel.allItems, check: check),
+                label: {
+                    Text("Добавить")
+                        .foregroundColor(Color("mainColor"))
+                        .font(.system(size: 12))
+                        .fontWeight(.medium)
+                }
+            )
+        }.padding(.trailing).padding(.top).padding(.leading)
     }
 }

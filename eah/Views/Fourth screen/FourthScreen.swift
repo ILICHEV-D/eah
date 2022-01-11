@@ -10,154 +10,126 @@ import SwiftUI
 struct FourthScreen: View {
     
     @EnvironmentObject var viewModel: ContentViewModel
-
-    @State var modalIsPresented = false
-
-//
-    @State private var show_modal: Bool = false
-    @Environment(\.presentationMode) var mode: Binding<PresentationMode>
-        //    viewModel.selectedIngredients.reduce(into: [String: Int]()) { $0[$1] = 0 }
-    
-//    @State var items: [String]
-    
-//    @State var items: [String: Int] = [:]
-    
-    
-
-
+        
+    @State private var show_modal: Bool = false    
     
     var body: some View {
         NavigationView {
             
-            //    ScrollView {
-            
             VStack{
-            
-            if viewModel.shoppingList.count == 0 {
-            
-                HStack {
+                if viewModel.shoppingList.count == 0 {
+                    HStack {
+                        Spacer()
+                        Text("Список покупок").fontWeight(.semibold)
+                        Spacer()
+                    }.padding().frame(width: UIScreen.screenWidth, height: 50, alignment: .center)
                     Spacer()
-                    Text("Список покупок").fontWeight(.semibold)
+                    VStack(spacing: 20.0) {
+                        Image("basket").resizable().frame(width: 230, height: 230, alignment: .center)
+                        Text("Ваш список покупок будет здесь")
+                            .multilineTextAlignment(.center)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .font(.system(size: 18))
+                            .foregroundColor(.black)
+                    }.padding(.horizontal).padding(.vertical)
                     Spacer()
-                }.padding().frame(width: UIScreen.screenWidth, height: 50, alignment: .center)
+                }
                 
-                
-                Spacer()
-                VStack(spacing: 20.0) {
-                    
-                    Image("basket").resizable().frame(width: 230, height: 230, alignment: .center)
-
-                    Text("Ваш список покупок будет здесь")
-                        .multilineTextAlignment(.center)
-                        .fixedSize(horizontal: false, vertical: true)
-                        .font(.system(size: 18))
-                        .foregroundColor(.black)
-                }.padding(.horizontal).padding(.vertical)
-                Spacer()
-                
-            }
-
                 else {
-                        ZStack{
-                            Spacer()
-                            Text("Список покупок").fontWeight(.semibold)
-                            Spacer()
-                        }.ignoresSafeArea().padding().frame(width: UIScreen.screenWidth, height: 50, alignment: .center)
-
-                        ScrollView(showsIndicators: false, content: {
-                            ForEach(viewModel.shoppingList.sorted(by: >), id: \.key){
-                                key, value in
+                    ZStack{
+                        Spacer()
+                        Text("Shopping list").fontWeight(.semibold)
+                        Spacer()
+                    }.ignoresSafeArea().padding().frame(width: UIScreen.screenWidth, height: 50, alignment: .center)
+                    
+                    ScrollView(showsIndicators: false, content: {
+                        ForEach(viewModel.shoppingList.sorted(by: { $0.key.name > $1.key.name }), id: \.key){ //!!!
+                            key, value in
+                            HStack{
+                                Text(key.name)
+                                    .foregroundColor(.gray)
+                                Spacer()
+                                
                                 HStack{
-                                    Text(key)
-                                        .foregroundColor(.gray)
-
-                                    Spacer()
-
-                                    HStack{
-                                        Button(action: {
-                                            viewModel.shoppingList[key]! += 1
-                                        }, label: {
-                                            Image(systemName: "plus")
-                                                .font(.system(size: 14, weight: .medium))
-                                                .frame(width: 28, height: 28, alignment: .center).cornerRadius(9.5)
-                                                .background(Color(UIColor.systemGray).opacity(0.12))
-                                                .foregroundColor(Color(UIColor.systemGray))
-                                        }).cornerRadius(4)
-
-                                        Text("\(value)").padding(.all, 5)
-
-                                        Button(action: {
-                                            if viewModel.shoppingList[key]! != 0 {
-                                                viewModel.shoppingList[key]! -= 1
-                                            }
-                                            
-                                            if viewModel.shoppingList[key]! == 0 {
+                                    Button(action: {
+                                        viewModel.shoppingList[key]! += 1
+                                    }, label: {
+                                        Image(systemName: "plus")
+                                            .font(.system(size: 14, weight: .medium))
+                                            .frame(width: 28, height: 28, alignment: .center).cornerRadius(9.5)
+                                            .background(Color(UIColor.systemGray).opacity(0.12))
+                                            .foregroundColor(Color(UIColor.systemGray))
+                                    }).cornerRadius(4)
+                                    
+                                    Text("\(value)").padding(.all, 5)
+                                    
+                                    Button(action: {
+                                        if viewModel.shoppingList[key]! != 0 {
+                                            viewModel.shoppingList[key]! -= 1
+                                        }
+                                        if viewModel.shoppingList[key]! == 0 {
                                             viewModel.shoppingList[key] = nil
                                             if let index = viewModel.selectedForBuyIngredients.firstIndex(of: key) {
                                                 viewModel.selectedForBuyIngredients.remove(at: index)
                                                 viewModel.suggestedForBuyIngredients.append(key)
                                             }}
-                                            
-                                            
-                                        }, label: {
-                                            Image(systemName: "minus")
-                                                .font(.system(size: 14, weight: .medium))
-                                                .frame(width: 28, height: 28, alignment: .center).cornerRadius(9.5)
-                                                .background(Color(UIColor.systemGray).opacity(0.12))
-                                                .foregroundColor(Color(UIColor.systemGray))
-                                        }).cornerRadius(4)
-
-                                    }
-
-                                    Button(action: {
-                                        viewModel.shoppingList[key] = nil
-                                        if let index = viewModel.selectedForBuyIngredients.firstIndex(of: key) {
-                                            viewModel.selectedForBuyIngredients.remove(at: index)
-                                            viewModel.suggestedForBuyIngredients.append(key)
-                                        }
+                                        
                                     }, label: {
-                                        Image("trashAddIngridients")
-                                    }).padding(.leading, 15)
-                                }.padding(.bottom)
-                            }
-
-
-                        }).padding()
+                                        Image(systemName: "minus")
+                                            .font(.system(size: 14, weight: .medium))
+                                            .frame(width: 28, height: 28, alignment: .center).cornerRadius(9.5)
+                                            .background(Color(UIColor.systemGray).opacity(0.12))
+                                            .foregroundColor(Color(UIColor.systemGray))
+                                    }).cornerRadius(4)
+                                }
+                                
+                                Button(action: {
+                                    viewModel.shoppingList[key] = nil
+                                    if let index = viewModel.selectedForBuyIngredients.firstIndex(of: key) {
+                                        viewModel.selectedForBuyIngredients.remove(at: index)
+                                        viewModel.suggestedForBuyIngredients.append(key)
+                                    }
+                                }, label: {
+                                    Image("trashAddIngridients")
+                                }).padding(.leading, 15)
+                            }.padding(.bottom)
+                        }
+                    }).padding()
                 }
-            
                 
-            Button(action: {
-                self.show_modal = true
-            }) {
-                HStack {
-                    Text("Добавить ингредиенты")
-                        .font(.system(size: 14))
-                        .fontWeight(.semibold)
-                        .foregroundColor(.white)
-                        .padding()
-                    Spacer()
-                    Image("plus")
-                        .padding()
+                
+                Button(action: {
+                    self.show_modal = true
+                }) {
+                    HStack {
+                        Text("Добавить ингредиенты")
+                            .font(.system(size: 14))
+                            .fontWeight(.semibold)
+                            .foregroundColor(.white)
+                            .padding()
+                        Spacer()
+                        Image("plus")
+                            .padding()
+                    }
+                    .frame(width: UIScreen.screenWidth - 100, height: 55, alignment: .center)
+                    .background(Color("mainColor"))
+                    .cornerRadius(16)
+                    .shadow(color: Color("mainColor").opacity(0.2), radius: 5, x: 3, y: 3)
+                }.padding().sheet(isPresented: self.$show_modal) {
+                    ThirdScreen(forAddIngridient: true)
                 }
-                .frame(width: UIScreen.screenWidth - 100, height: 55, alignment: .center)
-                .background(Color("mainColor"))
-                .cornerRadius(16)
-                .shadow(color: Color("mainColor").opacity(0.2), radius: 5, x: 3, y: 3)
-            }.padding().sheet(isPresented: self.$show_modal) {
-                ThirdScreen(forAddIngridient: true)
-            }
             }.navigationBarHidden(true)
-                
+            
         }.navigationBarHidden(true)
-        }
+    }
     
     func getColor() -> String {
-        if viewModel.selectedIngredients.count != 0 {
+        if viewModel.selectedForBuyIngredients.count != 0 {
             return  "mainColor"}
         else {
             return "arrowGrayColor"
         }}
-
+    
 }
 
 struct FourthScreen_Previews: PreviewProvider {

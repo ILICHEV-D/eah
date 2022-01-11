@@ -13,7 +13,7 @@ struct Star: View {
                 .font(.system(size: 12, weight: .black, design: .default))
                 .foregroundColor(Color("mainColor"))
 
-            Text(String(format: "%.1f", star!))
+            Text(String(format: "%.1f", star ?? 0))
                 .foregroundColor(Color("mainColor"))
                 .font(.system(size: 14))
                 .fontWeight(.bold)

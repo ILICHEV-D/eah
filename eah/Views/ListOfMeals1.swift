@@ -8,8 +8,13 @@ struct ListOfMeals: View {
     @GestureState private var dragOffset = CGSize.zero
     
     
-    @State var searchQuery = ""
+    @State var searchQuery = ""  {
+        didSet {
+            print("set")
+        }
+    }
     @State var searchStatus = false
+    
     
     
     
@@ -17,90 +22,81 @@ struct ListOfMeals: View {
     var items: [Meal]
     var check: String?
     
+    @State var selection: Int? = nil
     
     
     
     var body: some View {
         
         VStack {
+            // MARK: - NavBar
             
             if searchStatus == false {
-            HStack {
-                Button(action: {
-                    self.mode.wrappedValue.dismiss()
-                }, label: {
-                    Image(systemName: "chevron.left")
-                        .font(.title2)
-                        .frame(width: 40, height: 40, alignment: .center).cornerRadius(9.5)
-                        .background(Color(UIColor.systemGray).opacity(0.12))
-                        .foregroundColor(.black)
-                }).cornerRadius(9.5)
-                
-                Spacer()
-                Text("Рецепты").fontWeight(.semibold)
-                Spacer()
-                Button(action: {
-                    searchStatus = true
-                }, label: {
-                    Image(systemName: "magnifyingglass")
-                        .font(.title2)
-                        .frame(width: 40, height: 40, alignment: .center).cornerRadius(9.5)
-                        .background(Color(UIColor.systemGray).opacity(0.12))
-                        .foregroundColor(.black)
-                }).cornerRadius(9.5)
-                
-                
+                HStack {
+                    Button(action: {
+                        self.mode.wrappedValue.dismiss()
+                    }, label: {
+                        Image(systemName: "chevron.left")
+                            .font(.title2)
+                            .frame(width: 40, height: 40, alignment: .center).cornerRadius(9.5)
+                            .background(Color(UIColor.systemGray).opacity(0.12))
+                            .foregroundColor(.black)
+                    }).cornerRadius(9.5)
+                    Spacer()
+                    Text("Рецепты").fontWeight(.semibold)
+                    Spacer()
+                    Button(action: {
+                        searchStatus = true
+                    }, label: {
+                        Image(systemName: "magnifyingglass")
+                            .font(.title2)
+                            .frame(width: 40, height: 40, alignment: .center).cornerRadius(9.5)
+                            .background(Color(UIColor.systemGray).opacity(0.12))
+                            .foregroundColor(.black)
+                    }).cornerRadius(9.5)
                 }.ignoresSafeArea().padding().frame(width: UIScreen.screenWidth, height: 50, alignment: .center)
-            }
-            
-            
-            else {
-            
-            HStack {
-                HStack{
-                    Image(systemName: "magnifyingglass")
-                        .font(.system(size: 23, weight: .bold))
-                        .foregroundColor(.gray)
-                    
-                    TextField("Поиск", text: $searchQuery, onCommit:  {
-                        UIApplication.shared.endEditing()
-                    })
-                }
-                .frame(height: 20)
-                .padding(.vertical, 10)
-                .padding(.horizontal)
-                .background(Color.primary.opacity(0.05))
-                .cornerRadius(8)
+            } else {
                 
-                Button(action: {
-                    searchStatus = false
-                    searchQuery = ""
-                }, label: {
-                    Image(systemName: "xmark")
-                        .font(.title2)
-                        .frame(width: 40, height: 40, alignment: .center).cornerRadius(9.5)
-                        .background(Color(UIColor.systemGray).opacity(0.12))
-                        .foregroundColor(.black)
-                }).cornerRadius(9.5)
+                HStack {
+                    HStack{
+                        Image(systemName: "magnifyingglass")
+                            .font(.system(size: 23, weight: .bold))
+                            .foregroundColor(.gray)
+                        
+                        TextField("Поиск", text: $searchQuery.onChange({ someText in
+                            viewModel.searchName = someText
+                        }), onCommit:  {
+                            UIApplication.shared.endEditing()
+                        })}
+                    .frame(height: 20)
+                    .padding(.vertical, 10)
+                    .padding(.horizontal)
+                    .background(Color.primary.opacity(0.05))
+                    .cornerRadius(8)
+                    
+                    Button(action: {
+                        searchStatus = false
+                        searchQuery = ""
+                        viewModel.searchName = ""
+                    }, label: {
+                        Image(systemName: "xmark")
+                            .font(.title2)
+                            .frame(width: 40, height: 40, alignment: .center).cornerRadius(9.5)
+                            .background(Color(UIColor.systemGray).opacity(0.12))
+                            .foregroundColor(.black)
+                    }).cornerRadius(9.5)
+                }
+                .padding().frame(width: UIScreen.screenWidth, height: 50, alignment: .center)
             }
-            .padding().frame(width: UIScreen.screenWidth, height: 50, alignment: .center)
             
-            
-            }
-            
-            
-            //       NavigationView {
-            
+            // MARK: - MainCode
             
             ScrollView(.vertical, showsIndicators: true, content: {
                 LazyVGrid(columns: columns, content: {
                     
-                    ForEach(searchQuery == "" ? items :
-                                items.filter{$0.name.lowercased().contains(searchQuery.lowercased())}
-                    ){
+                    ForEach(searchQuery == "" ? items : viewModel.searchItems){
                         item in
                         if check == nil {
-                            
                             NavigationLink(
                                 destination: MealView(item: item, fromMealPlanner: false),
                                 label: {
@@ -115,41 +111,33 @@ struct ListOfMeals: View {
                         
                         else { //!!!
                             Button(action: {
-                                    
-                                    viewModel.allItems[viewModel.allItems.firstIndex(where: { $0.id == item.id })!]
-                                        .dayOfWeek.append(DayOfWeek(date: Date().getWeekDate(week: viewModel.selectedDay.name), time: check!))
-                                    
-                              //      viewModel.allItems[viewModel.allItems.firstIndex(where: { $0.id == item.id })!]
-                              //          .dayOfWeek[Date().getWeekDate(week: viewModel.selectedDay.name)] = check!
-                                    
-                                    viewModel.selectedDay = viewModel.selectedDay //!!!
-                                    
-                                    presentationMode.wrappedValue.dismiss()}) {
-                                RecomendationRecipe(item: item).gesture(DragGesture().updating($dragOffset, body: { (value, state, transaction) in
-                                    if(value.startLocation.x < 60 && value.translation.width > 20) {
-                                        self.mode.wrappedValue.dismiss()
-                                    }
-                                }))
-                            }
+//                                viewModel.allItems[viewModel.allItems.firstIndex(where: { $0.id == item.id })!]
+//                                    .dayOfWeek!.append(DayOfWeek(date: Date().getWeekDate(week: viewModel.selectedDay.name), time: check!))
+                                
+                                var meal = viewModel.allItems[viewModel.allItems.firstIndex(where: { $0.id == item.id })!]
+                                meal.dayOfWeek = DayOfWeek(date: Date().getWeekDate(week: viewModel.selectedDay.name), time: check!)
+                                viewModel.mealPlannerItems.append(meal)
+                                
+                                viewModel.selectedDay = viewModel.selectedDay //!!!
+
+                               
+                                presentationMode.wrappedValue.dismiss()}) {
+                                    RecomendationRecipe(item: item).gesture(DragGesture().updating($dragOffset, body: { (value, state, transaction) in
+                                        if(value.startLocation.x < 60 && value.translation.width > 20) {
+                                            self.mode.wrappedValue.dismiss()
+                                        }
+                                    }))
+                                }
                         }
                     }
-                })
-                .padding(.horizontal).padding(.vertical)
+                }).padding(.horizontal).padding(.vertical)
             })
-            
-            
-            
         }.gesture(DragGesture().updating($dragOffset, body: { (value, state, transaction) in
             if(value.startLocation.x < 60 && value.translation.width > 100) {
                 self.mode.wrappedValue.dismiss()
             }
         })).navigationBarHidden(true)
-      //  .edgesIgnoringSafeArea(.top)
-
-        
     }
-    
-    
 }
 
 struct ListOfMeals_Previews: PreviewProvider {
