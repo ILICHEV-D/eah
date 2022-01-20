@@ -34,6 +34,8 @@
 		753CFA5927428EA100BF3FA2 /* IngredientsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 753CFA5827428EA100BF3FA2 /* IngredientsList.swift */; };
 		7550038B273846B400EABCD4 /* ImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7550038A273846B400EABCD4 /* ImageLoader.swift */; };
 		7550038D2738494000EABCD4 /* ArticleImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7550038C2738494000EABCD4 /* ArticleImage.swift */; };
+		7599F02B2792E1CF00DDDB8F /* ExtensionTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7599F02A2792E1CF00DDDB8F /* ExtensionTabBar.swift */; };
+		7599F02F27945B4B00DDDB8F /* ImageHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7599F02E27945B4B00DDDB8F /* ImageHelper.swift */; };
 		759A4EB6278C443B00D3207D /* MailClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 759A4EB5278C443B00D3207D /* MailClass.swift */; };
 		759D79A1274BC91800C88771 /* AuthScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 759D79A0274BC91800C88771 /* AuthScreen.swift */; };
 		759D79A3274BD54700C88771 /* AuthAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 759D79A2274BD54700C88771 /* AuthAPI.swift */; };
@@ -70,6 +72,8 @@
 		753CFA5827428EA100BF3FA2 /* IngredientsList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IngredientsList.swift; sourceTree = "<group>"; };
 		7550038A273846B400EABCD4 /* ImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLoader.swift; sourceTree = "<group>"; };
 		7550038C2738494000EABCD4 /* ArticleImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleImage.swift; sourceTree = "<group>"; };
+		7599F02A2792E1CF00DDDB8F /* ExtensionTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionTabBar.swift; sourceTree = "<group>"; };
+		7599F02E27945B4B00DDDB8F /* ImageHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageHelper.swift; sourceTree = "<group>"; };
 		759A4EB5278C443B00D3207D /* MailClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MailClass.swift; sourceTree = "<group>"; };
 		759D79A0274BC91800C88771 /* AuthScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthScreen.swift; sourceTree = "<group>"; };
 		759D79A2274BD54700C88771 /* AuthAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthAPI.swift; sourceTree = "<group>"; };
@@ -108,6 +112,7 @@
 			children = (
 				69511B71263897A000FD2E68 /* FifthScreen.swift */,
 				759A4EB5278C443B00D3207D /* MailClass.swift */,
+				7599F02E27945B4B00DDDB8F /* ImageHelper.swift */,
 			);
 			path = "Fifth screen";
 			sourceTree = "<group>";
@@ -131,6 +136,7 @@
 		69A9EA352631E513003D37E2 /* eah */ = {
 			isa = PBXGroup;
 			children = (
+				7599F02A2792E1CF00DDDB8F /* ExtensionTabBar.swift */,
 				69A9EA362631E513003D37E2 /* eahApp.swift */,
 				69A9EA462631E53A003D37E2 /* MainView.swift */,
 				69A9EA4E2631E58A003D37E2 /* Models */,
@@ -300,11 +306,11 @@
 			};
 			buildConfigurationList = 69A9EA2E2631E513003D37E2 /* Build configuration list for PBXProject "eah" */;
 			compatibilityVersion = "Xcode 9.3";
-			developmentRegion = en;
+			developmentRegion = ru;
 			hasScannedForEncodings = 0;
 			knownRegions = (
-				en,
 				Base,
+				ru,
 			);
 			mainGroup = 69A9EA2A2631E513003D37E2;
 			packageReferences = (
@@ -347,12 +353,14 @@
 				69A9EA752631E771003D37E2 /* Popular.swift in Sources */,
 				69A9EA502631E59D003D37E2 /* Common.swift in Sources */,
 				69A9EA6A2631E681003D37E2 /* ForMealPlannerFreeBlock.swift in Sources */,
+				7599F02F27945B4B00DDDB8F /* ImageHelper.swift in Sources */,
 				759D79A3274BD54700C88771 /* AuthAPI.swift in Sources */,
 				69A9EA5B2631E61D003D37E2 /* RecomendationRecipe.swift in Sources */,
 				69A9EA722631E6D1003D37E2 /* IngridientView.swift in Sources */,
 				69A9EA6E2631E6AF003D37E2 /* MealView.swift in Sources */,
 				759A4EB6278C443B00D3207D /* MailClass.swift in Sources */,
 				753CFA5927428EA100BF3FA2 /* IngredientsList.swift in Sources */,
+				7599F02B2792E1CF00DDDB8F /* ExtensionTabBar.swift in Sources */,
 				69A9EA472631E53A003D37E2 /* MainView.swift in Sources */,
 				7550038D2738494000EABCD4 /* ArticleImage.swift in Sources */,
 				69511B6926386C9300FD2E68 /* NavigationBarView.swift in Sources */,
@@ -491,6 +499,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"eah/Preview Content\"";
 				DEVELOPMENT_TEAM = 43DAR95BYV;
@@ -501,8 +510,10 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = eahapp1.eah;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -513,6 +524,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"eah/Preview Content\"";
 				DEVELOPMENT_TEAM = 43DAR95BYV;
@@ -523,8 +535,10 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = eahapp1.eah;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};

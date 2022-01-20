@@ -6,15 +6,25 @@ struct ForMealPlannerBlock: View {
     
     var body: some View {
         HStack(spacing: 15){
-            ArticleImage(imageLoader: ImageLoaderCache.shared.loaderFor(
-                article: item))
-                .frame(width: 55, height: 55, alignment: .center)
-                .cornerRadius(14)
-                .aspectRatio(contentMode: .fill)
-                .padding(.all, 8)
-                .background(Color(color))
-                .cornerRadius(16)
-                .padding(.leading, 12)
+            ZStack(alignment: Alignment(horizontal: .trailing, vertical: .bottom), content: {
+                ArticleImage(imageLoader: ImageLoaderCache.shared.loaderFor(
+                    article: item))
+                    .frame(width: 55, height: 55, alignment: .center)
+                    .cornerRadius(14)
+                    .aspectRatio(contentMode: .fill)
+                    .padding(.all, 8)
+                    .background(Color(color))
+                    .cornerRadius(16)
+                    .padding(.leading, 12)
+                
+                Image("povarenok")
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 15, height: 15, alignment: .center)
+                    .cornerRadius(8)
+                    .padding(.trailing, 5)
+                    .padding(.bottom, 5)
+            })
             
             VStack(alignment: .leading, spacing: 5) {
                 Text(item.name).font(.system(size: 14))

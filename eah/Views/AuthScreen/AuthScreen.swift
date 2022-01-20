@@ -10,7 +10,7 @@ import SwiftUI
 struct AuthScreen: View {
     
     @EnvironmentObject var viewModel: ContentViewModel
-
+    
     @State var loginQuery = ""
     @State var passwordQuery = ""
     @State var nameQuery = ""
@@ -25,12 +25,12 @@ struct AuthScreen: View {
         }
     }
     
-    @State var registrationIsShow = true
+    @State var registrationIsShow = false
     
     @State private var selectedStrength = "Мужской"
     let strengths = ["Мужской", "Женский"]
-
-
+    
+    @Environment(\.presentationMode) var presentationMode
     
     var body: some View {
         NavigationView{
@@ -68,7 +68,7 @@ struct AuthScreen: View {
                                     .multilineTextAlignment(.center)
                             }
                             
-                            TextField("Логин", text: $loginQuery, onCommit:  {
+                            TextField("Email", text: $loginQuery, onCommit:  {
                                 UIApplication.shared.endEditing()
                             }).padding()
                                 .frame(width: UIScreen.screenWidth - 100, height: 55, alignment: .center)
@@ -76,17 +76,16 @@ struct AuthScreen: View {
                                 .cornerRadius(16)
                                 .shadow(color: Color("arrowGrayColor").opacity(0.2), radius: 5, x: 3, y: 3)
                             
-                            TextField("Пароль", text: $passwordQuery, onCommit:  {
+                            SecureField("Пароль", text: $passwordQuery, onCommit:  {
                                 UIApplication.shared.endEditing()
                             }).padding()
                                 .frame(width: UIScreen.screenWidth - 100, height: 55, alignment: .center)
                                 .background(Color("arrowGrayColor"))
                                 .cornerRadius(16)
                                 .shadow(color: Color("arrowGrayColor").opacity(0.2), radius: 5, x: 3, y: 3)
+                                
                             
                             if registrationIsShow {
-
-                                
                                 
                                 TextField("Имя", text: $nameQuery, onCommit:  {
                                     UIApplication.shared.endEditing()
@@ -95,21 +94,19 @@ struct AuthScreen: View {
                                     .background(Color("arrowGrayColor"))
                                     .cornerRadius(16)
                                     .shadow(color: Color("arrowGrayColor").opacity(0.2), radius: 5, x: 3, y: 3)
-                            
-                            HStack(spacing: 5) {
                                 
-                                
-                                TextField("Возраст", text: $ageQuery, onCommit:  {
-                                    UIApplication.shared.endEditing()
-                                }).padding()
-                                    .frame(width: (UIScreen.screenWidth - 105)/2, height: 55, alignment: .center)
-                                    .background(Color("arrowGrayColor"))
-                                    .cornerRadius(16)
-                                    .shadow(color: Color("arrowGrayColor").opacity(0.2), radius: 5, x: 3, y: 3)
-                                    .keyboardType(.numberPad)
-                                
-                                
-                                    Picker("Strength", selection: $selectedStrength) {
+                                HStack(spacing: 5) {
+                                    TextField("Возраст", text: $ageQuery, onCommit:  {
+                                        UIApplication.shared.endEditing()
+                                    }).padding()
+                                        .frame(width: (UIScreen.screenWidth - 105)/2, height: 55, alignment: .center)
+                                        .background(Color("arrowGrayColor"))
+                                        .cornerRadius(16)
+                                        .shadow(color: Color("arrowGrayColor").opacity(0.2), radius: 5, x: 3, y: 3)
+                                        .keyboardType(.numberPad)
+                                    
+                                    
+                                    Picker("Пол", selection: $selectedStrength) {
                                         ForEach(strengths, id: \.self) {
                                             Text($0)
                                                 .foregroundColor(Color.red)
@@ -117,23 +114,14 @@ struct AuthScreen: View {
                                     }
                                     .frame(width: (UIScreen.screenWidth - 105)/2, height: 55, alignment: .center)
                                     .pickerStyle(MenuPickerStyle())
-    //                                .frame(width: UIScreen.screenWidth - 100, height: 150, alignment: .center)
                                     .background(Color("arrowGrayColor"))
                                     .cornerRadius(16)
                                     .shadow(color: Color("arrowGrayColor").opacity(0.2), radius: 5, x: 3, y: 3)
-                                
-                                
-
-                                
-                                
-                                
-                            }
-                                
-                              
-
+                                }
                             }
                             
                             Button(action: {
+                                registrationIsShow = false
                                 if loginQuery.count == 0 || passwordQuery.count == 0 {
                                     errorMessage = "Пустые поля"
                                 } else {
@@ -143,27 +131,40 @@ struct AuthScreen: View {
                                             if response.status == false {
                                                 errorMessage = "Неправильно введенные данные"
                                             } else {
+                                                self.presentationMode.wrappedValue.dismiss()
                                                 AuthApi.saveAll(token: response.response.token, name: response.response.firstName ?? "", age: response.response.age ?? 0, sex: response.response.sex ?? true)
                                                 viewModel.userName = response.response.firstName ?? ""
                                                 tokenState = AuthApi.token
+                                                viewModel.loadFavorite()
                                                 errorMessage = nil
                                             }
                                         case .failure(let error):
-                                            errorMessage = "Ошибка"
+                                            errorMessage = error.localizedDescription
                                             print(error.localizedDescription)
                                         }
                                     })
                                 }}, label: {
-                                    HStack {
-                                        Text("Войти")
-                                            .font(.system(size: 17))
-                                            .fontWeight(.semibold)
-                                            .foregroundColor(.white)
-                                    }.padding()
-                                        .frame(width: UIScreen.screenWidth - 100, height: 55, alignment: .center)
-                                        .background(Color("mainColor"))
-                                        .cornerRadius(16)
-                                        .shadow(color: Color("mainColor").opacity(0.2), radius: 5, x: 3, y: 3)
+                                    if registrationIsShow {
+                                        HStack {
+                                            Text("Войти")
+                                                .font(.system(size: 17))
+                                                .fontWeight(.semibold)
+                                                .foregroundColor(Color("mainColor"))
+                                        }.padding()
+                                            .frame(width: UIScreen.screenWidth - 100, height: 55, alignment: .center)
+                                            .cornerRadius(16)
+                                    } else {
+                                        HStack {
+                                            Text("Войти")
+                                                .font(.system(size: 17))
+                                                .fontWeight(.semibold)
+                                                .foregroundColor(.white)
+                                        }.padding()
+                                            .frame(width: UIScreen.screenWidth - 100, height: 55, alignment: .center)
+                                            .background(Color("mainColor"))
+                                            .cornerRadius(16)
+                                            .shadow(color: Color("mainColor").opacity(0.2), radius: 5, x: 3, y: 3)
+                                    }
                                 })
                             
                             
@@ -185,9 +186,11 @@ struct AuthScreen: View {
                                                         if response.status == false {
                                                             errorMessage = "Неправильно введенные данные"
                                                         } else {
+                                                            self.presentationMode.wrappedValue.dismiss()
                                                             AuthApi.saveAll(token: response.response.token, name: response.response.firstName ?? "", age: response.response.age ?? 0, sex: response.response.sex ?? true)
                                                             viewModel.userName = response.response.firstName ?? ""
                                                             tokenState = AuthApi.token
+                                                            viewModel.loadFavorite()
                                                             errorMessage = nil
                                                         }
                                                     case .failure(let error):
@@ -202,29 +205,30 @@ struct AuthScreen: View {
                                         }
                                     })
                                 }}, label: {
-                                    HStack {
+                                    if registrationIsShow {
                                         Text("Зарегистрироваться")
                                             .font(.system(size: 17))
                                             .fontWeight(.semibold)
                                             .foregroundColor(.white)
-                                    }.padding()
-                                        .frame(width: UIScreen.screenWidth - 100, height: 55, alignment: .center)
-                                        .background(Color("mainColor"))
-                                        .cornerRadius(16)
-                                        .shadow(color: Color("mainColor").opacity(0.2), radius: 5, x: 3, y: 3)
+                                            .padding()
+                                            .frame(width: UIScreen.screenWidth - 100, height: 55, alignment: .center)
+                                            .background(Color("mainColor"))
+                                            .cornerRadius(16)
+                                            .shadow(color: Color("mainColor").opacity(0.2), radius: 5, x: 3, y: 3)
+                                    }
+                                    else {
+                                        Text("Зарегистрироваться")
+                                            .font(.system(size: 17))
+                                            .fontWeight(.semibold)
+                                            .foregroundColor(Color("mainColor"))
+                                            .padding()
+                                            .frame(width: UIScreen.screenWidth - 100, height: 55, alignment: .center)
+                                            .cornerRadius(16)
+                                    }
                                 })
                             
-                        }
-                        
-                        else {
-                            Text("Уже зарегистрированы!")
-                                .font(.system(size: 20))
-                                .fontWeight(.medium)
-                                .lineLimit(3)
-                                .padding(.leading, 25)
-                                .padding(.trailing, 25)
-                                .multilineTextAlignment(.center)
                             
+                        } else {
                             Button(action: {
                                 AuthApi.deleteAll()
                                 viewModel.userName = ""

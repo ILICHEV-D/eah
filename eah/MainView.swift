@@ -2,32 +2,39 @@ import SwiftUI
 
 struct MainView: View {
     var body: some View {
-
-        TabView {
-            FirstScreen()
-                .tabItem {
-                    Label("Рецепты", systemImage: "house")
-                }
+        
+        ZStack{
             
-            SecondScreen()
-                .tabItem {
-                    Label("План питания", systemImage: "menucard")
-                }
+            //            let fontAttributes = [NSAttributedString.Key.font: UIFont(name: "YourFontName", size: 12.0)!]
+            //            UITabBarItem.appearance().setTitleTextAttributes(fontAttributes, for: .normal)
+            //            //Set Tab bar text/item color
+            //            UITabBar.appearance().tintColor = UIColor.init(named: "YourColorName")
+            //
             
-            ThirdScreen()
-                .tabItem {
-                    Label("Поиск", systemImage: "fork.knife")
-                }
-            FourthScreen()
-                .tabItem {
-                    Label("Корзина", systemImage: "cart")
-                }
-            FifthScreen()
-                .tabItem {
-                    Label("Аккаунт", systemImage: "person.crop.circle")
-                }
+            UIKitTabView([
+                UIKitTabView.Tab(
+                    view: FirstScreen().edgesIgnoringSafeArea(.top),
+                    barItem: UITabBarItem(title: "Рецепты", image: UIImage(systemName: "house.fill"), selectedImage: UIImage(systemName: "house.fill"))
+                )
+                ,
+                UIKitTabView.Tab(
+                    view: SecondScreen().edgesIgnoringSafeArea(.top),
+                    barItem: UITabBarItem(title: "План питания", image: UIImage(systemName: "menucard.fill"), selectedImage: UIImage(systemName: "menucard.fill"))
+                ),
+                UIKitTabView.Tab(
+                    view: ThirdScreen().edgesIgnoringSafeArea(.top),
+                    barItem: UITabBarItem(title: "Поиск", image: UIImage(systemName: "fork.knife"), selectedImage: UIImage(systemName: "fork.knife"))
+                ),
+                UIKitTabView.Tab(
+                    view: FourthScreen().edgesIgnoringSafeArea(.top),
+                    barItem: UITabBarItem(title: "Корзина", image: UIImage(systemName: "cart.fill"), selectedImage: UIImage(systemName: "cart.fill"))
+                ),
+                UIKitTabView.Tab(
+                    view: FifthScreen().edgesIgnoringSafeArea(.top),
+                    barItem: UITabBarItem(title: "Аккаунт", image: UIImage(systemName: "person.crop.circle"), selectedImage: UIImage(systemName: "person.crop.circle"))
+                ),
+            ])
         }
-        .accentColor(Color("mainColor"))
     }
 }
 

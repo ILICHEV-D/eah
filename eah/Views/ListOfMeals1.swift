@@ -58,6 +58,16 @@ struct ListOfMeals: View {
             } else {
                 
                 HStack {
+                    Button(action: {
+                        self.mode.wrappedValue.dismiss()
+                    }, label: {
+                        Image(systemName: "chevron.left")
+                            .font(.title2)
+                            .frame(width: 40, height: 40, alignment: .center).cornerRadius(9.5)
+                            .background(Color(UIColor.systemGray).opacity(0.12))
+                            .foregroundColor(.black)
+                    }).cornerRadius(9.5)
+                    Spacer()
                     HStack{
                         Image(systemName: "magnifyingglass")
                             .font(.system(size: 23, weight: .bold))
@@ -109,14 +119,19 @@ struct ListOfMeals: View {
                             )
                         }
                         
-                        else { //!!!
+                        else { 
                             Button(action: {
-//                                viewModel.allItems[viewModel.allItems.firstIndex(where: { $0.id == item.id })!]
-//                                    .dayOfWeek!.append(DayOfWeek(date: Date().getWeekDate(week: viewModel.selectedDay.name), time: check!))
+                                var meal: Meal?
                                 
-                                var meal = viewModel.allItems[viewModel.allItems.firstIndex(where: { $0.id == item.id })!]
-                                meal.dayOfWeek = DayOfWeek(date: Date().getWeekDate(week: viewModel.selectedDay.name), time: check!)
-                                viewModel.mealPlannerItems.append(meal)
+                                if let index = viewModel.allItems.firstIndex(where: { $0.id == item.id }) {
+                                    meal = viewModel.allItems[index]
+                                } else {
+                                    meal = item
+                                }
+                                
+                               
+                                meal!.dayOfWeek = DayOfWeek(date: Date().getWeekDate(week: viewModel.selectedDay.name), time: check!)
+                                viewModel.mealPlannerItems.append(meal!)
                                 
                                 viewModel.selectedDay = viewModel.selectedDay //!!!
 

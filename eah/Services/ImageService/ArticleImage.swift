@@ -7,7 +7,6 @@
 
 
 import SwiftUI
-
 struct ArticleImage: View {
     @ObservedObject var imageLoader: ImageLoader
     @State private var animate = false
@@ -15,7 +14,7 @@ struct ArticleImage: View {
     var body: some View {
         Group {
             if !imageLoader.noData {
-                ZStack {
+                ZStack(alignment: Alignment(horizontal: .trailing, vertical: .bottom), content: {
                     if self.imageLoader.image != nil {
                         Image(uiImage: self.imageLoader.image!)
                             .resizable()
@@ -37,7 +36,7 @@ struct ArticleImage: View {
                             EmptyView()
                         }
                     }
-                }
+                })
             } else {
                 EmptyView()
             }

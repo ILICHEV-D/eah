@@ -11,13 +11,11 @@ import MessageUI
 class EmailHelper: NSObject, MFMailComposeViewControllerDelegate {
     public static let shared = EmailHelper()
     private override init() {
-        //
     }
     
     func sendEmail(subject:String, body:String, to:String){
         if !MFMailComposeViewController.canSendMail() {
-            // Utilities.showErrorBanner(title: "No mail account found", subtitle: "Please setup a mail account")
-            return //EXIT
+            return
         }
         
         let picker = MFMailComposeViewController()
@@ -35,6 +33,6 @@ class EmailHelper: NSObject, MFMailComposeViewControllerDelegate {
     }
     
     static func getRootViewController() -> UIViewController? {
-         UIApplication.shared.windows.first?.rootViewController
+        UIApplication.shared.windows.first?.rootViewController
     }
 }

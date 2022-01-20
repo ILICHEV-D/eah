@@ -27,7 +27,7 @@ struct ThirdScreen: View {
     
                 HStack {
                     Spacer()
-                    Text("Выбрать ингредиенты").fontWeight(.medium)
+                    Text("Поиск по ингредиентам").fontWeight(.medium)
                     Spacer()
                 }.padding().frame(width: UIScreen.screenWidth, height: 50, alignment: .center)
                 
@@ -73,7 +73,7 @@ struct ThirdScreen: View {
                         ScrollView(.vertical, showsIndicators: false, content: {
                             if viewModel.selectedIngredients.count != 0 {
                                 HStack {
-                                    Text("Выбрать ингредиенты").font(.system(size: 18))
+                                    Text("Поиск по ингредиентам").font(.system(size: 18))
                                         .fontWeight(.semibold)
                                     Spacer()
                                 }
@@ -209,7 +209,7 @@ struct ThirdScreen: View {
                             
                             if viewModel.selectedForBuyIngredients.count != 0 {
                                 HStack {
-                                    Text("Выбрать ингредиенты").font(.system(size: 18))
+                                    Text("Поиск по ингредиентам").font(.system(size: 18))
                                         .fontWeight(.semibold)
                                     Spacer()
                                 }
@@ -329,7 +329,18 @@ struct ThirdScreen: View {
                                 .cornerRadius(16)
                                 .shadow(color: Color(getColorForBuy()).opacity(0.2), radius: 5, x: 3, y: 3)
                         }).padding().onDisappear {
-                            viewModel.shoppingList = viewModel.selectedForBuyIngredients.reduce(into: [Ingredient: Int]()) { $0[$1] = 1 }
+                            for ingredient in viewModel.selectedForBuyIngredients {
+                                if !viewModel.shoppingList.contains(where: { $0.key.name == ingredient.name}) {
+                                    viewModel.shoppingList[ingredient] = 1
+                                } else {
+                                    print("non")
+                                }
+                            }
+                            for i in viewModel.shoppingList {
+                                if !viewModel.selectedForBuyIngredients.contains(where: { $0.name == i.key.name}) {
+                                    viewModel.shoppingList.removeValue(forKey: i.key)
+                                }
+                            }
                         }
                     }
                 })

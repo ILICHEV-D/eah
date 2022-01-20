@@ -7,15 +7,22 @@ struct Popular: View {
     var body: some View {
         
         VStack(alignment: .center, spacing: 6) {
-            ArticleImage(imageLoader: ImageLoaderCache.shared.loaderFor(
-                article: item))
-                .frame(width: 80, height: 80, alignment: .center)
-                .cornerRadius(8)
+            ZStack(alignment: Alignment(horizontal: .trailing, vertical: .bottom), content: {
+                ArticleImage(imageLoader: ImageLoaderCache.shared.loaderFor(
+                    article: item))
+                    .frame(width: 80, height: 80, alignment: .center)
+                    .cornerRadius(8)
+                
+                Image("povarenok")
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 15, height: 15, alignment: .center)
+                    .cornerRadius(4, corners: [.bottomRight, .topLeft])
+            })
             
             Text(item.name)
                 .font(.system(size: 14))
                 .foregroundColor(Color(UIColor.black))
-                .fontWeight(.semibold)
                 .frame(height: 35)
                 .lineLimit(2)
             

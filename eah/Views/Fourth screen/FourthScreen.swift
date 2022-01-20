@@ -38,7 +38,7 @@ struct FourthScreen: View {
                 else {
                     ZStack{
                         Spacer()
-                        Text("Shopping list").fontWeight(.semibold)
+                        Text("Список покупок").fontWeight(.semibold)
                         Spacer()
                     }.ignoresSafeArea().padding().frame(width: UIScreen.screenWidth, height: 50, alignment: .center)
                     

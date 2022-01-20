@@ -16,10 +16,22 @@ struct FifthScreen: View {
     @State private var selectorIndex = 0
     @State private var numbers = ["Избранные", "Помощь"]
     @State private var userName: () = AuthApi.loadName()
+    @State private var userImage: UIImage? = AuthApi.userImage
+    {
+        didSet {
+            if let image = userImage {
+                AuthApi.saveUserImage(image: (image))
+            } else {
+                AuthApi.saveUserImage(image: UIImage(named: "profile")!)
+            }
+        }
+    }
+    
+    @State private var showingOptions = false
     
     @State private var show_modal: Bool = false
     
-    
+    @State var showImagePicker: Bool = false
     
     var body: some View {
         NavigationView{
@@ -30,6 +42,7 @@ struct FifthScreen: View {
                     Text("Аккаунт")
                         .fontWeight(.semibold)
                     Spacer()
+                    
                     
                     Button(action: {
                         self.show_modal = true
@@ -47,12 +60,49 @@ struct FifthScreen: View {
                 }.padding().frame(width: UIScreen.screenWidth, height: 50, alignment: .center)
                 
                 ScrollView{
+                    
                     VStack(spacing: 10) {
-                        Image(systemName: "person.fill")
-                            .frame(width: 72, height: 72, alignment: .center)
-                            .background(Color(.systemGray5))
-                            .cornerRadius(36)
-                            .padding(.bottom, 10)
+                        
+                        ZStack {
+                            
+                            ZStack(alignment: Alignment(horizontal: .trailing, vertical: .bottom), content: {
+                                Image(uiImage: userImage ?? UIImage()).renderingMode(.original)
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(width: 120, height: 120, alignment: .center)
+                                    .background(Color(.systemGray5))
+                                    .cornerRadius(60)
+                                //                                    .padding(.bottom, 5)
+                                
+                                Button(" + ") {
+                                    showingOptions = true
+                                }
+                                .actionSheet(isPresented: $showingOptions) {
+                                    ActionSheet(
+                                        title: Text("Изменить изображение профиля"),
+                                        buttons: [
+                                            .default(Text("Изменить")) {
+                                                self.showImagePicker.toggle()
+                                            },
+                                            .cancel(Text("Отмена")) {
+                                                showingOptions = false
+                                            },
+                                            
+                                                .destructive(Text("Удалить")) {
+                                                    self.userImage = UIImage(named: "profile")
+                                                },
+                                        ]
+                                    )
+                                }
+                                
+                            })
+                                .sheet(isPresented: $showImagePicker) {
+                                    ImagePicker(sourceType: .photoLibrary) { image in
+                                        self.userImage = image
+                                    }
+                                }
+                        }
+                        
                         Text(viewModel.userName)
                             .font(.system(size: 17))
                             .fontWeight(.medium)
@@ -63,7 +113,7 @@ struct FifthScreen: View {
                             }
                         }
                         .pickerStyle(SegmentedPickerStyle())
-                        .padding(.horizontal, 19).padding(.top, 25)
+                        .padding(.horizontal, 19).padding(.top, 15)
                         
                         
                         // 3.
@@ -73,7 +123,6 @@ struct FifthScreen: View {
                                     HStack(spacing: 16){
                                         ForEach(viewModel.favoriteMeals){
                                             item in
-                                            
                                             NavigationLink(
                                                 destination: MealView(item: item, fromMealPlanner: false),
                                                 label: {
@@ -98,16 +147,6 @@ struct FifthScreen: View {
                                         .shadow(color: Color("mainColor").opacity(0.2), radius: 5, x: 3, y: 3)
                                 }
                             }
-                            
-//                        }
-//                        else if selectorIndex == 1 {
-//                            ScrollView(.horizontal, showsIndicators: false, content: {
-//                                HStack(spacing: 16){
-//                                    Image("frameAddRecipe")
-//                                        .resizable()
-//                                        .frame(width: 220, height: 300, alignment: .center)
-//                                }.padding()
-//                            })
                         } else  if selectorIndex == 1 {
                             VStack{
                                 Image("supportHeadphones")
@@ -115,13 +154,30 @@ struct FifthScreen: View {
                                     .font(.system(size: 20))
                                     .fontWeight(.medium)
                                     .padding(.bottom, 20)
-                                
-                                Button(action: {
-                                   EmailHelper.shared.sendEmail(subject: "", body: "", to: "")
-                                 }) {
-                                     Text("Почта")
-                                 }
-                            }.padding(.top, 50)
+                                HStack(spacing: 20) {
+                                    Button(action: {
+                                        EmailHelper.shared.sendEmail(subject: "", body: "", to: "")
+                                    }) {
+                                        Image("email")
+                                            .resizable()
+                                            .frame(width: 35, height: 35, alignment: .center)
+                                    }
+                                    Button(action: {
+                                        AuthApi.goToTelegram()
+                                    }) {
+                                        Image("telegram")
+                                            .resizable()
+                                            .frame(width: 32, height: 32, alignment: .center)
+                                    }
+                                    Button(action: {
+                                        AuthApi.goToInstagram()
+                                    }) {
+                                        Image("instagram")
+                                            .resizable()
+                                            .frame(width: 35, height: 35, alignment: .center)
+                                    }
+                                }
+                            }.padding(.top, 35)
                         }
                     }
                 }.navigationBarHidden(true)

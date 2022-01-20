@@ -1,3 +1,4 @@
+
 import Foundation
 import SwiftUI
 import Combine
@@ -10,15 +11,12 @@ class ContentViewModel: ObservableObject {
     
     @Published var searchName: String = ""
     @Published var searchIngredients: String = ""
-    
     @Published var searchStringMealsWithIngr: String = "" {
         didSet {print("searchStringMealsWithIngr --> \(searchStringMealsWithIngr.count)")}
     }
-    
     @Published var allItems: [Meal] = [] {
         didSet {print("allItems --> \(self.allItems.count)")}
     }
-    
     @Published var mealPlannerItems: [Meal] = [] {
         didSet {print("mealPlannerItems --> \(self.mealPlannerItems.count)")
             var days: [Date] = []
@@ -32,7 +30,6 @@ class ContentViewModel: ObservableObject {
             UserDefaults.standard.setValue(days, forKey:"days")
             UserDefaults.standard.setValue(time, forKey:"time")
             UserDefaults.standard.set(try? PropertyListEncoder().encode(mealPlannerItems), forKey:"mealPlanner")
-            print("saved")
         }
     }
     
@@ -86,7 +83,11 @@ class ContentViewModel: ObservableObject {
     @Published var suggestedForBuyIngredients: [Ingredient] = []
     @Published var selectedForBuyIngredients: [Ingredient] = []
     
-    @Published var shoppingList: [Ingredient: Int] = [:]
+    @Published var shoppingList: [Ingredient: Int] = [:] {
+        didSet {print("shoppingList --> \(self.shoppingList.count)")
+            UserDefaults.standard.set(try? PropertyListEncoder().encode(shoppingList), forKey:"shoppingList")
+        }
+    }
     
     @Published var week: [Week]
     @Published var selectedDay: Week = Week(name: "Monday", russianName: "Понедельник")
@@ -102,7 +103,6 @@ class ContentViewModel: ObservableObject {
         self.selectedDay = self.week[self.week.firstIndex(where: {
             $0.name == DateFormatter().weekdaySymbols[Calendar.current.component(.weekday, from: Date())-1]
         }) ?? 0]
-        
         self.suggestedIngredients = allIngredients
         self.suggestedForBuyIngredients = allIngredients
         
@@ -173,40 +173,14 @@ class ContentViewModel: ObservableObject {
             }.assign(to: \.searchIngredientsItems, on: self)
             .store(in: &self.cancellableSet4)
         
-        if AuthApi.token != nil {
-        AuthApi.getLikes(completion: { result in
-            switch result {
-            case .success(let response):
-                if response.status == false {
-                    print(response)
-                } else {
-                    for i in response.response {
-                        AuthApi.getMealFromUid(uid: i.recipeUid!) { result in
-                            switch result {
-                            case .success(let meal):                                
-                                if !self.favoriteMeals.contains(meal) {
-                                DispatchQueue.main.async {
-                                    self.favoriteMeals.append(meal)
-                                      }
-                                }
-                            case .failure(let error):
-                                print(error.localizedDescription)
-                            }
-                        }
-                    }
-                }
-            case .failure(let error):
-                print(error.localizedDescription)
-            }
-        })
-        }
-        
+        getLikes()
         loadName()
-        
+        AuthApi.loadUserImage()
+        loadFavorite()
         
         var days: [Date] = []
         var time: [String] = []
-
+        
         if let day = UserDefaults.standard.value(forKey:"days") as? [Date] {
             days = day
         }
@@ -221,9 +195,70 @@ class ContentViewModel: ObservableObject {
                 mealPlannerItems[i].dayOfWeek = DayOfWeek(date: days[i], time: time[i])
             }
         }
+    }
+    
+    private func getLikes() {
+        if AuthApi.token != nil {
+            AuthApi.getLikes(completion: { result in
+                switch result {
+                case .success(let response):
+                    if response.status == false {
+                        print(response)
+                    } else {
+                        for i in response.response {
+                            AuthApi.getMealFromUid(uid: i.recipeUid!) { result in
+                                switch result {
+                                case .success(let meal):
+                                    if !self.favoriteMeals.contains(meal) {
+                                        DispatchQueue.main.async {
+                                            self.favoriteMeals.append(meal)
+                                        }
+                                    }
+                                case .failure(let error):
+                                    print(error.localizedDescription)
+                                }
+                            }
+                        }
+                    }
+                case .failure(let error):
+                    print(error.localizedDescription)
+                }
+            })
+        }
+    }
+    func loadFavorite() {
+        if AuthApi.token != nil {
+            AuthApi.getLikes(completion: { result in
+                switch result {
+                case .success(let response):
+                    if response.status == false {
+                        print(response)
+                    } else {
+                        for i in response.response {
+                            AuthApi.getMealFromUid(uid: i.recipeUid!) { result in
+                                switch result {
+                                case .success(let meal):
+                                    if !self.favoriteMeals.contains(meal) {
+                                        DispatchQueue.main.async {
+                                            self.favoriteMeals.append(meal)
+                                        }
+                                    }
+                                case .failure(let error):
+                                    print(error.localizedDescription)
+                                }
+                            }
+                        }
+                    }
+                case .failure(let error):
+                    print(error.localizedDescription)
+                }
+            })
+        }
         
-
-        
+        if let shopList  = UserDefaults.standard.value(forKey: "shoppingList") as? Data {
+            shoppingList = try! PropertyListDecoder().decode([Ingredient: Int].self, from: shopList)
+            selectedForBuyIngredients = shoppingList.map({ $0.key})
+        }
     }
     
     private func mealPlannerFunc(day: Week) -> ([Meal], [Meal], [Meal]) {
@@ -233,7 +268,17 @@ class ContentViewModel: ObservableObject {
         
         for item in self.mealPlannerItems {
             if let i = item.dayOfWeek {
-                if getTodayWeekDay(date: i.date) == day.name {
+                
+                
+                let translateWeekDay: [String: String] = ["понедельник": "Monday",
+                                                          "вторник": "Tuesday",
+                                                          "среда": "Wednesday",
+                                                          "четверг": "Thursday",
+                                                          "пятница": "Friday",
+                                                          "суббота": "Saturday",
+                                                          "воскресенье": "Sunday"]
+                
+                if translateWeekDay[getTodayWeekDay(date: i.date)] == day.name {
                     if i.time == "breakfast" {
                         breakfast.append(item)
                     }

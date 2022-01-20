@@ -133,11 +133,21 @@ struct MealView: View {
             
             ScrollView {
                 VStack(){
-                    ArticleImage(imageLoader: ImageLoaderCache.shared.loaderFor(
-                        article: item))
-                        .frame(width: 150, height: 150, alignment: .center)
-                        .cornerRadius(15)
-                        .padding(.bottom, 15)
+                    ZStack(alignment: Alignment(horizontal: .trailing, vertical: .bottom), content: {
+                        ArticleImage(imageLoader: ImageLoaderCache.shared.loaderFor(
+                            article: item))
+                            .frame(width: 150, height: 150, alignment: .center)
+                            .cornerRadius(15)
+                            .padding(.bottom, 15)
+                        
+                        Image("povarenok")
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 30, height: 30, alignment: .center)
+                            .cornerRadius(8, corners: [.bottomRight, .topLeft])
+//                            .padding(.trailing, 5)
+                            .padding(.bottom, 15)
+                    })
                     
                     Text(item.name)
                         .font(.system(size: 20))
@@ -205,7 +215,7 @@ struct MealView: View {
                             Button(action: {
                                 if countServings != 1 {
                                 for index in (0 ..< item.ingredients!.count) {
-                                    item.ingredients![index].amount = item.ingredients![index].amount! * Double(countServings)} //!!!
+                                    item.ingredients![index].amount = item.ingredients![index].amount ?? 1 * Double(countServings)} //!!!
                                     countServings -= 1
                                 }
                             }, label: {
@@ -292,10 +302,19 @@ struct MealView: View {
                                     
                                     HStack(){
                                         Spacer()
-                                    ArticleImage(imageLoader: ImageLoaderCache.shared.loaderForStage(
-                                        article: i))
-                                        .frame(width: 220, height: 180, alignment: .center)
-                                        .cornerRadius(15)
+                                        ZStack(alignment: Alignment(horizontal: .trailing, vertical: .bottom), content: {
+                                            
+                                            ArticleImage(imageLoader: ImageLoaderCache.shared.loaderForStage(
+                                                article: i))
+                                                .frame(width: 220, height: 180, alignment: .center)
+                                                .cornerRadius(15)
+                                            
+                                            Image("povarenok")
+                                                .resizable()
+                                                .scaledToFill()
+                                                .frame(width: 30, height: 30, alignment: .center)
+                                                .cornerRadius(10, corners: [.bottomRight, .topLeft])
+                                        })
                                         Spacer()
                                     }
                                     Spacer()
@@ -310,7 +329,8 @@ struct MealView: View {
                             .frame(height: self.hue + 300)
                             .padding()
                         
-                        Text("Все рецепты вместе с фотографиями, ингредиентами и этапами приготовления взяты с сайта https://www.povarenok.ru")
+                        Text("Весь контент взят с сайта https://www.povarenok.ru")
+                            .font(.system(size: 15))
                             .foregroundColor(.gray)
                             .multilineTextAlignment(.center)
                             .padding()

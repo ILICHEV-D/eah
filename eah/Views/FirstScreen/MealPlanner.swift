@@ -11,10 +11,21 @@ struct MealPlanner: View {
         ZStack(alignment: .topLeading ){
             
             ZStack(alignment: Alignment(horizontal: .center, vertical: .bottom), content: {
-                ArticleImage(imageLoader: ImageLoaderCache.shared.loaderFor(
-                    article: item))
-                    .frame(width: 220, height: 300, alignment: .center)
-                    .cornerRadius(16)
+                ZStack(alignment: Alignment(horizontal: .trailing, vertical: .top), content: {
+                    
+                    ArticleImage(imageLoader: ImageLoaderCache.shared.loaderFor(
+                        article: item))
+                        .frame(width: 220, height: 300, alignment: .center)
+                        .cornerRadius(16)
+                    
+                    Image("povarenok")
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 30, height: 30, alignment: .center)
+                        .cornerRadius(8)
+                        .padding(.trailing, 5)
+                        .padding(.top, 5)
+                })
                 
                 ZStack(alignment: .leading) {
                     BlurView(style: .regular).frame(width: 197, height: 55)

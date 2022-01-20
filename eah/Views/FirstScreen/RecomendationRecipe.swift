@@ -5,27 +5,32 @@ struct RecomendationRecipe: View {
         
     var body: some View {
         VStack{
-            ZStack(alignment: Alignment(horizontal: .leading, vertical: .bottom), content: {
-                
-                ArticleImage(imageLoader: ImageLoaderCache.shared.loaderFor(
-                    article: item))
-                    .frame(width: 140, height: 140)
-                    .cornerRadius(8)
-                
-                Text(item.stringTime ?? "")
-                    .foregroundColor(.black)
-                    .padding(.vertical, 8)
-                    .padding(.horizontal, 8)
-                    .padding(.leading,0)
-                    .background(Color(red: 1, green: 1, blue: 1, opacity: 0.7))
-                    .cornerRadius(8, corners: [.bottomLeft, .topRight])
-                    .font(Font.system(size: 11))
-                
+            ZStack(alignment: Alignment(horizontal: .trailing, vertical: .bottom), content: {
+                ZStack(alignment: Alignment(horizontal: .leading, vertical: .bottom), content: {
+                    
+                    ArticleImage(imageLoader: ImageLoaderCache.shared.loaderFor(
+                        article: item))
+                        .frame(width: 140, height: 140)
+                        .cornerRadius(8)
+                    
+                    Text(item.stringTime ?? "")
+                        .foregroundColor(.black)
+                        .padding(.vertical, 8)
+                        .padding(.horizontal, 8)
+                        .padding(.leading,0)
+                        .background(Color(red: 1, green: 1, blue: 1, opacity: 0.7))
+                        .cornerRadius(8, corners: [.bottomLeft, .topRight])
+                        .font(Font.system(size: 11))
+                })
+                Image("povarenok")
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 20, height: 20, alignment: .center)
+                    .cornerRadius(6, corners: [.bottomRight, .topLeft])
             })
             
             HStack {
                 Text(item.name)
-                    .fontWeight(.semibold)
                     .font(.system(size: 14))
                     .foregroundColor(Color(UIColor.black))
                     .multilineTextAlignment(.leading)
