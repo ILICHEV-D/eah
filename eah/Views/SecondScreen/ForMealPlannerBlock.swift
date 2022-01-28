@@ -30,6 +30,7 @@ struct ForMealPlannerBlock: View {
                 Text(item.name).font(.system(size: 14))
                     .fontWeight(.medium)
                     .foregroundColor(Color(UIColor.black))
+                    .multilineTextAlignment(.leading)
                 Text("🔥 \(Int(item.ePower?.calories ?? 0)) калорий").font(.system(size: 12))
                     .foregroundColor(Color(UIColor.black))
                 Text(String(item.stringTime ?? ""))

@@ -159,7 +159,7 @@ struct AuthResponse: Codable {
 struct AuthSimpleResponse: Codable {
     let status: Bool
     let response: String?
-
+    
 }
 
 struct LikesModel: Codable {
@@ -172,7 +172,7 @@ struct LikesModel: Codable {
 struct Response: Codable {
     let uid, userUid, user, recipeUid: String?
     let recipe, createDate: String?
-
+    
     enum CodingKeys: String, CodingKey {
         case uid = "Uid"
         case userUid = "UserUid"

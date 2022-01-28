@@ -33,6 +33,25 @@ class ContentViewModel: ObservableObject {
         }
     }
     
+    
+    
+    @Published var recomendationLimit: Int = 0 {
+        didSet {print("recomendationLimit --> \(self.recomendationLimit)")}
+    }
+    
+    @Published var popularLimit: Int = 0 {
+        didSet {print("popularLimit --> \(self.popularLimit)")}
+    }
+    
+    @Published var allItemsLimit: Int = 0 {
+        didSet {print("allItemsLimit --> \(self.allItemsLimit)")}
+    }
+    
+    @Published var mealWithIngredientsLimit: Int = 0 {
+        didSet {print("mealWithIngredientsLimit --> \(self.mealWithIngredientsLimit)")}
+    }
+    
+    
     @Published var recomendationItems: [Meal] = [] {
         didSet {print("recomendationItems --> \(self.recomendationItems.count)")}
     }
@@ -57,9 +76,9 @@ class ContentViewModel: ObservableObject {
         didSet {print("mealWithIngredients --> \(self.mealWithIngredients.count)")}
     }
     
-    @Published var endpoint0: Endpoint = Endpoint(index: 0, limit: 1)!
-    @Published var endpoint1: Endpoint = Endpoint(index: 1, limit: 1)!
-    @Published var endpoint2: Endpoint = Endpoint(index: 2, limit: 1)!
+    @Published var endpoint0: Endpoint = Endpoint(index: 0, limit: 0)!
+    @Published var endpoint1: Endpoint = Endpoint(index: 1, limit: 0)!
+    @Published var endpoint2: Endpoint = Endpoint(index: 2, limit: 0)!
     @Published var endpoint3: Endpoint = Endpoint(index: 5, limit: 1)!
     @Published var endpoint6: Endpoint = Endpoint(index: 6, limit: 1)!
     
@@ -111,7 +130,8 @@ class ContentViewModel: ObservableObject {
         $endpoint0
             .flatMap { (endpoint0) -> AnyPublisher<[Meal], Never> in
                 MealAPI.shared.fetchMeals(from: endpoint0)}
-            .assign(to: \.allItems, on: self)
+            .sink(receiveValue: { meals in
+                self.allItems.append(contentsOf: meals)})
             .store(in: &self.cancellableSet0)
         
         $endpoint1
@@ -124,7 +144,8 @@ class ContentViewModel: ObservableObject {
         $endpoint2
             .flatMap { (endpoint2) -> AnyPublisher<[Meal], Never> in
                 MealAPI.shared.fetchMeals(from: endpoint2)}
-            .assign(to: \.popular, on: self)
+            .sink(receiveValue: { meals in
+                self.popular.append(contentsOf: meals)})
             .store(in: &self.cancellableSet2)
         
         $endpoint3
@@ -136,7 +157,8 @@ class ContentViewModel: ObservableObject {
         $endpoint6
             .flatMap { (endpoint6) -> AnyPublisher<[Meal], Never> in
                 MealAPI.shared.fetchMeals(from: .mealWithIngredients(limit: 1, searchString: self.searchStringMealsWithIngr))}
-            .assign(to: \.mealWithIngredients, on: self)
+            .sink(receiveValue: { meals in
+                self.mealWithIngredients.append(contentsOf: meals)})
             .store(in: &self.cancellableSet6)
         
         $searchName
@@ -256,8 +278,11 @@ class ContentViewModel: ObservableObject {
         }
         
         if let shopList  = UserDefaults.standard.value(forKey: "shoppingList") as? Data {
-            shoppingList = try! PropertyListDecoder().decode([Ingredient: Int].self, from: shopList)
-            selectedForBuyIngredients = shoppingList.map({ $0.key})
+            DispatchQueue.main.async {
+                self.shoppingList = try! PropertyListDecoder().decode([Ingredient: Int].self, from: shopList)
+                self.selectedForBuyIngredients = self.shoppingList.map({ $0.key})
+            }
+            
         }
     }
     

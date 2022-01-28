@@ -10,6 +10,7 @@ import SwiftUI
 struct ArticleImage: View {
     @ObservedObject var imageLoader: ImageLoader
     @State private var animate = false
+    var customIndicator: Bool? = false
     
     var body: some View {
         Group {
@@ -22,15 +23,13 @@ struct ArticleImage: View {
                     } else {
                         if imageLoader.url != nil {
                             Rectangle()
-                                .foregroundColor(.init(red: 233/255, green: 237/255, blue: 240/255))
+                                .foregroundColor(Color(UIColor.systemGray6))
                                 .frame(width: (UIScreen.main.bounds.width) * 0.75,
                                        height: UIScreen.main.bounds.width  * 0.6,
                                        alignment: .center)
                                 .scaledToFit()
                                 .overlay(
-                                    Text("")
-                                        .font(.footnote)
-                                        .foregroundColor(.white)
+                                    ProgressView()
                                 )
                         } else {
                             EmptyView()

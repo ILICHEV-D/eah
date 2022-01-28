@@ -17,6 +17,9 @@ struct FifthScreen: View {
     @State private var numbers = ["Избранные", "Помощь"]
     @State private var userName: () = AuthApi.loadName()
     @State private var userImage: UIImage? = AuthApi.userImage
+    
+    @State var selection: Int? = nil
+
     {
         didSet {
             if let image = userImage {
@@ -66,16 +69,17 @@ struct FifthScreen: View {
                         ZStack {
                             
                             ZStack(alignment: Alignment(horizontal: .trailing, vertical: .bottom), content: {
-                                Image(uiImage: userImage ?? UIImage()).renderingMode(.original)
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fill)
-                                    .frame(width: 120, height: 120, alignment: .center)
-                                    .background(Color(.systemGray5))
-                                    .cornerRadius(60)
-                                //                                    .padding(.bottom, 5)
+
                                 
-                                Button(" + ") {
+                                Button(action: {
                                     showingOptions = true
+                                }) {
+                                    Image(uiImage: userImage ?? UIImage()).renderingMode(.original)
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fill)
+                                        .frame(width: 120, height: 120, alignment: .center)
+                                        .background(Color(.systemGray5))
+                                        .cornerRadius(60)
                                 }
                                 .actionSheet(isPresented: $showingOptions) {
                                     ActionSheet(
@@ -132,19 +136,28 @@ struct FifthScreen: View {
                                         }
                                     }.padding()
                                 })
-                                NavigationLink(destination: ListOfMeals(items: viewModel.allItems)){
-                                    HStack {
-                                        Text("Больше рецептов")
-                                            .font(.system(size: 16))
-                                            .fontWeight(.semibold)
-                                            .foregroundColor(.white)
-                                        Spacer()
-                                        Image("arrow")
-                                    }.padding()
-                                        .frame(width: UIScreen.screenWidth - 100, height: 55, alignment: .center)
-                                        .background(Color("mainColor"))
-                                        .cornerRadius(16)
-                                        .shadow(color: Color("mainColor").opacity(0.2), radius: 5, x: 3, y: 3)
+                                
+                                NavigationLink(destination: ListOfMeals(searchStatus: true, items: viewModel.allItems, index: 0), tag: 0, selection: $selection)
+                                    {
+
+                                    Button(action: {
+                                        viewModel.allItemsLimit += 10
+                                        viewModel.endpoint0 = Endpoint(index: 0, limit: viewModel.allItemsLimit)!
+                                        self.selection = 0
+                                    }) {
+                                        HStack {
+                                            Text("Больше рецептов")
+                                                .font(.system(size: 16))
+                                                .fontWeight(.semibold)
+                                                .foregroundColor(.white)
+                                            Spacer()
+                                            Image("arrow")
+                                        }.padding()
+                                            .frame(width: UIScreen.screenWidth - 100, height: 55, alignment: .center)
+                                            .background(Color("mainColor"))
+                                            .cornerRadius(16)
+                                            .shadow(color: Color("mainColor").opacity(0.2), radius: 5, x: 3, y: 3)
+                                    }
                                 }
                             }
                         } else  if selectorIndex == 1 {

@@ -1,10 +1,3 @@
-//
-//  eahApp.swift
-//  eah
-//
-//  Created by Danil Ilichev on 22.04.2021.
-//
-
 import SwiftUI
 import UIKit
 @main
@@ -13,16 +6,14 @@ struct eahApp: App {
     @Environment(\.scenePhase) var scenePhase    
     
     init() {
-        UITabBar.appearance().barTintColor = UIColor(named: "mainColor")
-            UITabBar.appearance().tintColor =  UIColor(named: "mainColor")
-            UITabBar.appearance().isTranslucent = true
-
             if #available(iOS 15.0, *) {
                 let appearance = UITabBarAppearance()
                 appearance.configureWithOpaqueBackground()
                 UITabBar.appearance().standardAppearance = appearance
                 UITabBar.appearance().scrollEdgeAppearance = UITabBar.appearance().standardAppearance
             }
+        UITabBar.appearance().tintColor =  UIColor(named: "mainColor")
+        UITabBar.appearance().isTranslucent = true
         
         AuthApi.loadToken()
     }
@@ -42,6 +33,5 @@ struct eahApp: App {
                 print("Some strange problem")
             }
         }
-        
     }
 }

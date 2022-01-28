@@ -45,7 +45,7 @@ extension MyError: LocalizedError {
 // MARK: - AuthAPI
 
 public final class AuthApi {
-
+    
     static var userImage: UIImage? = UIImage(named: "profile") {
         didSet {print("changeImage")}
     }
@@ -98,10 +98,10 @@ public final class AuthApi {
         let appURL = NSURL(string: "tg://resolve?domain=eahapp")!
         let webURL = NSURL(string: "https://t.me/eahapp")!
         if UIApplication.shared.canOpenURL(appURL as URL) {
-                UIApplication.shared.open(appURL as URL, options: [:], completionHandler: nil)
+            UIApplication.shared.open(appURL as URL, options: [:], completionHandler: nil)
         }
         else {
-                UIApplication.shared.open(webURL as URL, options: [:], completionHandler: nil)
+            UIApplication.shared.open(webURL as URL, options: [:], completionHandler: nil)
         }
     }
     
@@ -109,10 +109,10 @@ public final class AuthApi {
         let appURL = URL(string: "instagram://user?username=eahapp")!
         let webURL = URL(string: "https://instagram.com/eahapp")!
         if UIApplication.shared.canOpenURL(appURL as URL) {
-                UIApplication.shared.open(appURL as URL, options: [:], completionHandler: nil)
+            UIApplication.shared.open(appURL as URL, options: [:], completionHandler: nil)
         }
         else {
-                UIApplication.shared.open(webURL as URL, options: [:], completionHandler: nil)
+            UIApplication.shared.open(webURL as URL, options: [:], completionHandler: nil)
         }
     }
     
@@ -127,7 +127,7 @@ public final class AuthApi {
     
     static func loadUserImage() {
         if let imageData = UserDefaults.standard.object(forKey: "userImage") as? Data {
-           self.userImage = UIImage(data: imageData)
+            self.userImage = UIImage(data: imageData)
             print("Изображение профиля загружено")
         }
     }
@@ -175,7 +175,7 @@ public final class AuthApi {
         token = nil
     }
     
-
+    
 }
 
 
@@ -312,35 +312,35 @@ extension AuthApi {
         task.resume()
     }
     
-        static func getLikes(completion: @escaping ((Result<LikesModel, Error>) -> Void)) {
-            guard let url = URL(string: Consts.URLStringLikes) else {
-                completion(.failure(MyError.invalidURL))
-                return
-            }
-    
-            var request = URLRequest(url: url)
-            request.httpMethod = "GET"
-    
-            request.addValue("escapp.icyftl.ru", forHTTPHeaderField: "Host")
-            request.setValue( "Bearer \(token!)", forHTTPHeaderField: "Authorization")
-    
-            let session = URLSession.shared
-            let task = session.dataTask(with: request) { data, response, error in
-                if let error = error {
-                    completion(.failure(error))
-                } else if let data = data {
-                    do {
-                        let response = try JSONDecoder().decode(LikesModel.self, from: data)
-                        completion(.success(response))
-                    } catch let error as NSError {
-                        completion(.failure(error))
-                    }
-                } else {
-                    completion(.failure(MyError.format))
-                }
-            }
-            task.resume()
+    static func getLikes(completion: @escaping ((Result<LikesModel, Error>) -> Void)) {
+        guard let url = URL(string: Consts.URLStringLikes) else {
+            completion(.failure(MyError.invalidURL))
+            return
         }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        
+        request.addValue("escapp.icyftl.ru", forHTTPHeaderField: "Host")
+        request.setValue( "Bearer \(token!)", forHTTPHeaderField: "Authorization")
+        
+        let session = URLSession.shared
+        let task = session.dataTask(with: request) { data, response, error in
+            if let error = error {
+                completion(.failure(error))
+            } else if let data = data {
+                do {
+                    let response = try JSONDecoder().decode(LikesModel.self, from: data)
+                    completion(.success(response))
+                } catch let error as NSError {
+                    completion(.failure(error))
+                }
+            } else {
+                completion(.failure(MyError.format))
+            }
+        }
+        task.resume()
+    }
     
     
     static func getMealFromUid (uid: String, completion: @escaping ((Result<Meal, Error>) -> Void)) {
@@ -348,10 +348,10 @@ extension AuthApi {
             completion(.failure(MyError.invalidURL))
             return
         }
-
+        
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
-
+        
         let session = URLSession.shared
         let task = session.dataTask(with: request) { data, response, error in
             if let error = error {
@@ -359,9 +359,8 @@ extension AuthApi {
             } else if let data = data {
                 do {
                     let response = try JSONDecoder().decode(MealResponse.self, from: data)
-//                        print(response.response)
                     if let meal = response.response?[0] {
-                    completion(.success(meal))
+                        completion(.success(meal))
                     }
                 } catch let error as NSError {
                     completion(.failure(error))

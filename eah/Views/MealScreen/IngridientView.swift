@@ -13,7 +13,7 @@ struct IngredientView: View {
     @Binding var amount: Int
     
     var body: some View {
-        HStack (spacing: 30){
+        HStack (spacing: 15){
             Text(item.imageSmile)
                 .fontWeight(.medium)
                 .font(.system(size: 26))
@@ -25,13 +25,13 @@ struct IngredientView: View {
             Spacer()
             
             if item.amount != nil {
-            if item.amount?.truncatingRemainder(dividingBy: 1) == 0.0 {
-                Text(String(Int((item.amount ?? 0.0)) * Int(amount)) + " " + (item.unit ?? "")).font(.system(size: 16))
-                .fontWeight(.medium)
-            } else {
-                Text(String((item.amount ?? 0.0) * Double(amount)) + " " + (item.unit ?? "")).font(.system(size: 16))
-                .fontWeight(.medium)
-            }
+                if item.amount?.truncatingRemainder(dividingBy: 1) == 0.0 {
+                    Text(String(Int((item.amount ?? 0.0)) * Int(amount)) + " " + (item.unit ?? "")).font(.system(size: 16))
+                        .fontWeight(.medium)
+                } else {
+                    Text(String((item.amount ?? 0.0) * Double(amount)) + " " + (item.unit ?? "")).font(.system(size: 16))
+                        .fontWeight(.medium)
+                }
             }
         }
     }

@@ -13,6 +13,7 @@ struct AuthScreen: View {
     
     @State var loginQuery = ""
     @State var passwordQuery = ""
+    @State var passwordСheckQuery = ""
     @State var nameQuery = ""
     @State var ageQuery = ""
     @State var errorMessage: String? = nil
@@ -83,9 +84,17 @@ struct AuthScreen: View {
                                 .background(Color("arrowGrayColor"))
                                 .cornerRadius(16)
                                 .shadow(color: Color("arrowGrayColor").opacity(0.2), radius: 5, x: 3, y: 3)
-                                
+                            
                             
                             if registrationIsShow {
+                                
+                                SecureField("Повторите парль", text: $passwordСheckQuery, onCommit:  {
+                                    UIApplication.shared.endEditing()
+                                }).padding()
+                                    .frame(width: UIScreen.screenWidth - 100, height: 55, alignment: .center)
+                                    .background(Color("arrowGrayColor"))
+                                    .cornerRadius(16)
+                                    .shadow(color: Color("arrowGrayColor").opacity(0.2), radius: 5, x: 3, y: 3)
                                 
                                 TextField("Имя", text: $nameQuery, onCommit:  {
                                     UIApplication.shared.endEditing()
@@ -133,7 +142,9 @@ struct AuthScreen: View {
                                             } else {
                                                 self.presentationMode.wrappedValue.dismiss()
                                                 AuthApi.saveAll(token: response.response.token, name: response.response.firstName ?? "", age: response.response.age ?? 0, sex: response.response.sex ?? true)
-                                                viewModel.userName = response.response.firstName ?? ""
+                                                DispatchQueue.main.sync {
+                                                    viewModel.userName = response.response.firstName ?? ""
+                                                }
                                                 tokenState = AuthApi.token
                                                 viewModel.loadFavorite()
                                                 errorMessage = nil
@@ -170,6 +181,10 @@ struct AuthScreen: View {
                             
                             Button(action: {
                                 registrationIsShow = true
+                                guard passwordСheckQuery == passwordQuery else {
+                                    errorMessage = "Пароли не совпадают"
+                                    return
+                                }
                                 if loginQuery.count == 0 || passwordQuery.count == 0 || ageQuery.count == 0 || nameQuery.count == 0 {
                                     errorMessage = "Пустые поля"
                                 } else {

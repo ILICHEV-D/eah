@@ -18,10 +18,15 @@ struct FirstScreen: View {
                     Text("Популярное")
                         .fontWeight(.semibold)
                     Spacer()
-                    
-                    NavigationLink(
-                        destination: ListOfMeals(searchStatus: true, items: viewModel.allItems),
-                        label: {
+                
+                    NavigationLink(destination: ListOfMeals(searchStatus: true, items: viewModel.allItems, index: 0), tag: 0, selection: $selection)
+                        {
+
+                        Button(action: {
+                            viewModel.allItemsLimit += 10
+                            viewModel.endpoint0 = Endpoint(index: 0, limit: viewModel.allItemsLimit)!
+                            self.selection = 0
+                        }) {
                             Spacer()
                             Image(systemName: "magnifyingglass")
                                 .font(.title2)
@@ -29,7 +34,8 @@ struct FirstScreen: View {
                                 .background(Color(UIColor.systemGray).opacity(0.12))
                                 .foregroundColor(.black)
                                 .cornerRadius(9.5)
-                        })
+                        }
+                    }
                 }.padding().frame(width: UIScreen.screenWidth, height: 50, alignment: .center)
                 
                 // MARK: - MainCode
@@ -51,9 +57,11 @@ struct FirstScreen: View {
                         Text("Хочешь что-нибудь приготовить?")
                             .font(.system(size: 20))
                             .fontWeight(.semibold)
+                            .multilineTextAlignment(.center)
                     }.padding()
                     
                     // MARK: Recommnedation
+                    
                     
                     HStack{
                         Text("Рекомендованные рецепты")
@@ -62,9 +70,10 @@ struct FirstScreen: View {
                         
                         Spacer()
                         
-                        NavigationLink(destination: ListOfMeals(items: viewModel.recomendationItems), tag: 1, selection: $selection) {
+                        NavigationLink(destination: ListOfMeals(items: viewModel.recomendationItems, index: 1), tag: 1, selection: $selection) {
                             Button(action: {
-                                viewModel.endpoint1 = Endpoint(index: 1, limit: 10)!
+                                viewModel.recomendationLimit += 10
+                                viewModel.endpoint1 = Endpoint(index: 1, limit: viewModel.recomendationLimit)!
                                 self.selection = 1
                             }) {
                                 Text("Все")
@@ -98,9 +107,10 @@ struct FirstScreen: View {
                         
                         Spacer()
                         
-                        NavigationLink(destination: ListOfMeals(items: viewModel.popular), tag: 2, selection: $selection) {
+                        NavigationLink(destination: ListOfMeals(items: viewModel.popular, index: 2), tag: 2, selection: $selection) {
                             Button(action: {
-                                viewModel.endpoint2 = Endpoint(index: 2, limit: 10)!
+                                viewModel.popularLimit += 10
+                                viewModel.endpoint2 = Endpoint(index: 2, limit: viewModel.popularLimit)!
                                 self.selection = 2
                             }) {
                                 Text("Все")

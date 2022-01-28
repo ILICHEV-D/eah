@@ -3,7 +3,7 @@ import SwiftUI
 struct SecondScreen: View {
     
     @EnvironmentObject var viewModel: ContentViewModel
-
+    
     
     var body: some View {
         
@@ -35,11 +35,11 @@ struct SecondScreen: View {
                                         }
                                         
                                     }, label: {
-                                            Text(item.russianName.prefix(3))
-                                                .font(.system(size: 16))
-                                                .fontWeight(.semibold)
-                                                .foregroundColor(viewModel.selectedDay.id == item.id ? Color("mainColor") : .gray)
-                                        }).padding(.vertical, 9)
+                                        Text(item.russianName.prefix(3))
+                                            .font(.system(size: 16))
+                                            .fontWeight(.semibold)
+                                            .foregroundColor(viewModel.selectedDay.id == item.id ? Color("mainColor") : .gray)
+                                    }).padding(.vertical, 9)
                                         .padding(.horizontal)
                                         .background(viewModel.selectedDay.id == item.id ? Color("backColor") : Color(UIColor.systemGray6))
                                         .cornerRadius(8)

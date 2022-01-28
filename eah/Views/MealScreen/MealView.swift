@@ -14,7 +14,12 @@ struct MealView: View {
     @EnvironmentObject var viewModel: ContentViewModel
     
     @State private var showingAlert = false
-
+    
+    @State var changeImageOfCart : Bool = false
+    
+    let impactLight = UIImpactFeedbackGenerator(style: .medium)
+    
+    
     
     var body: some View {
         
@@ -39,7 +44,7 @@ struct MealView: View {
                 Spacer()
                 
                 // MARK: - From meal planner
-
+                
                 if fromMealPlanner == true {
                     
                     Button(action: {
@@ -62,13 +67,13 @@ struct MealView: View {
                 }
                 
                 // MARK: - From list
-
+                
                 else {
                     Button(action: {
                         let itemUID = item.uid
                         guard AuthApi.token != nil else {
-                                self.showingAlert = true
-                                return
+                            self.showingAlert = true
+                            return
                         }
                         if viewModel.favoriteMeals.contains(item){
                             AuthApi.sendUnlike(recipeUid: itemUID,  completion: { result in
@@ -80,7 +85,7 @@ struct MealView: View {
                                         let index = viewModel.favoriteMeals.firstIndex(where: {$0.uid == itemUID})
                                         if let indexForRemove = index {
                                             DispatchQueue.main.async {
-                                        viewModel.favoriteMeals.remove(at: indexForRemove)
+                                                viewModel.favoriteMeals.remove(at: indexForRemove)
                                             }
                                         }
                                     }
@@ -89,6 +94,7 @@ struct MealView: View {
                                 }
                             })
                         } else {
+                            impactLight.impactOccurred()
                             AuthApi.sendLike(recipeUid: itemUID,  completion: { result in
                                 switch result {
                                 case .success(let response):
@@ -100,10 +106,10 @@ struct MealView: View {
                                             viewModel.favoriteMeals.append(item)
                                         }
                                     }
-                                    case .failure(let error):
-                                        print(error.localizedDescription)
-                                    }
-                                })
+                                case .failure(let error):
+                                    print(error.localizedDescription)
+                                }
+                            })
                         }
                         
                     }, label: {
@@ -115,7 +121,6 @@ struct MealView: View {
                                 .foregroundColor(.black)
                         }
                         else {
-
                             Image(systemName: "suit.heart")
                                 .font(.title2)
                                 .frame(width: 40, height: 40, alignment: .center).cornerRadius(9.5)
@@ -145,7 +150,7 @@ struct MealView: View {
                             .scaledToFill()
                             .frame(width: 30, height: 30, alignment: .center)
                             .cornerRadius(8, corners: [.bottomRight, .topLeft])
-//                            .padding(.trailing, 5)
+                        //                            .padding(.trailing, 5)
                             .padding(.bottom, 15)
                     })
                     
@@ -153,10 +158,10 @@ struct MealView: View {
                         .font(.system(size: 20))
                         .fontWeight(.bold)
                         .padding(.bottom, 1)
-                                        
-                    Text("Калории  \(Int(item.ePower?.calories ?? 0)) 🔥").font(.system(size: 12))
+                        .multilineTextAlignment(.center)
+                    
+                    Text("Калории  \(Int(item.ePower?.calories ?? 0) * countServings) 🔥").font(.system(size: 12))
                         .fontWeight(.medium)
-                        .padding(.bottom, 20)
                     
                     Text(item.description ?? "")
                         .fontWeight(.medium)
@@ -170,19 +175,19 @@ struct MealView: View {
                     HStack(spacing: 20){
                         VStack(spacing: 7){
                             Text("Белки").font(.system(size: 14)).fontWeight(.medium)
-                            Text("🍗 \(Int(item.ePower?.proteins ?? 0)) г").font(.system(size: 12)).foregroundColor(.gray).fontWeight(.medium)
+                            Text("🍗 \(Int(item.ePower?.proteins ?? 0) * countServings) г").font(.system(size: 12)).foregroundColor(.gray).fontWeight(.medium)
                         }
                         
                         ChangeDivider()
                         VStack(spacing: 7){
                             Text("Жиры").font(.system(size: 14)).fontWeight(.medium)
-                            Text("🥜 \(Int(item.ePower?.fats ?? 0)) г").font(.system(size: 12)).foregroundColor(.gray).fontWeight(.medium)
+                            Text("🥜 \(Int(item.ePower?.fats ?? 0) * countServings) г").font(.system(size: 12)).foregroundColor(.gray).fontWeight(.medium)
                         }
                         
                         ChangeDivider()
                         VStack(spacing: 7){
                             Text("Углеводы").font(.system(size: 14)).fontWeight(.medium)
-                            Text("🍞 \(Int(item.ePower?.carbonhydrates ?? 0)) г").font(.system(size: 12)).foregroundColor(.gray).fontWeight(.medium)
+                            Text("🍞 \(Int(item.ePower?.carbonhydrates ?? 0) * countServings) г").font(.system(size: 12)).foregroundColor(.gray).fontWeight(.medium)
                         }
                     }
                     .frame(width: UIScreen.screenWidth - 60, height: 73, alignment: .center)
@@ -191,9 +196,9 @@ struct MealView: View {
                     .shadow(color: Color.black.opacity(0.1), radius: 5, x: 3, y: 3)
                     
                     HStack{
-                        VStack(alignment: .leading, spacing: 2) {
+                        VStack(alignment: .leading, spacing: 3) {
                             Text("Ингредиенты")
-                                .font(.system(size: 18))
+                                .font(.system(size: 16))
                                 .fontWeight(.medium)
                             Text("\(item.ingredients?.count ?? 0) продуктов")
                                 .fontWeight(.medium)
@@ -203,19 +208,41 @@ struct MealView: View {
                         
                         Spacer()
                         
+                        Button(action: {
+                            for ingredient in item.ingredients ?? [] {
+                                changeImageOfCart = true
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                                    changeImageOfCart = false
+                                }
+                                
+                                if !viewModel.shoppingList.contains(where: { $0.key.name == ingredient.name}) {
+                                    viewModel.shoppingList[ingredient] = Int(ingredient.amount ?? 1)
+                                }
+                            }
+                        }, label: {
+                            Image(systemName: changeImageOfCart == false ? "cart.fill" : "checkmark")
+                                .font(.system(size: 18, weight: .medium))
+                                .frame(width: 42, height: 42, alignment: .center)
+                                .background(Color("mainColor"))
+                                .foregroundColor(.white)
+                        }).cornerRadius(16)
+                        
                         HStack {
-                            Text(String(countServings))
-                                .foregroundColor(.white)
-                                .fontWeight(.bold)
-                            Text("порций")
-                                .foregroundColor(.white)
-                                .font(.system(size: 14))
-                                .fontWeight(.medium)
+                            HStack(spacing: 3) {
+                                Text(String(countServings))
+                                    .foregroundColor(.white)
+                                    .fontWeight(.bold)
+                                    .font(.system(size: 15))
+                                Text("порций")
+                                    .foregroundColor(.white)
+                                    .font(.system(size: 13))
+                                    .fontWeight(.medium)
+                            }
                             
                             Button(action: {
                                 if countServings != 1 {
-                                for index in (0 ..< item.ingredients!.count) {
-                                    item.ingredients![index].amount = item.ingredients![index].amount ?? 1 * Double(countServings)} //!!!
+                                    for index in (0 ..< item.ingredients!.count) {
+                                        item.ingredients![index].amount = item.ingredients![index].amount ?? 1 * Double(countServings)} //!!!
                                     countServings -= 1
                                 }
                             }, label: {
@@ -238,7 +265,7 @@ struct MealView: View {
                             }).cornerRadius(4)
                             
                         }
-                        .frame(width: 160, height: 42, alignment: .center)
+                        .frame(width: 140, height: 42, alignment: .center)
                         .background(Color("mainColor"))
                         .cornerRadius(16)
                     }.padding()
@@ -254,7 +281,7 @@ struct MealView: View {
                         
                     }.padding(.leading).padding(.bottom).padding(.trailing)
                     
-
+                    
                     if item.cookingStages?.count != 0 {
                         HStack{
                             VStack(alignment: .leading, spacing: 2) {
@@ -283,9 +310,9 @@ struct MealView: View {
                                             .fontWeight(.semibold)
                                         Spacer()
                                     }.padding(.bottom, 5)
-//                                    GeometryReader {geometry in
+                                    //                                    GeometryReader {geometry in
                                     Text(i.text ?? "")
-
+                                    
                                     
                                         .fontWeight(.medium)
                                         .multilineTextAlignment(.leading)
@@ -294,11 +321,11 @@ struct MealView: View {
                                         .foregroundColor(.black)
                                         .padding(.bottom, 5)
                                         .background(GeometryReader { (geometryProxy : GeometryProxy) in
-                                                        HStack {}
-                                                        .onAppear {
-                                                            self.hue = geometryProxy.size.height
-                                                        }
-                                                    })
+                                            HStack {}
+                                            .onAppear {
+                                                self.hue = geometryProxy.size.height
+                                            }
+                                        })
                                     
                                     HStack(){
                                         Spacer()
@@ -324,25 +351,18 @@ struct MealView: View {
                             }
                         }
                         .tabViewStyle(PageTabViewStyle(indexDisplayMode: .automatic))
-                            .indexViewStyle(PageIndexViewStyle(backgroundDisplayMode: .always))
-                            .id(numberOfPages)
-                            .frame(height: self.hue + 300)
-                            .padding()
+                        .indexViewStyle(PageIndexViewStyle(backgroundDisplayMode: .always))
+                        .id(numberOfPages)
+                        .frame(height: self.hue + 300)
+                        .padding()
                         
-                        Text("Весь контент взят с сайта https://www.povarenok.ru")
+                        Text("Весь контент взят с сайта \n https://www.povarenok.ru")
                             .font(.system(size: 15))
                             .foregroundColor(.gray)
                             .multilineTextAlignment(.center)
                             .padding()
-                        
                     }
-                    
-                    
-                    
-                }.padding(.leading).padding(.trailing)
-                
-                
-                
+                }
                 
             }.navigationBarHidden(true)
                 .edgesIgnoringSafeArea(.top)
@@ -361,7 +381,6 @@ struct MealView: View {
 struct MealView_Previews: PreviewProvider {
     static var previews: some View {
         MealView(item: ContentViewModel().allItems[0], fromMealPlanner: true)
-        //        FirstScreen().environmentObject(ContentViewModel())
     }
 }
 

@@ -10,7 +10,7 @@ import SwiftUI
 struct FourthScreen: View {
     
     @EnvironmentObject var viewModel: ContentViewModel
-        
+    
     @State private var show_modal: Bool = false    
     
     var body: some View {
@@ -51,17 +51,6 @@ struct FourthScreen: View {
                                 Spacer()
                                 
                                 HStack{
-                                    Button(action: {
-                                        viewModel.shoppingList[key]! += 1
-                                    }, label: {
-                                        Image(systemName: "plus")
-                                            .font(.system(size: 14, weight: .medium))
-                                            .frame(width: 28, height: 28, alignment: .center).cornerRadius(9.5)
-                                            .background(Color(UIColor.systemGray).opacity(0.12))
-                                            .foregroundColor(Color(UIColor.systemGray))
-                                    }).cornerRadius(4)
-                                    
-                                    Text("\(value)").padding(.all, 5)
                                     
                                     Button(action: {
                                         if viewModel.shoppingList[key]! != 0 {
@@ -82,6 +71,19 @@ struct FourthScreen: View {
                                             .foregroundColor(Color(UIColor.systemGray))
                                     }).cornerRadius(4)
                                 }
+                                
+                                Text("\(value)").padding(.all, 5)
+                                
+                                
+                                Button(action: {
+                                    viewModel.shoppingList[key]! += 1
+                                }, label: {
+                                    Image(systemName: "plus")
+                                        .font(.system(size: 14, weight: .medium))
+                                        .frame(width: 28, height: 28, alignment: .center).cornerRadius(9.5)
+                                        .background(Color(UIColor.systemGray).opacity(0.12))
+                                        .foregroundColor(Color(UIColor.systemGray))
+                                }).cornerRadius(4)
                                 
                                 Button(action: {
                                     viewModel.shoppingList[key] = nil

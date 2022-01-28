@@ -1,29 +1,30 @@
 import SwiftUI
 
 struct MainView: View {
+    var secondTabImage = UIImage(systemName: "magnifyingglass")
+    var thirdTabImage = UIImage(systemName: "list.bullet.rectangle")
+    
+    init() {
+        if #available(iOS 15.0, *) {
+            secondTabImage = UIImage(systemName: "menucard.fill")
+            thirdTabImage = UIImage(systemName: "fork.knife")
+        }
+    }
+    
     var body: some View {
-        
         ZStack{
-            
-            //            let fontAttributes = [NSAttributedString.Key.font: UIFont(name: "YourFontName", size: 12.0)!]
-            //            UITabBarItem.appearance().setTitleTextAttributes(fontAttributes, for: .normal)
-            //            //Set Tab bar text/item color
-            //            UITabBar.appearance().tintColor = UIColor.init(named: "YourColorName")
-            //
-            
             UIKitTabView([
                 UIKitTabView.Tab(
                     view: FirstScreen().edgesIgnoringSafeArea(.top),
                     barItem: UITabBarItem(title: "Рецепты", image: UIImage(systemName: "house.fill"), selectedImage: UIImage(systemName: "house.fill"))
-                )
-                ,
+                ),
                 UIKitTabView.Tab(
                     view: SecondScreen().edgesIgnoringSafeArea(.top),
-                    barItem: UITabBarItem(title: "План питания", image: UIImage(systemName: "menucard.fill"), selectedImage: UIImage(systemName: "menucard.fill"))
+                    barItem: UITabBarItem(title: "План питания", image: secondTabImage, selectedImage: secondTabImage)
                 ),
                 UIKitTabView.Tab(
                     view: ThirdScreen().edgesIgnoringSafeArea(.top),
-                    barItem: UITabBarItem(title: "Поиск", image: UIImage(systemName: "fork.knife"), selectedImage: UIImage(systemName: "fork.knife"))
+                    barItem: UITabBarItem(title: "Поиск", image: thirdTabImage, selectedImage: thirdTabImage)
                 ),
                 UIKitTabView.Tab(
                     view: FourthScreen().edgesIgnoringSafeArea(.top),

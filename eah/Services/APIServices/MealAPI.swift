@@ -38,11 +38,11 @@ enum Endpoint {
         case .popular:
             return "recipes/get?is_popular=true"
         case .search(_, let searchString):
-            return "recipes/get?startswith=\(searchString ?? "")"
+            return "recipes/get?startswith=\(searchString ?? "")&limit=30"
         case .searchIngredients(_, let searchString):
             return "ingredients/get?startswith=\(searchString ?? "")"
         case .allIngredients:
-            return "ingredients/get?is_favorite=true&limit=30"
+            return "ingredients/get?is_favorite=true&limit=72"
         case .mealWithIngredients(_, let searchString):
             return "recipes/get?ingredients=\(searchString ?? "")"
         }
@@ -53,23 +53,24 @@ enum Endpoint {
         switch self {
         case let .all(limit):
             if limit > 1 {
-                return URL(string: baseString + "recipes/get?limit=30&offset=10")!}
+                return URL(string: baseString + "recipes/get?limit=\(10)&offset=\(limit)")!}
             else {return baseURL}
             
         case let .rec(limit):
             if limit > 1 {
                 print(limit)
-                return  URL(string: baseString + "recipes/get?limit=30&offset=10")!}
+                return  URL(string: baseString + "recipes/get?limit=\(10)&offset=\(limit)")!}
             else {return baseURL}
             
         case let .popular(limit):
             if limit > 1 {
-                return  URL(string: baseString + "recipes/get?is_popular=true")!}
+                return  URL(string: baseString + "recipes/get?limit=\(10)&offset=\(limit)&is_popular=true")!}
             else {return baseURL}
             
-        case let .search(limit, searchString):
+        case let .search(limit, _):
             if limit > 1 {
-                return  URL(string: baseString + "recipes/get?limit=30?startswith=\(searchString ?? "")")!}
+                return baseURL.appendingPathComponent("&limit=30")
+            }
             else {return baseURL}
             
         case let .searchIngredients(limit, searchString):
@@ -83,8 +84,10 @@ enum Endpoint {
             else {return baseURL}
             
         case let .mealWithIngredients(limit, searchString):
+            
             if limit > 1 {
-                return  URL(string: "ingredients=\(searchString ?? "")")!}
+                print(URL(string: baseString + "recipes/get?limit=\(10)&offset=\(limit)&ingredients=\(searchString ?? "")")!)
+                return  URL(string: baseString + "recipes/get?limit=\(10)&offset=\(limit)&ingredients=\(searchString ?? "")")!}
             else {return baseURL}
         }
     }
@@ -123,6 +126,7 @@ class MealAPI {
         guard let url = endpoint.absoluteURL else {
             return Just([Meal]()).eraseToAnyPublisher()
         }
+        print(url)
         
         return URLSession.shared.dataTaskPublisher(for: url)
             .map { $0.data }

@@ -13,6 +13,7 @@ struct ThirdScreen: View {
     @State var searchQuery = ""
     var forAddIngridient: Bool?
     @Environment(\.presentationMode) private var presentationMode
+    @State var selection: Int? = nil
     
     
     let columns = Array(repeating: GridItem(.flexible()), count: 3)
@@ -24,7 +25,7 @@ struct ThirdScreen: View {
             VStack{
                 
                 //MARK: - NavigationBar
-    
+                
                 HStack {
                     Spacer()
                     Text("Поиск по ингредиентам").fontWeight(.medium)
@@ -98,27 +99,7 @@ struct ThirdScreen: View {
                                         viewModel.searchStringMealsWithIngr = viewModel.selectedIngredients.map{$0.name}.map{String($0)}.joined(separator: ",") //!!!
                                         
                                     }, label: {
-                                        
-                                        VStack(spacing: 5){
-                                            Image("close").padding(.trailing, 85).padding(.top, -15)
-                                            
-                                            Text(item.imageSmile)
-                                                .font(.system(size: 26))
-                                                .frame(width: 68, height: 68, alignment: .center)
-                                                .background(item.color)
-                                                .cornerRadius(16)
-                                                .padding(.top, -3)
-                                            
-                                            Text(item.name).font(.system(size: 12))
-                                                .fontWeight(.medium).padding(.top, 6)
-                                                .foregroundColor(.black)
-                                        }
-                                        .frame(width: 100, height: 115, alignment: .center)
-                                        .background(
-                                            Color.white
-                                                .cornerRadius(16)
-                                                .shadow(color: Color.black.opacity(0.1), radius: 5, x: 3, y: 3)
-                                        )
+                                        IngredientSmallViewWithClose(item: item)
                                     })
                                 }.padding()
                             })
@@ -154,17 +135,7 @@ struct ThirdScreen: View {
                                         viewModel.endpoint6 = Endpoint(index: 6, limit: 1)!
                                         
                                     }, label: {
-                                        VStack(spacing: 5){
-                                            Text(item.imageSmile)
-                                                .font(.system(size: 26))
-                                                .frame(width: 68, height: 68, alignment: .center)
-                                                .background(item.color)
-                                                .cornerRadius(16)
-                                            
-                                            Text(item.name).font(.system(size: 12))
-                                                .fontWeight(.medium)
-                                                .foregroundColor(.black)
-                                        }
+                                        IngredientSmallView(item: item)
                                     })
                                         .frame(width: 100, height: 115, alignment: .center)
                                         .background(Color.white)
@@ -179,12 +150,13 @@ struct ThirdScreen: View {
                         }).padding(.leading).padding(.trailing)
                             .onAppear {UIScrollView.appearance().keyboardDismissMode = .interactive}
                         
-                        
-                        NavigationLink(
-                            
-                            destination: ListOfMeals(searchStatus: true, items: viewModel.mealWithIngredients),
-                            
-                            label: {
+                        NavigationLink(destination: ListOfMeals(searchStatus: true, items: viewModel.mealWithIngredients, index: 6), tag: 0, selection: $selection) {
+                            Button(action: {
+                                viewModel.mealWithIngredients = []
+                                viewModel.mealWithIngredientsLimit += 10
+                                viewModel.endpoint6 = Endpoint(index: 6, limit: viewModel.mealWithIngredientsLimit)!
+                                self.selection = 0
+                            }) {
                                 HStack {
                                     Text("Добавить \(viewModel.selectedIngredients.count) ингред.")
                                         .font(.system(size: 14))
@@ -197,8 +169,8 @@ struct ThirdScreen: View {
                                     .background(Color(getColor()))
                                     .cornerRadius(16)
                                     .shadow(color: Color(getColor()).opacity(0.2), radius: 5, x: 3, y: 3)
-                            }).padding()
-                        
+                            }.padding()
+                        }
                     }
                     
                     //MARK: - ForAddIngrediants
@@ -234,31 +206,8 @@ struct ThirdScreen: View {
                                         if let index = viewModel.selectedForBuyIngredients.firstIndex(of: ingr) {
                                             viewModel.selectedForBuyIngredients.remove(at: index)
                                         }
-                                        
-                                        
                                     }, label: {
-                                        
-                                        
-                                        VStack(spacing: 5){
-                                            Image("close").padding(.trailing, 85).padding(.top, -15)
-                                            
-                                            Text(item.imageSmile)
-                                                .font(.system(size: 26))
-                                                .frame(width: 68, height: 68, alignment: .center)
-                                                .background(item.color)
-                                                .cornerRadius(16)
-                                                .padding(.top, -3)
-                                            
-                                            Text(item.name).font(.system(size: 12))
-                                                .fontWeight(.medium).padding(.top, 6)
-                                                .foregroundColor(.black)
-                                        }
-                                        .frame(width: 100, height: 115, alignment: .center)
-                                        .background(
-                                            Color.white
-                                                .cornerRadius(16)
-                                                .shadow(color: Color.black.opacity(0.1), radius: 5, x: 3, y: 3)
-                                        )
+                                        IngredientSmallViewWithClose(item: item)
                                     })
                                 }.padding()
                             })
@@ -289,17 +238,7 @@ struct ThirdScreen: View {
                                             viewModel.suggestedForBuyIngredients.remove(at: index)
                                         }
                                     }, label: {
-                                        VStack(spacing: 5){
-                                            Text(item.imageSmile)
-                                                .font(.system(size: 26))
-                                                .frame(width: 68, height: 68, alignment: .center)
-                                                .background(item.color)
-                                                .cornerRadius(16)
-                                            
-                                            Text(item.name).font(.system(size: 12))
-                                                .fontWeight(.medium)
-                                                .foregroundColor(.black)
-                                        }
+                                        IngredientSmallView(item: item)
                                     })
                                         .frame(width: 100, height: 115, alignment: .center)
                                         .background(Color.white)

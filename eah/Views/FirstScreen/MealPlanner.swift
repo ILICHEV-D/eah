@@ -34,14 +34,15 @@ struct MealPlanner: View {
                             .fontWeight(.semibold)
                             .font(.system(size: 14))
                             .foregroundColor(.white)
-                            .padding(.leading, 18)
+                            .multilineTextAlignment(.center)
                         
                         Text(String(item.stringTime ?? ""))
                             .fontWeight(.semibold)
                             .font(.system(size: 11))
-                            .foregroundColor(.gray)
-                            .padding(.leading, 18)
-                    })
+                            .foregroundColor(Color(UIColor.systemGray5))
+                            .multilineTextAlignment(.center)
+                        
+                    }).padding()
                 }
                 .frame(width: 197, height: 55, alignment: .leading)
                 .cornerRadius(12)
