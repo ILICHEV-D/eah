@@ -92,12 +92,12 @@ struct ThirdScreen: View {
                                             }) {
                                                 viewModel.suggestedIngredients.append(ingr)
                                             }
+                                            
+                                            if let index = viewModel.selectedIngredients.firstIndex(of: ingr) {
+                                                viewModel.selectedIngredients.remove(at: index)
+                                            }
+                                            viewModel.searchStringMealsWithIngr = viewModel.selectedIngredients.map{$0.name}.map{String($0)}.joined(separator: ",") //!!!
                                         }
-                                        if let index = viewModel.selectedIngredients.firstIndex(of: ingr) {
-                                            viewModel.selectedIngredients.remove(at: index)
-                                        }
-                                        viewModel.searchStringMealsWithIngr = viewModel.selectedIngredients.map{$0.name}.map{String($0)}.joined(separator: ",") //!!!
-                                        
                                     }, label: {
                                         IngredientSmallViewWithClose(item: item)
                                     })
@@ -112,7 +112,7 @@ struct ThirdScreen: View {
                             
                             LazyVGrid(columns: columns, content: {
                                 
-                                ForEach(searchQuery == "" ? viewModel.allIngredients :
+                                ForEach(searchQuery == "" ? viewModel.suggestedIngredients :
                                             viewModel.searchIngredientsItems
                                 ){
                                     ingr in
@@ -124,12 +124,15 @@ struct ThirdScreen: View {
                                             }) {
                                                 viewModel.selectedIngredients.append(ingr)
                                             }
+                                            
+                                            
+                                            if let index = viewModel.suggestedIngredients.firstIndex(of: ingr) {
+                                                viewModel.suggestedIngredients.remove(at: index)
+                                            }
+                                            if let index = viewModel.searchIngredientsItems.firstIndex(of: ingr) {
+                                                viewModel.searchIngredientsItems.remove(at: index)
+                                            }
                                         }
-                                        if let index = viewModel.suggestedIngredients.firstIndex(of: ingr) {
-                                            viewModel.suggestedIngredients.remove(at: index)
-                                        }
-                                        
-                                        
                                         viewModel.searchStringMealsWithIngr = viewModel.selectedIngredients.map{$0.name}.map{String($0)}.joined(separator: ",") //!!!
                                         viewModel.endpoint6 = Endpoint(index: 6, limit: 1)!
                                         viewModel.endpoint6 = Endpoint(index: 6, limit: 1)!
@@ -158,12 +161,12 @@ struct ThirdScreen: View {
                                 self.selection = 0
                             }) {
                                 HStack {
-                                    Text("Добавить \(viewModel.selectedIngredients.count) ингред.")
+                                    Text("Покзать рецепты")
                                         .font(.system(size: 14))
                                         .fontWeight(.semibold)
                                         .foregroundColor(.white)
-                                    Spacer()
-                                    Image("plus")
+//                                    Spacer()
+//                                    Image("plus")
                                 }.padding()
                                     .frame(width: UIScreen.screenWidth - 100, height: 55, alignment: .center)
                                     .background(Color(getColor()))
@@ -220,7 +223,7 @@ struct ThirdScreen: View {
                             
                             LazyVGrid(columns: columns, content: {
                                 
-                                ForEach(searchQuery == "" ? viewModel.allIngredients :
+                                ForEach(searchQuery == "" ? viewModel.suggestedForBuyIngredients :
                                             viewModel.searchIngredientsItems
                                 ){
                                     ingr in
@@ -233,9 +236,13 @@ struct ThirdScreen: View {
                                             }) {
                                                 viewModel.selectedForBuyIngredients.append(ingr)
                                             }
-                                        }
-                                        if let index = viewModel.suggestedForBuyIngredients.firstIndex(of: ingr) {
-                                            viewModel.suggestedForBuyIngredients.remove(at: index)
+                                            
+                                            if let index = viewModel.suggestedForBuyIngredients.firstIndex(of: ingr) {
+                                                viewModel.suggestedForBuyIngredients.remove(at: index)
+                                            }
+                                            if let index = viewModel.searchIngredientsItems.firstIndex(of: ingr) {
+                                                viewModel.searchIngredientsItems.remove(at: index)
+                                            }
                                         }
                                     }, label: {
                                         IngredientSmallView(item: item)

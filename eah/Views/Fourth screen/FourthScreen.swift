@@ -11,7 +11,11 @@ struct FourthScreen: View {
     
     @EnvironmentObject var viewModel: ContentViewModel
     
-    @State private var show_modal: Bool = false    
+    @State private var show_modal: Bool = false
+    
+    @State private var showingOptions = false
+    
+    @State var showDeletePicker: Bool = false
     
     var body: some View {
         NavigationView {
@@ -95,6 +99,35 @@ struct FourthScreen: View {
                                     Image("trashAddIngridients")
                                 }).padding(.leading, 15)
                             }.padding(.bottom)
+                        }
+                        
+                        Button(action: {
+                            showingOptions = true
+                        }) {
+                            Text("Удалить все")
+                                .font(.system(size: 12))
+                                .fontWeight(.semibold)
+                                .foregroundColor(Color(UIColor.systemGray))
+                                .padding()
+                                .frame(width: 130, height: 30, alignment: .center)
+                                .background(Color(UIColor.systemGray).opacity(0.12))
+                                .cornerRadius(16)
+                                .shadow(color: Color("mainColor").opacity(0.2), radius: 5, x: 3, y: 3)
+                                .cornerRadius(4)
+                        }
+                        .alert(isPresented: $showingOptions) {
+                            Alert(title: Text("Вы уверены, что хотите удалить все продукты?"),
+                                  primaryButton: .destructive(Text("Удалить")) {
+                                for i in viewModel.shoppingList {
+                                    if let index = viewModel.selectedForBuyIngredients.firstIndex(of: i.key) {
+                                        viewModel.selectedForBuyIngredients.remove(at: index)
+                                        viewModel.suggestedForBuyIngredients.append(i.key)
+                                    }
+                                }
+                                viewModel.shoppingList = [:]
+                            },
+                                  secondaryButton: .cancel()
+                            )
                         }
                     }).padding()
                 }

@@ -11,7 +11,8 @@ struct ListOfMeals: View {
     @State var searchQuery = ""
     @State var searchStatus = false
     
-    
+    @State private var showingAlert = false
+    let impactLight = UIImpactFeedbackGenerator(style: .medium)
     
     let columns = Array(repeating: GridItem(.flexible()), count: 2)
     var items: [Meal]
@@ -104,16 +105,77 @@ struct ListOfMeals: View {
                     ForEach(searchQuery == "" ? items : viewModel.searchItems){
                         item in
                         if check == nil {
-                            NavigationLink(
-                                destination: MealView(item: item, fromMealPlanner: false),
-                                label: {
-                                    RecomendationRecipe(item: item).gesture(DragGesture().updating($dragOffset, body: { (value, state, transaction) in
-                                        if(value.startLocation.x < 60 && value.translation.width > 20) {
-                                            self.mode.wrappedValue.dismiss()
-                                        }
-                                    }))
-                                }
-                            )
+                            
+                            ZStack(alignment: Alignment(horizontal: .trailing, vertical: .top), content: {
+                                
+                                NavigationLink(
+                                    destination: MealView(item: item, fromMealPlanner: false),
+                                    label: {
+                                        RecomendationRecipe(item: item).gesture(DragGesture().updating($dragOffset, body: { (value, state, transaction) in
+                                            if(value.startLocation.x < 60 && value.translation.width > 20) {
+                                                self.mode.wrappedValue.dismiss()
+                                            }
+                                        }))
+                                    }
+                                )
+                                
+                                Button(action: {
+                                    let itemUID = item.uid
+                                    guard AuthApi.token != nil else {
+                                        self.showingAlert = true
+                                        return
+                                    }
+                                    if viewModel.favoriteMeals.contains(item){
+                                        AuthApi.sendUnlike(recipeUid: itemUID,  completion: { result in
+                                            switch result {
+                                            case .success(let response):
+                                                if response.status == false {
+                                                    print(response)
+                                                } else {
+                                                    let index = viewModel.favoriteMeals.firstIndex(where: {$0.uid == itemUID})
+                                                    if let indexForRemove = index {
+                                                        DispatchQueue.main.async {
+                                                            viewModel.favoriteMeals.remove(at: indexForRemove)
+                                                        }
+                                                    }
+                                                }
+                                            case .failure(let error):
+                                                print(error.localizedDescription)
+                                            }
+                                        })
+                                    } else {
+                                        impactLight.impactOccurred()
+                                        AuthApi.sendLike(recipeUid: itemUID,  completion: { result in
+                                            switch result {
+                                            case .success(let response):
+                                                if response.status == false {
+                                                    print(response)
+                                                } else {
+                                                    print(response)
+                                                    DispatchQueue.main.async {
+                                                        viewModel.favoriteMeals.append(item)
+                                                    }
+                                                }
+                                            case .failure(let error):
+                                                print(error.localizedDescription)
+                                            }
+                                        })
+                                    }
+                                }, label: {
+                                    if viewModel.favoriteMeals.contains(item){
+                                        Image(systemName: "heart.fill")
+                                            .foregroundColor(Color("mainColor"))
+                                    } else {
+                                        Image(systemName: "heart")
+                                            .foregroundColor(Color(UIColor.systemGray3))
+                                    }
+                                })
+                                    .font(.system(size: 20, weight: .bold))
+                                    .frame(width: 30, height: 30, alignment: .center)
+                                    .padding(.trailing, 17).padding(.top, 23)
+                            })
+                            
+
                         }
                         
                         else {
@@ -158,7 +220,9 @@ struct ListOfMeals: View {
                             }
                             
                         }
-                }).padding(.horizontal).padding(.vertical)
+                }).padding(.horizontal).padding(.vertical).alert(isPresented: $showingAlert) {
+                    Alert(title: Text("Необходимо авторизоваться"), message: Text("Авторизуйтесь для сохранения блюд"), dismissButton: .default(Text("Хорошо")))
+                }
             })
         }.gesture(DragGesture().updating($dragOffset, body: { (value, state, transaction) in
             if(value.startLocation.x < 60 && value.translation.width > 100) {

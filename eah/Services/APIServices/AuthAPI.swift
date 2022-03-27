@@ -216,7 +216,7 @@ extension AuthApi {
         task.resume()
     }
     
-    static func sendRequestSignUp(login: String, password: String, age: Int, sex: Bool, name: String, completion: @escaping ((Result<AuthSimpleResponse, Error>) -> Void)) {
+    static func sendRequestSignUp(login: String, password: String, age: Int?, sex: Bool?, name: String, completion: @escaping ((Result<AuthSimpleResponse, Error>) -> Void)) {
         let urlString = Consts.URLStringSignUp
         guard let url = URL(string: urlString) else {
             completion(.failure(MyError.invalidURL))
@@ -225,8 +225,12 @@ extension AuthApi {
         
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
-        
-        let json: [String: Any] = ["Email": "\(login)", "Password": "\(password)", "FirstName": "\(name)", "Sex": sex, "Age": age]
+        var json: [String: Any] = [:]
+        if age != nil && age != nil {
+            json = ["Email": "\(login)", "Password": "\(password)", "FirstName": "\(name)"]
+        } else {
+            json = ["Email": "\(login)", "Password": "\(password)", "FirstName": "\(name)", "Sex": sex!, "Age": age!]
+        }
         let jsonData = try? JSONSerialization.data(withJSONObject: json)
         request.setValue("\(String(describing: jsonData?.count))", forHTTPHeaderField: "Content-Length")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")

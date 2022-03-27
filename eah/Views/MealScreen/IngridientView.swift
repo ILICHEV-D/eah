@@ -12,6 +12,10 @@ struct IngredientView: View {
     var item: Ingredient
     @Binding var amount: Int
     
+    @EnvironmentObject var viewModel: ContentViewModel
+
+    @State var changeImageOfCart : Bool = false
+    
     var body: some View {
         HStack (spacing: 15){
             Text(item.imageSmile)
@@ -33,6 +37,25 @@ struct IngredientView: View {
                         .fontWeight(.medium)
                 }
             }
+            
+            Button(action: {
+                changeImageOfCart = true
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    withAnimation {
+                        changeImageOfCart = false
+                    }
+                }
+                
+                if !viewModel.shoppingList.contains(where: { $0.key.name == item.name}) {
+                    viewModel.shoppingList[item] = Int(item.amount ?? 1)
+                }
+            }, label: {
+                Image(systemName: changeImageOfCart == false ? "cart.fill" : "checkmark")
+                    .font(.system(size: 18, weight: .medium))
+                    .frame(width: 19, height: 19, alignment: .center)
+                    .foregroundColor(Color(UIColor.systemGray2))
+            })
+            
         }
     }
 }

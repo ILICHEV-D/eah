@@ -141,7 +141,7 @@ struct MealView: View {
                     ZStack(alignment: Alignment(horizontal: .trailing, vertical: .bottom), content: {
                         ArticleImage(imageLoader: ImageLoaderCache.shared.loaderFor(
                             article: item))
-                            .frame(width: 150, height: 150, alignment: .center)
+                            .frame(width: UIScreen.screenWidth - 100, height: UIScreen.screenWidth - 100, alignment: .center)
                             .cornerRadius(15)
                             .padding(.bottom, 15)
                         
@@ -208,24 +208,24 @@ struct MealView: View {
                         
                         Spacer()
                         
-                        Button(action: {
-                            for ingredient in item.ingredients ?? [] {
-                                changeImageOfCart = true
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                                    changeImageOfCart = false
-                                }
-                                
-                                if !viewModel.shoppingList.contains(where: { $0.key.name == ingredient.name}) {
-                                    viewModel.shoppingList[ingredient] = Int(ingredient.amount ?? 1)
-                                }
-                            }
-                        }, label: {
-                            Image(systemName: changeImageOfCart == false ? "cart.fill" : "checkmark")
-                                .font(.system(size: 18, weight: .medium))
-                                .frame(width: 42, height: 42, alignment: .center)
-                                .background(Color("mainColor"))
-                                .foregroundColor(.white)
-                        }).cornerRadius(16)
+//                        Button(action: {
+//                            for ingredient in item.ingredients ?? [] {
+//                                changeImageOfCart = true
+//                                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+//                                    changeImageOfCart = false
+//                                }
+//
+//                                if !viewModel.shoppingList.contains(where: { $0.key.name == ingredient.name}) {
+//                                    viewModel.shoppingList[ingredient] = Int(ingredient.amount ?? 1)
+//                                }
+//                            }
+//                        }, label: {
+//                            Image(systemName: changeImageOfCart == false ? "cart.fill" : "checkmark")
+//                                .font(.system(size: 18, weight: .medium))
+//                                .frame(width: 42, height: 42, alignment: .center)
+//                                .background(Color("mainColor"))
+//                                .foregroundColor(.white)
+//                        }).cornerRadius(16)
                         
                         HStack {
                             HStack(spacing: 3) {
@@ -281,6 +281,38 @@ struct MealView: View {
                         
                     }.padding(.leading).padding(.bottom).padding(.trailing)
                     
+                    Button(action: {
+                        for ingredient in item.ingredients ?? [] {
+                            changeImageOfCart = true
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                                changeImageOfCart = false
+                            }
+                            
+                            if !viewModel.shoppingList.contains(where: { $0.key.name == ingredient.name}) {
+                                viewModel.shoppingList[ingredient] = Int(ingredient.amount ?? 1)
+                            }
+                        }
+                    }, label: {
+                        HStack {
+                            if !changeImageOfCart {
+                                Text("Добавить в корзину")
+                                    .font(.system(size: 14))
+                                    .fontWeight(.semibold)
+                            } else {
+                                Image(systemName: "checkmark")
+                                    .font(.system(size: 20, weight: .medium))
+                                
+                                Text("Добавлено")
+                                    .font(.system(size: 14))
+                                    .fontWeight(.semibold)
+                            }
+                        }
+                        .foregroundColor(.white)
+                        .frame(width: UIScreen.screenWidth - 100, height: 55, alignment: .center)
+                        .background(Color("mainColor"))
+                        .cornerRadius(16)
+                        .shadow(color: Color("mainColor").opacity(0.2), radius: 5, x: 3, y: 3)
+                    }).padding(.bottom)
                     
                     if item.cookingStages?.count != 0 {
                         HStack{
@@ -310,10 +342,7 @@ struct MealView: View {
                                             .fontWeight(.semibold)
                                         Spacer()
                                     }.padding(.bottom, 5)
-                                    //                                    GeometryReader {geometry in
                                     Text(i.text ?? "")
-                                    
-                                    
                                         .fontWeight(.medium)
                                         .multilineTextAlignment(.leading)
                                         .fixedSize(horizontal: false, vertical: true)
@@ -328,12 +357,11 @@ struct MealView: View {
                                         })
                                     
                                     HStack(){
-                                        Spacer()
                                         ZStack(alignment: Alignment(horizontal: .trailing, vertical: .bottom), content: {
                                             
                                             ArticleImage(imageLoader: ImageLoaderCache.shared.loaderForStage(
                                                 article: i))
-                                                .frame(width: 220, height: 180, alignment: .center)
+                                                .frame(width: UIScreen.screenWidth - 40, height: UIScreen.screenWidth - 60, alignment: .center)
                                                 .cornerRadius(15)
                                             
                                             Image("povarenok")
@@ -353,7 +381,7 @@ struct MealView: View {
                         .tabViewStyle(PageTabViewStyle(indexDisplayMode: .automatic))
                         .indexViewStyle(PageIndexViewStyle(backgroundDisplayMode: .always))
                         .id(numberOfPages)
-                        .frame(height: self.hue + 300)
+                        .frame(height: self.hue + 450)
                         .padding()
                         
                         Text("Весь контент взят с сайта \n https://www.povarenok.ru")

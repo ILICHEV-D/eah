@@ -69,7 +69,10 @@ class ContentViewModel: ObservableObject {
     }
     
     @Published var allIngredients: [Ingredient] = [] {
-        didSet {print("allIngredients --> \(self.allIngredients.count)")}
+        didSet {print("allIngredients --> \(self.allIngredients.count)")
+            self.suggestedIngredients = allIngredients
+            self.suggestedForBuyIngredients = allIngredients
+        }
     }
     
     @Published var mealWithIngredients: [Meal] = [] {
@@ -80,7 +83,7 @@ class ContentViewModel: ObservableObject {
     @Published var endpoint1: Endpoint = Endpoint(index: 1, limit: 0)!
     @Published var endpoint2: Endpoint = Endpoint(index: 2, limit: 0)!
     @Published var endpoint3: Endpoint = Endpoint(index: 5, limit: 1)!
-    @Published var endpoint6: Endpoint = Endpoint(index: 6, limit: 1)!
+    @Published var endpoint6: Endpoint = Endpoint(index: 6, limit: 0)!
     
     private var cancellableSet0: Set<AnyCancellable> = []
     private var cancellableSet1: Set<AnyCancellable> = []
@@ -156,7 +159,7 @@ class ContentViewModel: ObservableObject {
         
         $endpoint6
             .flatMap { (endpoint6) -> AnyPublisher<[Meal], Never> in
-                MealAPI.shared.fetchMeals(from: .mealWithIngredients(limit: 1, searchString: self.searchStringMealsWithIngr))}
+                MealAPI.shared.fetchMeals(from: .mealWithIngredients(limit: 0, searchString: self.searchStringMealsWithIngr))}
             .sink(receiveValue: { meals in
                 self.mealWithIngredients.append(contentsOf: meals)})
             .store(in: &self.cancellableSet6)

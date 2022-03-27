@@ -18,18 +18,20 @@ struct AuthScreen: View {
     @State var ageQuery = ""
     @State var errorMessage: String? = nil
     @State var tokenState = AuthApi.token
-    var sexQuery: Bool {
+    var sexQuery: Bool? {
         if selectedStrength == "Мужской" {
             return true
-        } else {
+        } else if selectedStrength == "Женский" {
             return false
+        } else {
+            return nil
         }
     }
     
     @State var registrationIsShow = false
     
-    @State private var selectedStrength = "Мужской"
-    let strengths = ["Мужской", "Женский"]
+    @State private var selectedStrength = "Не выбран"
+    let strengths = ["Не выбран", "Мужской", "Женский"]
     
     @Environment(\.presentationMode) var presentationMode
     
@@ -185,7 +187,7 @@ struct AuthScreen: View {
                                     errorMessage = "Пароли не совпадают"
                                     return
                                 }
-                                if loginQuery.count == 0 || passwordQuery.count == 0 || ageQuery.count == 0 || nameQuery.count == 0 {
+                                if loginQuery.count == 0 || passwordQuery.count == 0 {
                                     errorMessage = "Пустые поля"
                                 } else {
                                     AuthApi.sendRequestSignUp(login: loginQuery, password: passwordQuery,  age: Int(ageQuery) ?? 0, sex: sexQuery, name: nameQuery, completion: { result in
