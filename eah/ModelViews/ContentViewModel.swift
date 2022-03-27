@@ -14,9 +14,11 @@ class ContentViewModel: ObservableObject {
     @Published var searchStringMealsWithIngr: String = "" {
         didSet {print("searchStringMealsWithIngr --> \(searchStringMealsWithIngr.count)")}
     }
+    
     @Published var allItems: [Meal] = [] {
         didSet {print("allItems --> \(self.allItems.count)")}
     }
+    
     @Published var mealPlannerItems: [Meal] = [] {
         didSet {print("mealPlannerItems --> \(self.mealPlannerItems.count)")
             var days: [Date] = []
@@ -203,6 +205,8 @@ class ContentViewModel: ObservableObject {
         AuthApi.loadUserImage()
         loadFavorite()
         
+        // MARK: - MealPlanner init
+        
         var days: [Date] = []
         var time: [String] = []
         
@@ -222,119 +226,12 @@ class ContentViewModel: ObservableObject {
         }
     }
     
-    private func getLikes() {
-        if AuthApi.token != nil {
-            AuthApi.getLikes(completion: { result in
-                switch result {
-                case .success(let response):
-                    if response.status == false {
-                        print(response)
-                    } else {
-                        for i in response.response {
-                            AuthApi.getMealFromUid(uid: i.recipeUid!) { result in
-                                switch result {
-                                case .success(let meal):
-                                    if !self.favoriteMeals.contains(meal) {
-                                        DispatchQueue.main.async {
-                                            self.favoriteMeals.append(meal)
-                                        }
-                                    }
-                                case .failure(let error):
-                                    print(error.localizedDescription)
-                                }
-                            }
-                        }
-                    }
-                case .failure(let error):
-                    print(error.localizedDescription)
-                }
-            })
-        }
-    }
-    func loadFavorite() {
-        if AuthApi.token != nil {
-            AuthApi.getLikes(completion: { result in
-                switch result {
-                case .success(let response):
-                    if response.status == false {
-                        print(response)
-                    } else {
-                        for i in response.response {
-                            AuthApi.getMealFromUid(uid: i.recipeUid!) { result in
-                                switch result {
-                                case .success(let meal):
-                                    if !self.favoriteMeals.contains(meal) {
-                                        DispatchQueue.main.async {
-                                            self.favoriteMeals.append(meal)
-                                        }
-                                    }
-                                case .failure(let error):
-                                    print(error.localizedDescription)
-                                }
-                            }
-                        }
-                    }
-                case .failure(let error):
-                    print(error.localizedDescription)
-                }
-            })
-        }
-        
-        if let shopList  = UserDefaults.standard.value(forKey: "shoppingList") as? Data {
-            DispatchQueue.main.async {
-                self.shoppingList = try! PropertyListDecoder().decode([Ingredient: Int].self, from: shopList)
-                self.selectedForBuyIngredients = self.shoppingList.map({ $0.key})
-            }
-            
-        }
-    }
-    
-    private func mealPlannerFunc(day: Week) -> ([Meal], [Meal], [Meal]) {
-        var breakfast: [Meal] = []
-        var lunch: [Meal] = []
-        var dinner: [Meal] = []
-        
-        for item in self.mealPlannerItems {
-            if let i = item.dayOfWeek {
-                
-                
-                let translateWeekDay: [String: String] = ["понедельник": "Monday",
-                                                          "вторник": "Tuesday",
-                                                          "среда": "Wednesday",
-                                                          "четверг": "Thursday",
-                                                          "пятница": "Friday",
-                                                          "суббота": "Saturday",
-                                                          "воскресенье": "Sunday"]
-                
-                if translateWeekDay[getTodayWeekDay(date: i.date)] == day.name {
-                    if i.time == "breakfast" {
-                        breakfast.append(item)
-                    }
-                    else if i.time == "lunch" {
-                        lunch.append(item)
-                    }
-                    else if i.time == "dinner" {
-                        dinner.append(item)
-                    }
-                }
-            }
-        }
-        return (breakfast, lunch, dinner)
-    }
-    
-    private func getTodayWeekDay(date: Date)-> String{
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "EEEE"
-        let weekDay = dateFormatter.string(from: date)
-        return weekDay
-    }
-    
     private func loadName() {
         if let nameFromUD = UserDefaults.standard.value(forKey:"name") as? String {
             self.userName = nameFromUD
         }
         else {
-            print("name не авторизован")
+            print("Пользователь не авторизован")
         }
     }
 }

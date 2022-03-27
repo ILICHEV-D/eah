@@ -86,10 +86,10 @@ enum Endpoint {
         case let .mealWithIngredients(limit, searchString):
             return baseURL
             
-//            if limit > 1 {
-//                print(URL(string: baseString + "recipes/get?limit=\(10)&offset=\(limit)&ingredients=\(searchString ?? "")")!)
-//                return  URL(string: baseString + "recipes/get?limit=\(10)&offset=\(limit)&ingredients=\(searchString ?? "")")!}
-//            else {return baseURL}
+            //            if limit > 1 {
+            //                print(URL(string: baseString + "recipes/get?limit=\(10)&offset=\(limit)&ingredients=\(searchString ?? "")")!)
+            //                return  URL(string: baseString + "recipes/get?limit=\(10)&offset=\(limit)&ingredients=\(searchString ?? "")")!}
+            //            else {return baseURL}
         }
     }
     

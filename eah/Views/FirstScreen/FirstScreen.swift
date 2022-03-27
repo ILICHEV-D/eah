@@ -5,23 +5,21 @@ struct FirstScreen: View {
     
     @EnvironmentObject var viewModel: ContentViewModel
     @State var selection: Int? = nil
-        
+    
     var body: some View {
         NavigationView{
             
-            // MARK: - NavBar
-            
             VStack {
+                
+                // MARK: - Navigation Bar
                 
                 ZStack {
                     Spacer()
-                    Text("Популярное")
-                        .fontWeight(.semibold)
+                    Text("Популярное").fontWeight(.semibold)
                     Spacer()
-                
+                    
                     NavigationLink(destination: ListOfMeals(searchStatus: true, items: viewModel.allItems, index: 0), tag: 0, selection: $selection)
-                        {
-
+                    {
                         Button(action: {
                             viewModel.allItemsLimit += 10
                             viewModel.endpoint0 = Endpoint(index: 0, limit: viewModel.allItemsLimit)!
@@ -38,30 +36,19 @@ struct FirstScreen: View {
                     }
                 }.padding().frame(width: UIScreen.screenWidth, height: 50, alignment: .center)
                 
-                // MARK: - MainCode
+                // MARK: - Main code
                 
                 ScrollView(.vertical, showsIndicators: false, content: {
                     VStack(spacing: 7.0){
-                        if viewModel.userName != "" {
-                            Text("Привет, \(viewModel.userName)")
-                            .font(.system(size: 20))
+                        Text(viewModel.userName != "" ? "Привет, \(viewModel.userName)" : "Привет")
                             .fontWeight(.semibold)
                             .foregroundColor(Color("mainColor"))
-                        } else {
-                            Text("Привет")
-                            .font(.system(size: 20))
-                            .fontWeight(.semibold)
-                            .foregroundColor(Color("mainColor"))
-                        }
-                        
                         Text("Хочешь что-нибудь приготовить?")
-                            .font(.system(size: 20))
                             .fontWeight(.semibold)
                             .multilineTextAlignment(.center)
-                    }.padding()
+                    }.font(.system(size: 20)).padding()
                     
                     // MARK: Recommnedation
-                    
                     
                     HStack{
                         Text("Рекомендованные рецепты")
@@ -146,4 +133,3 @@ struct FirstScreen_Previews: PreviewProvider {
         FirstScreen().environmentObject(ContentViewModel())
     }
 }
-

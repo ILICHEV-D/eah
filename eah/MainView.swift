@@ -1,8 +1,8 @@
 import SwiftUI
 
 struct MainView: View {
-    var secondTabImage = UIImage(systemName: "magnifyingglass")
-    var thirdTabImage = UIImage(systemName: "list.bullet.rectangle")
+    private var secondTabImage = UIImage(systemName: "magnifyingglass")
+    private var thirdTabImage = UIImage(systemName: "list.bullet.rectangle")
     
     init() {
         if #available(iOS 15.0, *) {

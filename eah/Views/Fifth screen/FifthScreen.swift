@@ -13,25 +13,13 @@ struct FifthScreen: View {
     
     
     @EnvironmentObject var viewModel: ContentViewModel
+    
     @State private var selectorIndex = 0
     @State private var numbers = ["Избранные", "Помощь"]
     @State private var userName: () = AuthApi.loadName()
-    @State private var userImage: UIImage? = AuthApi.userImage
-    
-    @State var selection: Int? = nil
-
-    {
-        didSet {
-            if let image = userImage {
-                AuthApi.saveUserImage(image: (image))
-            } else {
-                AuthApi.saveUserImage(image: UIImage(named: "profile")!)
-            }
-        }
-    }
-    
+    @State private var userImage: UIImage? = AuthApi.userImage 
+    @State private var selection: Int? = nil
     @State private var showingOptions = false
-    
     @State private var show_modal: Bool = false
     
     @State var showImagePicker: Bool = false
@@ -69,7 +57,6 @@ struct FifthScreen: View {
                         ZStack {
                             
                             ZStack(alignment: Alignment(horizontal: .trailing, vertical: .bottom), content: {
-
                                 
                                 Button(action: {
                                     showingOptions = true
@@ -119,8 +106,6 @@ struct FifthScreen: View {
                         .pickerStyle(SegmentedPickerStyle())
                         .padding(.horizontal, 19).padding(.top, 15)
                         
-                        
-                        // 3.
                         if selectorIndex == 0 {
                             VStack {
                                 ScrollView(.horizontal, showsIndicators: false, content: {
@@ -138,8 +123,8 @@ struct FifthScreen: View {
                                 })
                                 
                                 NavigationLink(destination: ListOfMeals(searchStatus: true, items: viewModel.allItems, index: 0), tag: 0, selection: $selection)
-                                    {
-
+                                {
+                                    
                                     Button(action: {
                                         viewModel.allItemsLimit += 10
                                         viewModel.endpoint0 = Endpoint(index: 0, limit: viewModel.allItemsLimit)!
@@ -181,13 +166,6 @@ struct FifthScreen: View {
                                         Image("telegram")
                                             .resizable()
                                             .frame(width: 32, height: 32, alignment: .center)
-                                    }
-                                    Button(action: {
-                                        AuthApi.goToInstagram()
-                                    }) {
-                                        Image("instagram")
-                                            .resizable()
-                                            .frame(width: 35, height: 35, alignment: .center)
                                     }
                                 }
                             }.padding(.top, 35)

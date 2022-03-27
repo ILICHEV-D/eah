@@ -6,12 +6,12 @@ struct eahApp: App {
     @Environment(\.scenePhase) var scenePhase    
     
     init() {
-            if #available(iOS 15.0, *) {
-                let appearance = UITabBarAppearance()
-                appearance.configureWithOpaqueBackground()
-                UITabBar.appearance().standardAppearance = appearance
-                UITabBar.appearance().scrollEdgeAppearance = UITabBar.appearance().standardAppearance
-            }
+        if #available(iOS 15.0, *) {
+            let appearance = UITabBarAppearance()
+            appearance.configureWithOpaqueBackground()
+            UITabBar.appearance().standardAppearance = appearance
+            UITabBar.appearance().scrollEdgeAppearance = UITabBar.appearance().standardAppearance
+        }
         UITabBar.appearance().tintColor =  UIColor(named: "mainColor")
         UITabBar.appearance().isTranslucent = true
         

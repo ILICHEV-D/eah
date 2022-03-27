@@ -7,22 +7,17 @@ struct ListOfMeals: View {
     @Environment(\.presentationMode) var mode: Binding<PresentationMode>
     @GestureState private var dragOffset = CGSize.zero
     
-    
     @State var searchQuery = ""
     @State var searchStatus = false
-    
     @State private var showingAlert = false
-    let impactLight = UIImpactFeedbackGenerator(style: .medium)
+    @State var selection: Int? = nil
+
+    private let impactLight = UIImpactFeedbackGenerator(style: .medium)
+    private let columns = Array(repeating: GridItem(.flexible()), count: 2)
     
-    let columns = Array(repeating: GridItem(.flexible()), count: 2)
     var items: [Meal]
     var index: Int?
-    
     var check: String?
-    
-    @State var selection: Int? = nil
-    
-    
     
     var body: some View {
         
@@ -175,7 +170,7 @@ struct ListOfMeals: View {
                                     .padding(.trailing, 17).padding(.top, 23)
                             })
                             
-
+                            
                         }
                         
                         else {

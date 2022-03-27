@@ -208,25 +208,6 @@ struct MealView: View {
                         
                         Spacer()
                         
-//                        Button(action: {
-//                            for ingredient in item.ingredients ?? [] {
-//                                changeImageOfCart = true
-//                                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-//                                    changeImageOfCart = false
-//                                }
-//
-//                                if !viewModel.shoppingList.contains(where: { $0.key.name == ingredient.name}) {
-//                                    viewModel.shoppingList[ingredient] = Int(ingredient.amount ?? 1)
-//                                }
-//                            }
-//                        }, label: {
-//                            Image(systemName: changeImageOfCart == false ? "cart.fill" : "checkmark")
-//                                .font(.system(size: 18, weight: .medium))
-//                                .frame(width: 42, height: 42, alignment: .center)
-//                                .background(Color("mainColor"))
-//                                .foregroundColor(.white)
-//                        }).cornerRadius(16)
-                        
                         HStack {
                             HStack(spacing: 3) {
                                 Text(String(countServings))

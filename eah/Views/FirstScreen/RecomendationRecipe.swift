@@ -2,26 +2,24 @@ import SwiftUI
 
 struct RecomendationRecipe: View {
     var item: Meal
-        
+    
     var body: some View {
         VStack{
             ZStack(alignment: Alignment(horizontal: .trailing, vertical: .bottom), content: {
                 ZStack(alignment: Alignment(horizontal: .leading, vertical: .bottom), content: {
                     
-                    ArticleImage(imageLoader: ImageLoaderCache.shared.loaderFor(
-                        article: item))
+                    ArticleImage(imageLoader: ImageLoaderCache.shared.loaderFor(article: item))
                         .frame(width: 140, height: 140)
                         .cornerRadius(8)
                     
                     Text(item.stringTime ?? "")
                         .foregroundColor(.black)
-                        .padding(.vertical, 8)
-                        .padding(.horizontal, 8)
-                        .padding(.leading,0)
+                        .padding(.vertical, 8).padding(.horizontal, 8).padding(.leading, 0)
                         .background(Color(red: 1, green: 1, blue: 1, opacity: 0.7))
                         .cornerRadius(8, corners: [.bottomLeft, .topRight])
                         .font(Font.system(size: 11))
                 })
+                
                 Image("povarenok")
                     .resizable()
                     .scaledToFill()

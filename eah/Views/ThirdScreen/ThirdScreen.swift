@@ -10,11 +10,13 @@ import SwiftUI
 struct ThirdScreen: View {
     
     @EnvironmentObject var viewModel: ContentViewModel
-    @State var searchQuery = ""
-    var forAddIngridient: Bool?
+    
     @Environment(\.presentationMode) private var presentationMode
+    
+    @State var searchQuery = ""
     @State var selection: Int? = nil
     
+    var forAddIngridient: Bool?
     
     let columns = Array(repeating: GridItem(.flexible()), count: 3)
     
@@ -68,7 +70,7 @@ struct ThirdScreen: View {
                 
                 ZStack(alignment: .bottom, content: {
                     
-                    //MARK: - NotforAddIngrediants
+                    //MARK: - Not for AddIngredients
                     
                     if forAddIngridient == nil {
                         ScrollView(.vertical, showsIndicators: false, content: {
@@ -165,8 +167,6 @@ struct ThirdScreen: View {
                                         .font(.system(size: 14))
                                         .fontWeight(.semibold)
                                         .foregroundColor(.white)
-//                                    Spacer()
-//                                    Image("plus")
                                 }.padding()
                                     .frame(width: UIScreen.screenWidth - 100, height: 55, alignment: .center)
                                     .background(Color(getColor()))
@@ -176,7 +176,7 @@ struct ThirdScreen: View {
                         }
                     }
                     
-                    //MARK: - ForAddIngrediants
+                    //MARK: - ForAddIngredients
                     
                     else {
                         

@@ -13,7 +13,7 @@ struct IngredientView: View {
     @Binding var amount: Int
     
     @EnvironmentObject var viewModel: ContentViewModel
-
+    
     @State var changeImageOfCart : Bool = false
     
     var body: some View {

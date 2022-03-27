@@ -10,7 +10,7 @@ import SwiftUI
 
 struct UIKitTabView: View {
     var viewControllers: [UIHostingController<AnyView>]
-
+    
     init(_ tabs: [Tab]) {
         self.viewControllers = tabs.map {
             let host = UIHostingController(rootView: $0.view)
@@ -18,16 +18,16 @@ struct UIKitTabView: View {
             return host
         }
     }
-
+    
     var body: some View {
         
         TabBarController(controllers: viewControllers).edgesIgnoringSafeArea(.all)
     }
-
+    
     struct Tab {
         var view: AnyView
         var barItem: UITabBarItem
-
+        
         init<V: View>(view: V, barItem: UITabBarItem) {
             self.view = AnyView(view)
             self.barItem = barItem
@@ -38,14 +38,14 @@ struct UIKitTabView: View {
 
 struct TabBarController: UIViewControllerRepresentable {
     var controllers: [UIViewController]
-
+    
     func makeUIViewController(context: Context) -> UITabBarController {
         let tabBarController = UITabBarController()
         tabBarController.viewControllers = controllers
         tabBarController.delegate = context.coordinator
         return tabBarController
     }
-
+    
     func updateUIViewController(_ uiViewController: UITabBarController, context: Context) { }
 }
 
@@ -60,12 +60,12 @@ extension TabBarController {
         private var shouldSelectIndex = -1
         
         func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
-
+            
             shouldSelectIndex = tabBarController.selectedIndex
             
             return true
         }
-
+        
         func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
             if shouldSelectIndex == tabBarController.selectedIndex {
                 if let navVC = tabBarController.viewControllers![shouldSelectIndex].nearestNavigationController {
@@ -106,7 +106,7 @@ extension UIViewController {
             default:
                 break
             }
-
+            
             for subView in view.subviews {
                 scrollToTop(view: subView)
             }

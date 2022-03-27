@@ -8,8 +8,7 @@ struct Popular: View {
         
         VStack(alignment: .center, spacing: 6) {
             ZStack(alignment: Alignment(horizontal: .trailing, vertical: .bottom), content: {
-                ArticleImage(imageLoader: ImageLoaderCache.shared.loaderFor(
-                    article: item))
+                ArticleImage(imageLoader: ImageLoaderCache.shared.loaderFor(article: item))
                     .frame(width: 80, height: 80, alignment: .center)
                     .cornerRadius(8)
                 

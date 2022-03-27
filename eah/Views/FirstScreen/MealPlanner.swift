@@ -13,8 +13,7 @@ struct MealPlanner: View {
             ZStack(alignment: Alignment(horizontal: .center, vertical: .bottom), content: {
                 ZStack(alignment: Alignment(horizontal: .trailing, vertical: .top), content: {
                     
-                    ArticleImage(imageLoader: ImageLoaderCache.shared.loaderFor(
-                        article: item))
+                    ArticleImage(imageLoader: ImageLoaderCache.shared.loaderFor(article: item))
                         .frame(width: 220, height: 300, alignment: .center)
                         .cornerRadius(16)
                     
@@ -23,8 +22,7 @@ struct MealPlanner: View {
                         .scaledToFill()
                         .frame(width: 30, height: 30, alignment: .center)
                         .cornerRadius(8)
-                        .padding(.trailing, 5)
-                        .padding(.top, 5)
+                        .padding(.trailing, 5).padding(.top, 5)
                 })
                 
                 ZStack(alignment: .leading) {

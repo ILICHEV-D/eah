@@ -8,7 +8,8 @@ struct SecondScreen: View {
     var body: some View {
         
         NavigationView{
-            // MARK: - NavigationBar
+            
+            // MARK: - Navigation Bar
             
             VStack{
                 HStack {
@@ -54,8 +55,7 @@ struct SecondScreen: View {
                         
                         if viewModel.breakfast.count != 0 {
                             SecondScreenScroll(items: viewModel.breakfast, nameOfColor: "breakfastColor")
-                        }
-                        else {
+                        } else {
                             NavigationLink(
                                 destination: ListOfMeals(items: viewModel.allItems, check: "breakfast"),
                                 label: {
@@ -70,8 +70,7 @@ struct SecondScreen: View {
                         
                         if viewModel.lunch.count != 0 {
                             SecondScreenScroll(items: viewModel.lunch, nameOfColor: "lunchColor")
-                        }
-                        else {
+                        } else {
                             NavigationLink(
                                 destination: ListOfMeals(items: viewModel.allItems, check: "lunch"),
                                 label: {
@@ -86,8 +85,7 @@ struct SecondScreen: View {
                         
                         if viewModel.dinner.count != 0 {
                             SecondScreenScroll(items: viewModel.dinner, nameOfColor: "dinnerColor")
-                        }
-                        else {
+                        } else {
                             NavigationLink(
                                 destination: ListOfMeals(items: viewModel.allItems, check: "dinner"),
                                 label: {
