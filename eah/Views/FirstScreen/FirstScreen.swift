@@ -59,8 +59,8 @@ struct FirstScreen: View {
                         
                         NavigationLink(destination: ListOfMeals(items: viewModel.recomendationItems, index: 1), tag: 1, selection: $selection) {
                             Button(action: {
-                                viewModel.recomendationLimit += 10
-                                viewModel.endpoint1 = Endpoint(index: 1, limit: viewModel.recomendationLimit)!
+//                                viewModel.recomendationLimit += 10
+//                                viewModel.endpoint1 = Endpoint(index: 1, limit: viewModel.recomendationLimit)!
                                 self.selection = 1
                             }) {
                                 Text("Все")

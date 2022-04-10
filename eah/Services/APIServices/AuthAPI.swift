@@ -19,6 +19,9 @@ struct Consts {
     static let URLStringUnlike = "https://escapp.icyftl.ru/recipes/unlike"
     static let URLStringLikes = "https://escapp.icyftl.ru/user/likes"
     static let URLStringMealFromUid = "https://escapp.icyftl.ru/recipes/get/"
+    static let URLStringRecMeal = "https://escapp.icyftl.ru/user/recommend?number_of_items=40"
+    static let URLStringRecWithoutTokenMeal = "https://escapp.icyftl.ru/recipes/get?is_popular=true&limit=50"
+
 }
 
 // MARK: - MyError
@@ -119,6 +122,7 @@ public final class AuthApi {
     static func loadToken() {
         if let tokenFromUD = UserDefaults.standard.value(forKey:"token") as? String {
             self.token = tokenFromUD
+            print(token)
         }
         else {
             print("Пользователь не авторизован")
@@ -352,10 +356,8 @@ extension AuthApi {
             completion(.failure(MyError.invalidURL))
             return
         }
-        
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
-        
         let session = URLSession.shared
         let task = session.dataTask(with: request) { data, response, error in
             if let error = error {

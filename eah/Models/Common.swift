@@ -167,6 +167,10 @@ struct LikesModel: Codable {
     let response: [Response]
 }
 
+struct LikesRecModel: Codable {
+    let status: Bool?
+    let response: [String]
+}
 
 // MARK: - Response
 

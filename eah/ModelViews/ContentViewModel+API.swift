@@ -77,4 +77,42 @@ extension ContentViewModel {
             
         }
     }
+    
+    func getRecMeals() {
+        if (AuthApi.token != nil) {
+            MealAPI.shared.fetchRecMeals { result in
+                switch result {
+                case .success(let response):
+                    print(response.response.count)
+                    for i in response.response {
+                        AuthApi.getMealFromUid(uid: i) { result in
+                            
+                            switch result {
+                            case .success(let meal):
+                                if !self.favoriteMeals.contains(meal) {
+                                    DispatchQueue.main.async {
+                                        self.recomendationItems.append(meal)
+                                    }
+                                }
+                            case .failure(let error):
+                                print(error.localizedDescription)
+                            }
+                        }
+                    }
+                case .failure(let error):
+                    print(error.localizedDescription)
+                }
+            }
+        } else {
+            MealAPI.shared.fetchRecWithoutToekenMeals { result in
+                switch result {
+                case .success(let response):
+                    print(response)
+                    self.recomendationItems = response
+                case .failure(let error):
+                    print(error.localizedDescription)
+                }
+            }
+        }
+    }
 }

@@ -34,7 +34,7 @@ enum Endpoint {
         case .all:
             return "recipes/get"
         case .rec:
-            return "recipes/get"
+            return "user/recommend?number_of_items=10"
         case .popular:
             return "recipes/get?is_popular=true"
         case .search(_, let searchString):
@@ -59,7 +59,7 @@ enum Endpoint {
         case let .rec(limit):
             if limit > 1 {
                 print(limit)
-                return  URL(string: baseString + "recipes/get?limit=\(10)&offset=\(limit)")!}
+                return  URL(string: baseString + "user/recommend?number_of_items=10")!}
             else {return baseURL}
             
         case let .popular(limit):
@@ -128,7 +128,6 @@ class MealAPI {
             return Just([Meal]()).eraseToAnyPublisher()
         }
         print(url)
-        
         return URLSession.shared.dataTaskPublisher(for: url)
             .map { $0.data }
             .decode(type: MealResponse.self, decoder: JSONDecoder())
@@ -136,6 +135,68 @@ class MealAPI {
             .replaceError(with: [])
             .receive(on: RunLoop.main)
             .eraseToAnyPublisher()
+    }
+    
+    func fetchRecMeals(completion: @escaping ((Result<LikesRecModel, Error>) -> Void)) {
+        guard let token = AuthApi.token else {
+            print("fetchRecMeals, cannot find token" )
+            return
+        }
+        
+        guard let url = URL(string: Consts.URLStringRecMeal) else {
+            completion(.failure(MyError.invalidURL))
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        
+        request.addValue("escapp.icyftl.ru", forHTTPHeaderField: "Host")
+        request.setValue( "Bearer \(token)", forHTTPHeaderField: "Authorization")
+        
+        let session = URLSession.shared
+        let task = session.dataTask(with: request) { data, response, error in
+            if let error = error {
+                completion(.failure(error))
+            } else if let data = data {
+                do {
+                    let response = try JSONDecoder().decode(LikesRecModel.self, from: data)
+//                    print(response.response)
+                    completion(.success(response))
+                } catch let error as NSError {
+                    completion(.failure(error))
+                }
+            } else {
+                completion(.failure(MyError.format))
+            }
+        }
+        task.resume()
+    }
+    
+    func fetchRecWithoutToekenMeals(completion: @escaping ((Result<[Meal], Error>) -> Void)) {
+
+        guard let url = URL(string: Consts.URLStringRecWithoutTokenMeal) else {
+            completion(.failure(MyError.invalidURL))
+            return
+        }
+        
+        let session = URLSession.shared
+        let task = session.dataTask(with: url) { data, response, error in
+            if let error = error {
+                completion(.failure(error))
+            } else if let data = data {
+                do {
+                    let response = try JSONDecoder().decode(MealResponse.self, from: data)
+//                    print(response.response)
+                    completion(.success(response.response ?? []))
+                } catch let error as NSError {
+                    completion(.failure(error))
+                }
+            } else {
+                completion(.failure(MyError.format))
+            }
+        }
+        task.resume()
     }
     
     func fetchIngredients(from endpoint: Endpoint) -> AnyPublisher<[Ingredient], Never> {

@@ -82,7 +82,7 @@ class ContentViewModel: ObservableObject {
     }
     
     @Published var endpoint0: Endpoint = Endpoint(index: 0, limit: 0)!
-    @Published var endpoint1: Endpoint = Endpoint(index: 1, limit: 0)!
+//    @Published var endpoint1: Endpoint = Endpoint(index: 1, limit: 0)!
     @Published var endpoint2: Endpoint = Endpoint(index: 2, limit: 0)!
     @Published var endpoint3: Endpoint = Endpoint(index: 5, limit: 1)!
     @Published var endpoint6: Endpoint = Endpoint(index: 6, limit: 0)!
@@ -139,12 +139,12 @@ class ContentViewModel: ObservableObject {
                 self.allItems.append(contentsOf: meals)})
             .store(in: &self.cancellableSet0)
         
-        $endpoint1
-            .flatMap { (endpoint1) -> AnyPublisher<[Meal], Never> in
-                return MealAPI.shared.fetchMeals(from: endpoint1)}
-            .sink(receiveValue: { meals in
-                self.recomendationItems.append(contentsOf: meals)})
-            .store(in: &self.cancellableSet1)
+//        $endpoint1
+//            .flatMap { (endpoint1) -> AnyPublisher<[Meal], Never> in
+//                return MealAPI.shared.fetchMeals(from: endpoint1)}
+//            .sink(receiveValue: { meals in
+//                self.recomendationItems.append(contentsOf: meals)})
+//            .store(in: &self.cancellableSet1)
         
         $endpoint2
             .flatMap { (endpoint2) -> AnyPublisher<[Meal], Never> in
@@ -201,6 +201,7 @@ class ContentViewModel: ObservableObject {
             .store(in: &self.cancellableSet4)
         
         getLikes()
+        getRecMeals()
         loadName()
         AuthApi.loadUserImage()
         loadFavorite()

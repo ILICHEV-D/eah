@@ -204,8 +204,8 @@ struct ListOfMeals: View {
                                 viewModel.allItemsLimit += 10
                                 viewModel.endpoint0 = Endpoint(index: 0, limit: viewModel.allItemsLimit)!
                             } else if ind == 1 {
-                                viewModel.recomendationLimit += 10
-                                viewModel.endpoint1 = Endpoint(index: 1, limit: viewModel.recomendationLimit)!
+//                                viewModel.recomendationLimit += 10
+//                                viewModel.endpoint1 = Endpoint(index: 1, limit: viewModel.recomendationLimit)!
                             } else if ind == 2 {
                                 viewModel.popularLimit += 10
                                 viewModel.endpoint2 = Endpoint(index: 2, limit: viewModel.popularLimit)!
