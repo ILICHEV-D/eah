@@ -167,7 +167,7 @@ struct ListOfMeals: View {
                                 })
                                     .font(.system(size: 20, weight: .bold))
                                     .frame(width: 30, height: 30, alignment: .center)
-                                    .padding(.trailing, 17).padding(.top, 23)
+                                    .padding(.trailing, 20).padding(.top, 23)
                             })
                             
                             

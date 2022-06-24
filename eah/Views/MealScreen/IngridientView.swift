@@ -11,6 +11,7 @@ struct IngredientView: View {
     
     var item: Ingredient
     @Binding var amount: Int
+    @Binding var changeImageOfCartAll: Bool
     
     @EnvironmentObject var viewModel: ContentViewModel
     
@@ -50,10 +51,17 @@ struct IngredientView: View {
                     viewModel.shoppingList[item] = Int(item.amount ?? 1)
                 }
             }, label: {
-                Image(systemName: changeImageOfCart == false ? "cart.fill" : "checkmark")
-                    .font(.system(size: 18, weight: .medium))
-                    .frame(width: 19, height: 19, alignment: .center)
-                    .foregroundColor(Color(UIColor.systemGray2))
+                if changeImageOfCartAll {
+                    Image(systemName: "checkmark")
+                        .font(.system(size: 18, weight: .medium))
+                        .frame(width: 19, height: 19, alignment: .center)
+                        .foregroundColor(Color(UIColor.systemGray2))
+                } else {
+                    Image(systemName: changeImageOfCart == false ? "cart.fill" : "checkmark")
+                        .font(.system(size: 18, weight: .medium))
+                        .frame(width: 19, height: 19, alignment: .center)
+                        .foregroundColor(Color(UIColor.systemGray2))
+                }
             })
             
         }

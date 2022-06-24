@@ -256,7 +256,7 @@ struct MealView: View {
                         
                         ForEach((item.ingredients ?? []), id: \.self){
                             ingr in
-                            IngredientView(item: convertIngridient(item:  helpEnumIngredients.init(rawValue: ingr.name), ingr: ingr), amount: $countServings)
+                            IngredientView(item: convertIngridient(item:  helpEnumIngredients.init(rawValue: ingr.name), ingr: ingr), amount: $countServings, changeImageOfCartAll: $changeImageOfCart)
                         }
                         
                         
@@ -265,7 +265,7 @@ struct MealView: View {
                     Button(action: {
                         for ingredient in item.ingredients ?? [] {
                             changeImageOfCart = true
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                                 changeImageOfCart = false
                             }
                             
@@ -276,7 +276,7 @@ struct MealView: View {
                     }, label: {
                         HStack {
                             if !changeImageOfCart {
-                                Text("Добавить в корзину")
+                                Text("Добавить всё в корзину")
                                     .font(.system(size: 14))
                                     .fontWeight(.semibold)
                             } else {
@@ -324,7 +324,7 @@ struct MealView: View {
                                         Spacer()
                                     }.padding(.bottom, 5)
                                     Text(i.text ?? "")
-                                        .fontWeight(.medium)
+//                                        .fontWeight(.medium)
                                         .multilineTextAlignment(.leading)
                                         .fixedSize(horizontal: false, vertical: true)
                                         .font(.system(size: 17))
