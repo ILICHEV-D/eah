@@ -48,12 +48,12 @@ struct MealView: View {
                 if fromMealPlanner == true {
                     
                     Button(action: {
-                        let indexOfMeal = viewModel.mealPlannerItems.firstIndex(where: { $0.id == item.id &&
-                            ($0.dayOfWeek?.date == Date().getWeekDate(week: viewModel.selectedDay.name))
+                        let indexOfMeal = viewModel.mealPlannerItems.firstIndex(where: {
+                            $0.id == item.id &&
+                            viewModel.selectedDay.name == $0.dayOfWeek?.date.getTodayWeekDay()
                         })
                         
                         viewModel.mealPlannerItems.remove(at: indexOfMeal!)
-                        viewModel.selectedDay = viewModel.selectedDay
                         self.mode.wrappedValue.dismiss()
                         
                     }, label: {

@@ -47,6 +47,44 @@ extension Date {
         return gregorian.date(byAdding: .day, value: 1, to: sunday!)!
     }
     
+    func compareDateComponents(_ date: Date?) -> Bool {
+        guard let date = date else { return false }
+        
+        let firstComponents = self.get(.day, .month)
+        let secondComponents = date.get(.day, .month)
+        
+        if
+            let firstDay = firstComponents.day,
+            let firstMonth = firstComponents.month,
+            let secondDay = secondComponents.day,
+            let secondMonth = secondComponents.month {
+            return (firstDay == secondDay) && (firstMonth == secondMonth)
+        }
+        return false
+    }
+    
+    func get(_ components: Calendar.Component..., calendar: Calendar = Calendar.current) -> DateComponents {
+        return calendar.dateComponents(Set(components), from: self)
+    }
+    
+    func get(_ component: Calendar.Component, calendar: Calendar = Calendar.current) -> Int {
+        return calendar.component(component, from: self)
+    }
+    
+    func getTodayWeekDay(_ date: Date? = nil) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "EEEE"
+        let weekDay = dateFormatter.string(from: date ?? self)
+        let translateWeekDay: [String: String] = ["понедельник": "Monday",
+                                                  "вторник": "Tuesday",
+                                                  "среда": "Wednesday",
+                                                  "четверг": "Thursday",
+                                                  "пятница": "Friday",
+                                                  "суббота": "Saturday",
+                                                  "воскресенье": "Sunday"]
+        return translateWeekDay[weekDay] ?? ""
+    }
+    
 }
 
 extension Binding {

@@ -20,22 +20,11 @@ class ContentViewModel: ObservableObject {
     }
     
     @Published var mealPlannerItems: [Meal] = [] {
-        didSet {print("mealPlannerItems --> \(self.mealPlannerItems.count)")
-            var days: [Date] = []
-            var time: [String] = []
-            mealPlannerItems.forEach({
-                if let dayOfWeek = $0.dayOfWeek {
-                    days.append(dayOfWeek.date)
-                    time.append(dayOfWeek.time)
-                }})
-            
-            UserDefaults.standard.setValue(days, forKey:"days")
-            UserDefaults.standard.setValue(time, forKey:"time")
-            UserDefaults.standard.set(try? PropertyListEncoder().encode(mealPlannerItems), forKey:"mealPlanner")
+        didSet {
+            print("mealPlannerItems --> \(self.mealPlannerItems.count)")
+            mealPlannerItemsDidSet()
         }
     }
-    
-    
     
     @Published var recomendationLimit: Int = 0 {
         didSet {print("recomendationLimit --> \(self.recomendationLimit)")}
@@ -95,10 +84,6 @@ class ContentViewModel: ObservableObject {
     private var cancellableSet5: Set<AnyCancellable> = []
     private var cancellableSet6: Set<AnyCancellable> = []
     
-    var breakfast: [Meal] {return self.mealPlannerFunc(day: selectedDay).0}
-    var lunch: [Meal] {return self.mealPlannerFunc(day: selectedDay).1}
-    var dinner: [Meal] {return self.mealPlannerFunc(day: selectedDay).2}
-    
     @Published var favoriteMeals: [Meal] = []
     
     @Published var suggestedIngredients: [Ingredient] = []
@@ -112,21 +97,11 @@ class ContentViewModel: ObservableObject {
             UserDefaults.standard.set(try? PropertyListEncoder().encode(shoppingList), forKey:"shoppingList")
         }
     }
-    
-    @Published var week: [Week]
-    @Published var selectedDay: Week = Week(name: "Monday", russianName: "Понедельник")
-    
+
+    @Published var selectedDay: Week = .todayWeekDay
     
     init() {
-        // MARK: - WeekInit
         
-        self.week = [
-            Week(name: "Monday", russianName: "Пн"), Week(name: "Tuesday", russianName: "Вт"), Week(name: "Wednesday", russianName: "Ср"), Week(name: "Thursday", russianName: "Чт"), Week(name: "Friday", russianName: "Пт"), Week(name: "Saturday", russianName: "Сб"), Week(name: "Sunday", russianName: "Вс")
-        ]
-        
-        self.selectedDay = self.week[self.week.firstIndex(where: {
-            $0.name == DateFormatter().weekdaySymbols[Calendar.current.component(.weekday, from: Date())-1]
-        }) ?? 0]
         self.suggestedIngredients = allIngredients
         self.suggestedForBuyIngredients = allIngredients
         
@@ -208,23 +183,7 @@ class ContentViewModel: ObservableObject {
         
         // MARK: - MealPlanner init
         
-        var days: [Date] = []
-        var time: [String] = []
-        
-        if let day = UserDefaults.standard.value(forKey:"days") as? [Date] {
-            days = day
-        }
-        
-        if let t = UserDefaults.standard.value(forKey:"time") as? [String] {
-            time = t
-        }
-        
-        if let meals = UserDefaults.standard.value(forKey:"mealPlanner") as? Data {
-            mealPlannerItems = try! PropertyListDecoder().decode(Array<Meal>.self, from: meals)
-            for i in 0..<mealPlannerItems.count {
-                mealPlannerItems[i].dayOfWeek = DayOfWeek(date: days[i], time: time[i])
-            }
-        }
+        mealPlannerInit()
     }
     
     private func loadName() {

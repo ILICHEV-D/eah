@@ -125,6 +125,21 @@ struct Week: Identifiable, Codable {
     var id = UUID().uuidString
     var name: String
     var russianName: String
+    
+    static let allWeek: [Week] = [
+        Week(name: "Monday", russianName: "Пн"),
+        Week(name: "Tuesday", russianName: "Вт"),
+        Week(name: "Wednesday", russianName: "Ср"),
+        Week(name: "Thursday", russianName: "Чт"),
+        Week(name: "Friday", russianName: "Пт"),
+        Week(name: "Saturday", russianName: "Сб"),
+        Week(name: "Sunday", russianName: "Вс")
+    ]
+        
+    static let todayWeekDay: Week = Week.allWeek[Week.allWeek.firstIndex(where: {
+        $0.name == Date().getTodayWeekDay()
+    }) ?? 0]
+                                                 
 }
 
 enum FoodIntake {

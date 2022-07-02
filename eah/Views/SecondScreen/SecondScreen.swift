@@ -27,7 +27,7 @@ struct SecondScreen: View {
                         ScrollView(.horizontal, showsIndicators: false, content: {
                             
                             HStack(spacing: 16){
-                                ForEach(viewModel.week){
+                                ForEach(Week.allWeek){
                                     item in
                                     Button(action: {
                                         withAnimation(.spring()){
