@@ -7,7 +7,7 @@ class MealAPI {
     public static let shared = MealAPI()
     
     func fetchAllMeals(offset: Int, completion: @escaping ((Result<[Meal], Error>) -> Void)) {
-        guard let url = URL(string: Consts.URLStringAllMeal + "&limit=\(10)&offset=\(offset)") else {
+        guard let url = URL(string: MealAPIConsts.URLStringAllMeal + "&limit=\(10)&offset=\(offset)") else {
             completion(.failure(MyError.invalidURL))
             return
         }
@@ -16,7 +16,7 @@ class MealAPI {
     }
     
     func fetchPopularMeals(offset: Int, completion: @escaping ((Result<[Meal], Error>) -> Void)) {
-        guard let url = URL(string: Consts.URLStringPopularMeal + "&limit=\(10)&offset=\(offset)") else {
+        guard let url = URL(string: MealAPIConsts.URLStringPopularMeal + "&limit=\(10)&offset=\(offset)") else {
             completion(.failure(MyError.invalidURL))
             return
         }
@@ -25,7 +25,7 @@ class MealAPI {
     }
     
     func fetchRecWithoutToekenMeals(completion: @escaping ((Result<[Meal], Error>) -> Void)) {
-        guard let url = URL(string: Consts.URLStringRecWithoutTokenMeal) else {
+        guard let url = URL(string: MealAPIConsts.URLStringRecWithoutTokenMeal) else {
             completion(.failure(MyError.invalidURL))
             return
         }
@@ -35,7 +35,7 @@ class MealAPI {
     
     func fetchMealWithIngredients(offset: Int, searchString: String, completion: @escaping ((Result<[Meal], Error>) -> Void)) {
         //TODO: Add offset job
-        guard let url = URL(string: Consts.URLStringAllMeal + ("&ingredients=\(searchString ?? "")&limit=30").encodeUrl) else {
+        guard let url = URL(string: MealAPIConsts.URLStringAllMeal + ("&ingredients=\(searchString)&limit=30").encodeUrl) else {
             completion(.failure(MyError.invalidURL))
             return
         }
@@ -45,7 +45,7 @@ class MealAPI {
     
     func fetchMealWithSearch(offset: Int, searchString: String, completion: @escaping ((Result<[Meal], Error>) -> Void)) {
         //TODO: Add offset job
-        guard let url = URL(string: Consts.URLStringAllMeal + ("&startswith=\(searchString ?? "")&limit=30").encodeUrl) else {
+        guard let url = URL(string: MealAPIConsts.URLStringAllMeal + ("&startswith=\(searchString)&limit=30").encodeUrl) else {
             completion(.failure(MyError.invalidURL))
             return
         }
@@ -73,13 +73,14 @@ class MealAPI {
         task.resume()
     }
     
+    //TODO: fix rec meals
     func fetchRecMeals(completion: @escaping ((Result<LikesRecModel, Error>) -> Void)) {
-        guard let token = AuthApi.token else {
+        guard let token = AuthService.token else {
             print("fetchRecMeals, cannot find token" )
             return
         }
         
-        guard let url = URL(string: Consts.URLStringRecMeal) else {
+        guard let url = URL(string: MealAPIConsts.URLStringRecMeal) else {
             completion(.failure(MyError.invalidURL))
             return
         }
@@ -108,4 +109,11 @@ class MealAPI {
         task.resume()
     }
     
+}
+
+struct MealAPIConsts {
+    static let URLStringRecMeal = "https://escapp.icyftl.ru/user/recommend?number_of_items=40"
+    static let URLStringRecWithoutTokenMeal = "https://escapp.icyftl.ru/recipes/get?is_popular=true&limit=50"
+    static let URLStringPopularMeal = "https://escapp.icyftl.ru/recipes/get?is_popular=true"
+    static let URLStringAllMeal = "https://escapp.icyftl.ru/recipes/get?"
 }

@@ -116,7 +116,7 @@ struct ListOfMeals: View {
                                 
                                 Button(action: {
                                     let itemUID = item.uid
-                                    guard AuthApi.token != nil else {
+                                    guard AuthService.token != nil else {
                                         self.showingAlert = true
                                         return
                                     }

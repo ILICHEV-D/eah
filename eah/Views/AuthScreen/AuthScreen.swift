@@ -17,7 +17,7 @@ struct AuthScreen: View {
     @State var nameQuery = ""
     @State var ageQuery = ""
     @State var errorMessage: String? = nil
-    @State var tokenState = AuthApi.token
+    @State var tokenState = AuthService.token
     var sexQuery: Bool? {
         if selectedStrength == "Мужской" {
             return true
@@ -143,11 +143,11 @@ struct AuthScreen: View {
                                                 errorMessage = "Неправильно введенные данные"
                                             } else {
                                                 self.presentationMode.wrappedValue.dismiss()
-                                                AuthApi.saveAll(token: response.response.token, name: response.response.firstName ?? "", age: response.response.age ?? 0, sex: response.response.sex ?? true)
+                                                AuthService.saveAll(token: response.response.token, name: response.response.firstName ?? "", age: response.response.age ?? 0, sex: response.response.sex ?? true)
                                                 DispatchQueue.main.sync {
                                                     viewModel.userName = response.response.firstName ?? ""
                                                 }
-                                                tokenState = AuthApi.token
+                                                tokenState = AuthService.token
                                                 viewModel.loadFavorite()
                                                 errorMessage = nil
                                             }
@@ -204,9 +204,9 @@ struct AuthScreen: View {
                                                             errorMessage = "Неправильно введенные данные"
                                                         } else {
                                                             self.presentationMode.wrappedValue.dismiss()
-                                                            AuthApi.saveAll(token: response.response.token, name: response.response.firstName ?? "", age: response.response.age ?? 0, sex: response.response.sex ?? true)
+                                                            AuthService.saveAll(token: response.response.token, name: response.response.firstName ?? "", age: response.response.age ?? 0, sex: response.response.sex ?? true)
                                                             viewModel.userName = response.response.firstName ?? ""
-                                                            tokenState = AuthApi.token
+                                                            tokenState = AuthService.token
                                                             viewModel.loadFavorite()
                                                             errorMessage = nil
                                                         }
@@ -247,10 +247,10 @@ struct AuthScreen: View {
                             
                         } else {
                             Button(action: {
-                                AuthApi.deleteAll()
+                                AuthService.deleteAll()
                                 viewModel.userName = ""
                                 viewModel.favoriteMeals = []
-                                tokenState = AuthApi.token
+                                tokenState = AuthService.token
                                 
                             }, label: {
                                 HStack {

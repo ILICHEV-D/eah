@@ -11,11 +11,8 @@ class IngredientAPI {
     
     public static let shared = IngredientAPI()
     
-    static let URLStringIngredient = "https://escapp.icyftl.ru/ingredients/"
-//    "ingredients/get?is_favorite=true&limit=72"
-    
     func fetchAllIngredients(completion: @escaping ((Result<[Ingredient], Error>) -> Void)) {
-        guard let url = URL(string: IngredientAPI.URLStringIngredient + "get?is_favorite=true&limit=72") else {
+        guard let url = URL(string: IngredientAPIConsts.URLStringIngredient + "get?is_favorite=true&limit=72") else {
             completion(.failure(MyError.invalidURL))
             return
         }
@@ -23,7 +20,7 @@ class IngredientAPI {
     }
     
     func fetchMealWithSearch(searchString: String, completion: @escaping ((Result<[Ingredient], Error>) -> Void)) {
-        guard let url = URL(string: IngredientAPI.URLStringIngredient + ("get?startswith=\(searchString)&limit=30").encodeUrl) else {
+        guard let url = URL(string: IngredientAPIConsts.URLStringIngredient + ("get?startswith=\(searchString)&limit=30").encodeUrl) else {
             completion(.failure(MyError.invalidURL))
             return
         }
@@ -51,3 +48,6 @@ class IngredientAPI {
     }
 }
     
+struct IngredientAPIConsts {
+    static let URLStringIngredient = "https://escapp.icyftl.ru/ingredients/"
+}

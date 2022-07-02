@@ -15,7 +15,7 @@ struct eahApp: App {
         UITabBar.appearance().tintColor =  UIColor(named: "mainColor")
         UITabBar.appearance().isTranslucent = true
         
-        AuthApi.loadToken()
+        AuthService.loadToken()
     }
     
     var body: some Scene {

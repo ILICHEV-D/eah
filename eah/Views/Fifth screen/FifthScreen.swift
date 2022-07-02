@@ -16,8 +16,8 @@ struct FifthScreen: View {
     
     @State private var selectorIndex = 0
     @State private var numbers = ["Избранные", "Помощь"]
-    @State private var userName: () = AuthApi.loadName()
-    @State private var userImage: UIImage? = AuthApi.userImage 
+    @State private var userName: () = AuthService.loadName()
+    @State private var userImage: UIImage? = AuthService.userImage
     @State private var selection: Int? = nil
     @State private var showingOptions = false
     @State private var show_modal: Bool = false
@@ -161,7 +161,7 @@ struct FifthScreen: View {
                                             .frame(width: 35, height: 35, alignment: .center)
                                     }
                                     Button(action: {
-                                        AuthApi.goToTelegram()
+                                        RedirectService.goToTelegram()
                                     }) {
                                         Image("telegram")
                                             .resizable()

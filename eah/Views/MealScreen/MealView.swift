@@ -71,7 +71,7 @@ struct MealView: View {
                 else {
                     Button(action: {
                         let itemUID = item.uid
-                        guard AuthApi.token != nil else {
+                        guard AuthService.token != nil else {
                             self.showingAlert = true
                             return
                         }

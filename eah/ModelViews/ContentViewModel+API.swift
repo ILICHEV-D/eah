@@ -91,7 +91,7 @@ extension ContentViewModel {
     //TODO: refactoring
 
     func getLikes() {
-        if AuthApi.token != nil {
+        if AuthService.token != nil {
             AuthApi.getLikes(completion: { result in
                 switch result {
                 case .success(let response):
@@ -123,7 +123,7 @@ extension ContentViewModel {
     
     
     func loadFavorite() {
-        if AuthApi.token != nil {
+        if AuthService.token != nil {
             AuthApi.getLikes(completion: { result in
                 switch result {
                 case .success(let response):
@@ -161,7 +161,7 @@ extension ContentViewModel {
     }
     
     func obtainRecomendationMeals() {
-        if (AuthApi.token != nil) {
+        if (AuthService.token != nil) {
             MealAPI.shared.fetchRecMeals { result in
                 switch result {
                 case .success(let response):

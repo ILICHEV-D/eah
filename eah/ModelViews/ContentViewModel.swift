@@ -122,7 +122,7 @@ class ContentViewModel: ObservableObject {
         getLikes()
         obtainRecomendationMeals()
         loadName()
-        AuthApi.loadUserImage()
+        AuthService.loadUserImage()
         loadFavorite()
     }
     
