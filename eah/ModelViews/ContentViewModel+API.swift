@@ -15,7 +15,7 @@ extension ContentViewModel {
             switch result {
             case .success(let response):
                 DispatchQueue.main.async {
-                    self.allItems.append(contentsOf: response)
+                    self.allMeals.append(contentsOf: response)
                 }
             case .failure(let error):
                 print(error.localizedDescription)
@@ -62,6 +62,34 @@ extension ContentViewModel {
         }
     }
     
+    func obtainAllAllIngredients() {
+        IngredientAPI.shared.fetchAllIngredients { result in
+            switch result {
+            case .success(let response):
+                DispatchQueue.main.async {
+                    self.allIngredients.append(contentsOf: response)
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+    }
+    
+    func obtainSearchIngredients() {
+        IngredientAPI.shared.fetchMealWithSearch(searchString: searchIngredients) { result in
+            switch result {
+            case .success(let response):
+                DispatchQueue.main.async {
+                    self.searchIngredientsItems = response
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+    }
+    
+    //TODO: refactoring
+
     func getLikes() {
         if AuthApi.token != nil {
             AuthApi.getLikes(completion: { result in
@@ -93,7 +121,6 @@ extension ContentViewModel {
     }
     
     
-    //TODO: refactoring
     
     func loadFavorite() {
         if AuthApi.token != nil {

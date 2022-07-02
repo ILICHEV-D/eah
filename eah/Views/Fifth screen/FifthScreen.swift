@@ -122,7 +122,7 @@ struct FifthScreen: View {
                                     }.padding()
                                 })
                                 
-                                NavigationLink(destination: ListOfMeals(searchStatus: true, items: viewModel.allItems, index: 3), tag: 0, selection: $selection)
+                                NavigationLink(destination: ListOfMeals(searchStatus: true, items: viewModel.allMeals, index: 3), tag: 0, selection: $selection)
                                 {
                                     
                                     Button(action: {

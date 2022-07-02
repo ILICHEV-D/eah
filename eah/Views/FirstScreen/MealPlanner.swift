@@ -66,7 +66,7 @@ struct MealPlanner: View {
 
 struct MealPlanner_Previews: PreviewProvider {
     static var previews: some View {
-        MealPlanner(item: ContentViewModel().allItems[5], time: "Lunch")
+        MealPlanner(item: ContentViewModel().allMeals[5], time: "Lunch")
     }
 }
 

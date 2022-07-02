@@ -41,6 +41,6 @@ struct Popular: View {
 
 struct Popular_Previews: PreviewProvider {
     static var previews: some View {
-        Popular(item: ContentViewModel().allItems[0])
+        Popular(item: ContentViewModel().allMeals[0])
     }
 }

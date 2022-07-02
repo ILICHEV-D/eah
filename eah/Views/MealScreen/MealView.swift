@@ -389,7 +389,7 @@ struct MealView: View {
 
 struct MealView_Previews: PreviewProvider {
     static var previews: some View {
-        MealView(item: ContentViewModel().allItems[0], fromMealPlanner: true)
+        MealView(item: ContentViewModel().allMeals[0], fromMealPlanner: true)
     }
 }
 

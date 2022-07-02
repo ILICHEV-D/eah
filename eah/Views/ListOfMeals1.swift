@@ -177,8 +177,8 @@ struct ListOfMeals: View {
                             Button(action: {
                                 var meal: Meal?
                                 
-                                if let index = viewModel.allItems.firstIndex(where: { $0.id == item.id }) {
-                                    meal = viewModel.allItems[index]
+                                if let index = viewModel.allMeals.firstIndex(where: { $0.id == item.id }) {
+                                    meal = viewModel.allMeals[index]
                                 } else {
                                     meal = item
                                 }
@@ -223,6 +223,6 @@ struct ListOfMeals: View {
 
 struct ListOfMeals_Previews: PreviewProvider {
     static var previews: some View {
-        ListOfMeals(items: ContentViewModel().allItems)
+        ListOfMeals(items: ContentViewModel().allMeals)
     }
 }

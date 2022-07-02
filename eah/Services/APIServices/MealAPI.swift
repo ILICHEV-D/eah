@@ -2,71 +2,6 @@ import Foundation
 import Combine
 import UIKit
 
-
-enum Endpoint {
-    
-    case allIngredients(limit: Int)
-    case searchIngredients (limit: Int, searchString: String?)
-    case mealWithIngredients (limit: Int, searchString: String?)
-    
-    init? (index: Int, limit: Int) {
-        switch index {
-        case 4: self = .searchIngredients(limit: limit, searchString: nil)
-        case 5: self = .allIngredients(limit: limit)
-        default: return nil
-        }
-    }
-    
-    private var baseURL: URL {URL(string: "https://escapp.icyftl.ru/")!}
-    private var baseString: String {"https://escapp.icyftl.ru/"}
-    
-    private func path() -> String {
-        switch self {
-        case .searchIngredients(_, let searchString):
-            return "ingredients/get?startswith=\(searchString ?? "")"
-        case .allIngredients:
-            return "ingredients/get?is_favorite=true&limit=72"
-        case .mealWithIngredients(_, let searchString):
-            return "recipes/get?ingredients=\(searchString ?? "")&limit=60"
-        }
-    }
-    
-    
-    private func limitURL (baseURL: URL) -> URL {
-        switch self {
-        case let .searchIngredients(limit, searchString):
-            if limit > 1 {
-                return  URL(string: baseString + "ingredients/get?startswith=\(searchString ?? "")")!}
-            else {return baseURL}
-            
-        case let .allIngredients(limit):
-            if limit > 1 {
-                return  URL(string: baseString + "ingredients/get?is_favorite=true&limit=30")!}
-            else {return baseURL}
-            
-        case let .mealWithIngredients(limit, searchString):
-            return baseURL
-        }
-    }
-    
-    private func getLimit () -> Int {
-        switch self {
-        case .allIngredients(limit: let limit):
-            return limit
-        case let .searchIngredients(limit, _):
-            return limit
-        case let .mealWithIngredients(limit, _):
-            return limit
-        }
-    }
-    
-    var absoluteURL: URL? {
-        var queryURL = URL(string: baseURL.appendingPathComponent(self.path().encodeUrl).absoluteString.removingPercentEncoding!)
-        queryURL = limitURL(baseURL: queryURL!)
-        return queryURL
-    }
-}
-
 class MealAPI {
     
     public static let shared = MealAPI()
@@ -173,17 +108,4 @@ class MealAPI {
         task.resume()
     }
     
-    func fetchIngredients(from endpoint: Endpoint) -> AnyPublisher<[Ingredient], Never> {
-        guard let url = endpoint.absoluteURL else {
-            return Just([Ingredient]()).eraseToAnyPublisher() // 0
-        }
-        
-        return URLSession.shared.dataTaskPublisher(for: url)
-            .map { $0.data }
-            .decode(type: IngredientResponse.self, decoder: JSONDecoder())
-            .map {$0.response!}
-            .replaceError(with: [])
-            .receive(on: RunLoop.main)
-            .eraseToAnyPublisher()
-    }
 }
