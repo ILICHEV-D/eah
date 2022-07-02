@@ -197,21 +197,15 @@ struct ListOfMeals: View {
                     Rectangle()
                         .foregroundColor(.white)
                         .onAppear {
-                            print("Reached end of scroll view")
-                            guard let ind = index else {return}
-                            guard searchQuery == "" else {return}
-                            if ind == 0 {
+                            print("INDEX", index)
+                            if index == 0 {
                                 viewModel.allItemsLimit += 10
-                                viewModel.endpoint0 = Endpoint(index: 0, limit: viewModel.allItemsLimit)!
-                            } else if ind == 1 {
-//                                viewModel.recomendationLimit += 10
-//                                viewModel.endpoint1 = Endpoint(index: 1, limit: viewModel.recomendationLimit)!
-                            } else if ind == 2 {
+                            } else if index == 1 {
+                                viewModel.recomendationLimit += 10
+                            } else if index == 2 {
                                 viewModel.popularLimit += 10
-                                viewModel.endpoint2 = Endpoint(index: 2, limit: viewModel.popularLimit)!
-                            } else if ind == 6 {
-                                viewModel.mealWithIngredientsLimit += 10
-                                viewModel.endpoint6 = Endpoint(index: 6, limit: viewModel.mealWithIngredientsLimit)!
+                            } else if index == 3 {
+//                                viewModel.searchItemsLimit += 3
                             }
                             
                         }

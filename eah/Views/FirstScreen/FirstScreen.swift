@@ -18,11 +18,9 @@ struct FirstScreen: View {
                     Text("Популярное").fontWeight(.semibold)
                     Spacer()
                     
-                    NavigationLink(destination: ListOfMeals(searchStatus: true, items: viewModel.allItems, index: 0), tag: 0, selection: $selection)
+                    NavigationLink(destination: ListOfMeals(searchStatus: true, items: viewModel.searchItems, index: 3), tag: 0, selection: $selection)
                     {
                         Button(action: {
-                            viewModel.allItemsLimit += 10
-                            viewModel.endpoint0 = Endpoint(index: 0, limit: viewModel.allItemsLimit)!
                             self.selection = 0
                         }) {
                             Spacer()
@@ -96,13 +94,10 @@ struct FirstScreen: View {
                         
                         NavigationLink(destination: ListOfMeals(items: viewModel.popular, index: 2), tag: 2, selection: $selection) {
                             Button(action: {
-                                viewModel.popularLimit += 10
-                                viewModel.endpoint2 = Endpoint(index: 2, limit: viewModel.popularLimit)!
                                 self.selection = 2
                             }) {
                                 Text("Все")
                                     .fontWeight(.medium)
-                                //.font(Font.custom("Manrope-Regular", size: 16))
                                     .foregroundColor(Color("mainColor"))
                                     .font(.system(size: 12))
                             }

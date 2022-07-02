@@ -57,7 +57,7 @@ struct SecondScreen: View {
                             SecondScreenScroll(items: viewModel.breakfast, nameOfColor: "breakfastColor")
                         } else {
                             NavigationLink(
-                                destination: ListOfMeals(items: viewModel.allItems, check: "breakfast"),
+                                destination: ListOfMeals(items: viewModel.allItems, index: 0, check: "breakfast"),
                                 label: {
                                     ForMealPlannerFreeBlock(color: "Component0").padding()
                                 }
@@ -72,7 +72,7 @@ struct SecondScreen: View {
                             SecondScreenScroll(items: viewModel.lunch, nameOfColor: "lunchColor")
                         } else {
                             NavigationLink(
-                                destination: ListOfMeals(items: viewModel.allItems, check: "lunch"),
+                                destination: ListOfMeals(items: viewModel.allItems, index: 0, check: "lunch"),
                                 label: {
                                     ForMealPlannerFreeBlock(color: "Component1").padding()
                                 }
@@ -87,7 +87,7 @@ struct SecondScreen: View {
                             SecondScreenScroll(items: viewModel.dinner, nameOfColor: "dinnerColor")
                         } else {
                             NavigationLink(
-                                destination: ListOfMeals(items: viewModel.allItems, check: "dinner"),
+                                destination: ListOfMeals(items: viewModel.allItems, index: 0, check: "dinner"),
                                 label: {
                                     ForMealPlannerFreeBlock(color: "Component2").padding()
                                 }
@@ -138,7 +138,7 @@ struct MealAddMore: View {
             Text(russianName).font(.system(size: 18)).fontWeight(.semibold)
             Spacer()
             NavigationLink(
-                destination: ListOfMeals(items: viewModel.allItems, check: check),
+                destination: ListOfMeals(items: viewModel.allItems, index: 0, check: check),
                 label: {
                     Text("Добавить")
                         .foregroundColor(Color("mainColor"))

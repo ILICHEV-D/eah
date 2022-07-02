@@ -10,6 +10,58 @@ import SwiftUI
 
 extension ContentViewModel {
     
+    func getAllMeals() {
+        MealAPI.shared.fetchAllMeals(offset: allItemsLimit) { result in
+            switch result {
+            case .success(let response):
+                DispatchQueue.main.async {
+                    self.allItems.append(contentsOf: response)
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+    }
+    
+    func getMealsWithIngredients() {
+        MealAPI.shared.fetchMealWithIngredients(offset: mealWithIngredientsLimit, searchString: searchStringMealsWithIngr) { result in
+            switch result {
+            case .success(let response):
+                DispatchQueue.main.async {
+                    self.mealWithIngredients = response
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+    }
+    
+    func obtainSearchMeals() {
+        MealAPI.shared.fetchMealWithSearch(offset: 0, searchString: searchName) { result in
+            switch result {
+            case .success(let response):
+                DispatchQueue.main.async {
+                    self.searchItems = response
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+    }
+    
+    func obtainPopularMeals() {
+        MealAPI.shared.fetchPopularMeals(offset: popularLimit) { result in
+            switch result {
+            case .success(let response):
+                DispatchQueue.main.async {
+                    self.popular.append(contentsOf: response)
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+    }
+    
     func getLikes() {
         if AuthApi.token != nil {
             AuthApi.getLikes(completion: { result in
@@ -39,6 +91,9 @@ extension ContentViewModel {
             })
         }
     }
+    
+    
+    //TODO: refactoring
     
     func loadFavorite() {
         if AuthApi.token != nil {
@@ -78,7 +133,7 @@ extension ContentViewModel {
         }
     }
     
-    func getRecMeals() {
+    func obtainRecomendationMeals() {
         if (AuthApi.token != nil) {
             MealAPI.shared.fetchRecMeals { result in
                 switch result {

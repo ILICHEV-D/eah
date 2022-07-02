@@ -136,9 +136,9 @@ struct ThirdScreen: View {
                                             }
                                         }
                                         viewModel.searchStringMealsWithIngr = viewModel.selectedIngredients.map{$0.name}.map{String($0)}.joined(separator: ",") //!!!
-                                        viewModel.endpoint6 = Endpoint(index: 6, limit: 1)!
-                                        viewModel.endpoint6 = Endpoint(index: 6, limit: 1)!
-                                        
+//                                        viewModel.endpoint6 = Endpoint(index: 6, limit: 1)!
+//                                        viewModel.endpoint6 = Endpoint(index: 6, limit: 1)!
+                                        viewModel.getMealsWithIngredients()
                                     }, label: {
                                         IngredientSmallView(item: item)
                                     })
@@ -157,9 +157,9 @@ struct ThirdScreen: View {
                         
                         NavigationLink(destination: ListOfMeals(searchStatus: true, items: viewModel.mealWithIngredients, index: 6), tag: 0, selection: $selection) {
                             Button(action: {
-                                viewModel.mealWithIngredients = []
-                                viewModel.mealWithIngredientsLimit += 10
-                                viewModel.endpoint6 = Endpoint(index: 6, limit: viewModel.mealWithIngredientsLimit)!
+//                                viewModel.mealWithIngredients = []
+//                                viewModel.mealWithIngredientsLimit += 10
+//                                viewModel.endpoint6 = Endpoint(index: 6, limit: viewModel.mealWithIngredientsLimit)!
                                 self.selection = 0
                             }) {
                                 HStack {

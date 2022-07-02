@@ -9,8 +9,18 @@ class ContentViewModel: ObservableObject {
         didSet {print("printUserName --> \(userName)")}
     }
     
-    @Published var searchName: String = ""
+    @Published var searchName: String = "" {
+        didSet {
+            searchItems = []
+//            searchItemsLimit = 0
+            print("searchName --> \(self.searchName)")
+            if self.searchName.count >= 2 {
+                obtainSearchMeals()
+            }
+        }
+    }
     @Published var searchIngredients: String = ""
+    
     @Published var searchStringMealsWithIngr: String = "" {
         didSet {print("searchStringMealsWithIngr --> \(searchStringMealsWithIngr.count)")}
     }
@@ -31,15 +41,24 @@ class ContentViewModel: ObservableObject {
     }
     
     @Published var popularLimit: Int = 0 {
-        didSet {print("popularLimit --> \(self.popularLimit)")}
+        didSet {
+            print("popularLimit --> \(self.popularLimit)")
+            obtainPopularMeals()
+        }
     }
     
     @Published var allItemsLimit: Int = 0 {
-        didSet {print("allItemsLimit --> \(self.allItemsLimit)")}
+        didSet {
+            print("allItemsLimit --> \(self.allItemsLimit)")
+            getAllMeals()
+        }
     }
     
     @Published var mealWithIngredientsLimit: Int = 0 {
-        didSet {print("mealWithIngredientsLimit --> \(self.mealWithIngredientsLimit)")}
+        didSet {
+            print("mealWithIngredientsLimit --> \(self.mealWithIngredientsLimit)")
+            getMealsWithIngredients()
+        }
     }
     
     
@@ -70,19 +89,10 @@ class ContentViewModel: ObservableObject {
         didSet {print("mealWithIngredients --> \(self.mealWithIngredients.count)")}
     }
     
-    @Published var endpoint0: Endpoint = Endpoint(index: 0, limit: 0)!
-//    @Published var endpoint1: Endpoint = Endpoint(index: 1, limit: 0)!
-    @Published var endpoint2: Endpoint = Endpoint(index: 2, limit: 0)!
     @Published var endpoint3: Endpoint = Endpoint(index: 5, limit: 1)!
-    @Published var endpoint6: Endpoint = Endpoint(index: 6, limit: 0)!
     
-    private var cancellableSet0: Set<AnyCancellable> = []
-    private var cancellableSet1: Set<AnyCancellable> = []
-    private var cancellableSet2: Set<AnyCancellable> = []
-    private var cancellableSet3: Set<AnyCancellable> = []
     private var cancellableSet4: Set<AnyCancellable> = []
     private var cancellableSet5: Set<AnyCancellable> = []
-    private var cancellableSet6: Set<AnyCancellable> = []
     
     @Published var favoriteMeals: [Meal] = []
     
@@ -107,56 +117,11 @@ class ContentViewModel: ObservableObject {
         
         // MARK: - NetworkInit
         
-        $endpoint0
-            .flatMap { (endpoint0) -> AnyPublisher<[Meal], Never> in
-                MealAPI.shared.fetchMeals(from: endpoint0)}
-            .sink(receiveValue: { meals in
-                self.allItems.append(contentsOf: meals)})
-            .store(in: &self.cancellableSet0)
-        
-//        $endpoint1
-//            .flatMap { (endpoint1) -> AnyPublisher<[Meal], Never> in
-//                return MealAPI.shared.fetchMeals(from: endpoint1)}
-//            .sink(receiveValue: { meals in
-//                self.recomendationItems.append(contentsOf: meals)})
-//            .store(in: &self.cancellableSet1)
-        
-        $endpoint2
-            .flatMap { (endpoint2) -> AnyPublisher<[Meal], Never> in
-                MealAPI.shared.fetchMeals(from: endpoint2)}
-            .sink(receiveValue: { meals in
-                self.popular.append(contentsOf: meals)})
-            .store(in: &self.cancellableSet2)
-        
         $endpoint3
             .flatMap { (endpoint3) -> AnyPublisher<[Ingredient], Never> in
                 MealAPI.shared.fetchIngredients(from: endpoint3)}
             .assign(to: \.allIngredients, on: self)
             .store(in: &self.cancellableSet5)
-        
-        $endpoint6
-            .flatMap { (endpoint6) -> AnyPublisher<[Meal], Never> in
-                MealAPI.shared.fetchMeals(from: .mealWithIngredients(limit: 0, searchString: self.searchStringMealsWithIngr))}
-            .sink(receiveValue: { meals in
-                self.mealWithIngredients.append(contentsOf: meals)})
-            .store(in: &self.cancellableSet6)
-        
-        $searchName
-            .debounce(for: 0.1, scheduler: RunLoop.main)
-            .removeDuplicates()
-            .flatMap { (searchName) -> AnyPublisher<[Meal], Never> in
-                Future<[Meal], Never> { (promise) in
-                    if 2...30 ~= searchName.count {
-                        MealAPI.shared.fetchMeals(from:.search(limit: 1, searchString: searchName))
-                            .sink(receiveValue: {value in promise(.success(value))})
-                            .store(in: &self.cancellableSet3)
-                    }
-                    else {promise(.success([Meal]()))
-                        
-                    }
-                }.eraseToAnyPublisher()
-            }.assign(to: \.searchItems, on: self)
-            .store(in: &self.cancellableSet3)
         
         $searchIngredients
             .debounce(for: 0.1, scheduler: RunLoop.main)
@@ -175,15 +140,19 @@ class ContentViewModel: ObservableObject {
             }.assign(to: \.searchIngredientsItems, on: self)
             .store(in: &self.cancellableSet4)
         
-        getLikes()
-        getRecMeals()
-        loadName()
-        AuthApi.loadUserImage()
-        loadFavorite()
-        
         // MARK: - MealPlanner init
         
         mealPlannerInit()
+    }
+    
+    private func obtainInitialItems() {
+        obtainSearchMeals()
+        obtainPopularMeals()
+        getLikes()
+        obtainRecomendationMeals()
+        loadName()
+        AuthApi.loadUserImage()
+        loadFavorite()
     }
     
     private func loadName() {

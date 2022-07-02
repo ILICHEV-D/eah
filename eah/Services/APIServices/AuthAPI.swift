@@ -21,6 +21,8 @@ struct Consts {
     static let URLStringMealFromUid = "https://escapp.icyftl.ru/recipes/get/"
     static let URLStringRecMeal = "https://escapp.icyftl.ru/user/recommend?number_of_items=40"
     static let URLStringRecWithoutTokenMeal = "https://escapp.icyftl.ru/recipes/get?is_popular=true&limit=50"
+    static let URLStringPopularMeal = "https://escapp.icyftl.ru/recipes/get?is_popular=true"
+    static let URLStringAllMeal = "https://escapp.icyftl.ru/recipes/get?"
 
 }
 
