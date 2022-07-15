@@ -22,7 +22,7 @@ class MealAPI {
             return
         }
 
-        let json: [String: Any] = ["Contains": ""]
+        let json: [String: Any] = ["CategoryName": "салаты"]
         mealsPostSession(jsonBody: json, url: url, completion: completion)
     }
     
@@ -32,7 +32,7 @@ class MealAPI {
             return
         }
 
-        let json: [String: Any] = ["Contains": ""]
+        let json: [String: Any] = ["CategoryName": "десерты"]
         mealsPostSession(jsonBody: json, url: url, completion: completion)
     }
     
@@ -42,7 +42,7 @@ class MealAPI {
             return
         }
 
-        let json: [String: Any] = ["Contains": ""]
+        let json: [String: Any] = ["CategoryName": "горячие супы"]
         mealsPostSession(jsonBody: json, url: url, completion: completion)
     }
     

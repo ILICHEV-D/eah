@@ -57,8 +57,6 @@ struct FirstScreen: View {
                         
                         NavigationLink(destination: ListOfMeals(items: viewModel.recomendationItems, index: 1), tag: 1, selection: $selection) {
                             Button(action: {
-//                                viewModel.recomendationLimit += 10
-//                                viewModel.endpoint1 = Endpoint(index: 1, limit: viewModel.recomendationLimit)!
                                 self.selection = 1
                             }) {
                                 Text("Все")
@@ -71,14 +69,26 @@ struct FirstScreen: View {
                     
                     ScrollView(.horizontal, showsIndicators: false, content: {
                         HStack(spacing: 16){
-                            ForEach(viewModel.recomendationItems){
-                                item in
-                                NavigationLink(
-                                    destination: MealView(item: item, fromMealPlanner: false),
-                                    label: {
-                                        RecomendationRecipe(item: item)
-                                    }
-                                )
+                            if viewModel.recomendationItems.count != 0 {
+                                ForEach(viewModel.recomendationItems){
+                                    item in
+                                    NavigationLink(
+                                        destination: MealView(item: item, fromMealPlanner: false),
+                                        label: {
+                                            RecomendationRecipe(item: item)
+                                        }
+                                    )
+                                }
+                            } else {
+                                ForEach(viewModel.allMeals){
+                                    item in
+                                    NavigationLink(
+                                        destination: MealView(item: item, fromMealPlanner: false),
+                                        label: {
+                                            RecomendationRecipe(item: item)
+                                        }
+                                    )
+                                }
                             }
                         }.padding(.leading).padding(.bottom).padding(.trailing)
                     })
@@ -122,7 +132,7 @@ struct FirstScreen: View {
                     // MARK: First category
                     
                     HStack{
-                        Text("Первая категория")
+                        Text("Салаты")
                             .fontWeight(.semibold)
                             .font(.system(size: 18))
                         
@@ -158,7 +168,7 @@ struct FirstScreen: View {
                     // MARK: Second category
                     
                     HStack{
-                        Text("Вторая категория")
+                        Text("Десерты")
                             .fontWeight(.semibold)
                             .font(.system(size: 18))
                         
@@ -193,38 +203,38 @@ struct FirstScreen: View {
                     // MARK: Third category
                     
                     VStack {
-                    HStack{
-                        Text("Третья категория")
-                            .fontWeight(.semibold)
-                            .font(.system(size: 18))
-                        
-                        Spacer()
-                        
-                        NavigationLink(destination: ListOfMeals(items: viewModel.thirdCategory), tag: 4, selection: $selection) {
-                            Button(action: {
-                                self.selection = 4
-                            }) {
-                                Text("Все")
-                                    .fontWeight(.medium)
-                                    .foregroundColor(Color("mainColor"))
-                                    .font(.system(size: 12))
+                        HStack{
+                            Text("Супы")
+                                .fontWeight(.semibold)
+                                .font(.system(size: 18))
+                            
+                            Spacer()
+                            
+                            NavigationLink(destination: ListOfMeals(items: viewModel.thirdCategory), tag: 4, selection: $selection) {
+                                Button(action: {
+                                    self.selection = 4
+                                }) {
+                                    Text("Все")
+                                        .fontWeight(.medium)
+                                        .foregroundColor(Color("mainColor"))
+                                        .font(.system(size: 12))
+                                }
                             }
-                        }
-                    }.padding(.trailing).padding(.leading)
-
-                    ScrollView(.horizontal, showsIndicators: false, content: {
-                        HStack(spacing: 16){
-                            ForEach(viewModel.thirdCategory){
-                                item in
-                                NavigationLink(
-                                    destination: MealView(item: item, fromMealPlanner: false),
-                                    label: {
-                                        Popular(item: item)
-                                    }
-                                )
-                            }
-                        }.padding(.leading).padding(.bottom).padding(.trailing)
-                    })
+                        }.padding(.trailing).padding(.leading)
+                        
+                        ScrollView(.horizontal, showsIndicators: false, content: {
+                            HStack(spacing: 16){
+                                ForEach(viewModel.thirdCategory){
+                                    item in
+                                    NavigationLink(
+                                        destination: MealView(item: item, fromMealPlanner: false),
+                                        label: {
+                                            Popular(item: item)
+                                        }
+                                    )
+                                }
+                            }.padding(.leading).padding(.bottom).padding(.trailing)
+                        })
                     }
                     
                 })

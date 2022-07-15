@@ -133,7 +133,6 @@ public final class AuthService {
     }
     
     static func deleteAll() {
-        saveToken(token: nil)
         saveAge(age: nil)
         saveName(name: nil)
         saveSex(sex: nil)

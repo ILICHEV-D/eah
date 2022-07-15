@@ -122,6 +122,7 @@ class ContentViewModel: ObservableObject {
     }
     
     private func obtainInitialItems() {
+        getAllMeals()
         obtainSearchMeals()
         obtainPopularMeals()
         obtainCategories()

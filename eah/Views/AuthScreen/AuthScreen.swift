@@ -16,6 +16,7 @@ struct AuthScreen: View {
     @State var passwordСheckQuery = ""
     @State var nameQuery = ""
     @State var ageQuery = ""
+    @State var welcomeBool = false
     @State var errorMessage: String? = nil
     @State var tokenState = AuthService.token
     var sexQuery: Bool? {
@@ -52,6 +53,15 @@ struct AuthScreen: View {
                             .frame(width: 180, height: 180, alignment: .center)
                             .padding(.bottom, 10)
                         
+                        if welcomeBool {
+                        Text("Вы успешно зарегистрировались! \n Оцените 5 блюд, чтобы увидеть персональную подборку рецептов")
+                            .font(.system(size: 20))
+                            .fontWeight(.medium)
+                            .padding(.leading, 25)
+                            .padding(.trailing, 25)
+                            .multilineTextAlignment(.center)
+                            .padding()
+                        }
                         
                         if tokenState == nil {
                             Text("Чтобы узнать обо всех наших рецептах и функциях, пожалуйста, зарегистрируйтесь!")
@@ -213,7 +223,7 @@ struct AuthScreen: View {
                                                         if response.status == false {
                                                             errorMessage = "Неправильно введенные данные"
                                                         } else {
-                                                            self.presentationMode.wrappedValue.dismiss()
+                                                            
                                                             AuthService.saveAll(token: response.response.token,
                                                                                 refreshToken: response.response.refreshToken,
                                                                                 name: response.response.user.firstName ?? "",
@@ -226,6 +236,7 @@ struct AuthScreen: View {
                                                             tokenState = AuthService.token
                                                             viewModel.getLikes()
                                                             errorMessage = nil
+                                                            welcomeBool = true
                                                         }
                                                     case .failure(let error):
                                                         errorMessage = "Неправильно введенные данные"
@@ -267,8 +278,9 @@ struct AuthScreen: View {
                                 AuthService.deleteAll()
                                 viewModel.userName = ""
                                 viewModel.favoriteMeals = []
-                                tokenState = AuthService.token
-                                
+                                tokenState = nil
+                                AuthService.token = nil
+                                self.presentationMode.wrappedValue.dismiss()
                             }, label: {
                                 HStack {
                                     Text("Выйти")
@@ -280,6 +292,21 @@ struct AuthScreen: View {
                                     .background(Color("mainColor"))
                                     .cornerRadius(16)
                                     .shadow(color: Color("mainColor").opacity(0.2), radius: 5, x: 3, y: 3)
+                            })
+                            
+                            Button(action: {
+                                AuthService.deleteAll()
+                                viewModel.userName = ""
+                                viewModel.favoriteMeals = []
+                                AuthService.token = nil
+                                UserDefaults.standard.set(nil, forKey: "userImage")
+                                self.presentationMode.wrappedValue.dismiss()
+                            }, label: {
+                                HStack {
+                                    Text("Удалить аккаунт")
+                                        .font(.system(size: 17))
+                                        .foregroundColor(.black)
+                                }.padding()
                             })
                         }
                     }
