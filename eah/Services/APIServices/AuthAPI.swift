@@ -13,18 +13,19 @@ import SwiftUI
 // MARK: - Consts
 
 struct Consts {
-    static let URLStringSignUp = "https://escapp.icyftl.ru/user/register"
-    static let URLStringSignIn = "https://escapp.icyftl.ru/user/login"
-    static let URLStringLike = "https://escapp.icyftl.ru/recipes/like"
-    static let URLStringUnlike = "https://escapp.icyftl.ru/recipes/unlike"
-    static let URLStringLikes = "https://escapp.icyftl.ru/user/likes"
+    static let URLStringSignUp = "https://escapp-stage.icyftl.xyz/api/v2/user/sign_up"
+    static let URLStringSignIn = "https://escapp-stage.icyftl.xyz/api/v2/user/sign_in"
+    static let URLStringLike = "https://escapp-stage.icyftl.xyz/api/v2/recipes/like"
+    static let URLStringUnlike = "https://escapp-stage.icyftl.xyz/api/v2/recipes/unlike"
+    static let URLStringLikes = "https://escapp-stage.icyftl.xyz/api/v2/user/likes"
     static let URLStringMealFromUid = "https://escapp.icyftl.ru/recipes/get/"
 }
 
 
-// MARK: - Network
-
 public final class AuthApi {
+    
+    // MARK: - Auth
+    
     static func sendRequestSignIn(login: String, password: String, completion: @escaping ((Result<AuthModel, Error>) -> Void)) {
         let urlString = Consts.URLStringSignIn
         guard let url = URL(string: urlString) else {
@@ -85,6 +86,7 @@ public final class AuthApi {
                 completion(.failure(error))
             } else if let data = data {
                 do {
+                    data.printJSON()
                     let response = try JSONDecoder().decode(AuthSimpleResponse.self, from: data)
                     completion(.success(response))
                 } catch let error as NSError {
@@ -97,47 +99,31 @@ public final class AuthApi {
         task.resume()
     }
     
+    // MARK: - likes
+
     static func sendLike(recipeUid: String, completion: @escaping ((Result<AuthSimpleResponse, Error>) -> Void)) {
-        
         guard let url = URL(string: "\(Consts.URLStringLike)?recipe_uid=\(recipeUid)") else {
             completion(.failure(MyError.invalidURL))
             return
         }
-        var request = URLRequest(url: url)
-        request.httpMethod = "PUT"
         
-        request.addValue("escapp.icyftl.ru", forHTTPHeaderField: "Host")
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.setValue( "Bearer \(AuthService.token!)", forHTTPHeaderField: "Authorization")
-        
-        let session = URLSession.shared
-        let task = session.dataTask(with: request) { data, response, error in
-            if let error = error {
-                completion(.failure(error))
-            } else if let data = data {
-                do {
-                    let response = try JSONDecoder().decode(AuthSimpleResponse.self, from: data)
-                    completion(.success(response))
-                } catch let error as NSError {
-                    completion(.failure(error))
-                }
-            } else {
-                completion(.failure(MyError.format))
-            }
-        }
-        task.resume()
+        authLikesSession(url: url, completion: completion)
     }
     
     static func sendUnlike(recipeUid: String, completion: @escaping ((Result<AuthSimpleResponse, Error>) -> Void)) {
-        
         guard let url = URL(string: "\(Consts.URLStringUnlike)?recipe_uid=\(recipeUid)") else {
             completion(.failure(MyError.invalidURL))
             return
         }
+    
+        authLikesSession(url: url, completion: completion)
+    }
+    
+    
+    static func authLikesSession(url: URL, completion: @escaping ((Result<AuthSimpleResponse, Error>) -> Void)) {
         var request = URLRequest(url: url)
-        request.httpMethod = "PATCH"
+        request.httpMethod = "POST"
         
-        request.addValue("escapp.icyftl.ru", forHTTPHeaderField: "Host")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue( "Bearer \(AuthService.token!)", forHTTPHeaderField: "Authorization")
         
@@ -159,7 +145,8 @@ public final class AuthApi {
         task.resume()
     }
     
-    static func getLikes(completion: @escaping ((Result<LikesModel, Error>) -> Void)) {
+    
+    static func getLikes(completion: @escaping ((Result<[Meal], Error>) -> Void)) {
         guard let url = URL(string: Consts.URLStringLikes) else {
             completion(.failure(MyError.invalidURL))
             return
@@ -168,17 +155,19 @@ public final class AuthApi {
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         
-        request.addValue("escapp.icyftl.ru", forHTTPHeaderField: "Host")
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue( "Bearer \(AuthService.token!)", forHTTPHeaderField: "Authorization")
         
+        print(request.debugDescription)
         let session = URLSession.shared
         let task = session.dataTask(with: request) { data, response, error in
             if let error = error {
                 completion(.failure(error))
             } else if let data = data {
                 do {
-                    let response = try JSONDecoder().decode(LikesModel.self, from: data)
-                    completion(.success(response))
+                    data.printJSON()
+                    let response = try JSONDecoder().decode(MealResponse.self, from: data)
+                    completion(.success(response.response ?? []))
                 } catch let error as NSError {
                     completion(.failure(error))
                 }

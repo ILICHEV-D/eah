@@ -77,8 +77,7 @@ final class ImageLoader: ObservableObject {
                           200...299 ~= httpResponse.statusCode else {
                               throw URLError(.unsupportedURL)
                           }
-                    let js = try? JSONSerialization.jsonObject(with: data) as? [String: Any]
-                    return Data(base64Encoded: js?["response"] as! String)!
+                    return data
                 }
                 .map {
                     UIImage(data: $0)

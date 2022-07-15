@@ -12,25 +12,34 @@ class IngredientAPI {
     public static let shared = IngredientAPI()
     
     func fetchAllIngredients(completion: @escaping ((Result<[Ingredient], Error>) -> Void)) {
-        guard let url = URL(string: IngredientAPIConsts.URLStringIngredient + "get?is_favorite=true&limit=72") else {
+        guard let url = URL(string: IngredientAPIConsts.URLStringIngredient) else {
             completion(.failure(MyError.invalidURL))
             return
         }
-        ingredientsSession(url: url, completion: completion)
+        
+        let json: [String: Any] = ["IsFavorite": true, "Limit": 72]
+        ingredientsSession(jsonBody: json, url: url, completion: completion)
     }
     
     func fetchMealWithSearch(searchString: String, completion: @escaping ((Result<[Ingredient], Error>) -> Void)) {
-        guard let url = URL(string: IngredientAPIConsts.URLStringIngredient + ("get?startswith=\(searchString)&limit=30").encodeUrl) else {
+        guard let url = URL(string: IngredientAPIConsts.URLStringIngredient) else {
             completion(.failure(MyError.invalidURL))
             return
         }
-        print(url)
-        ingredientsSession(url: url, completion: completion)
+        
+        let json: [String: Any] = ["Contains": searchString, "Limit": 30]
+        ingredientsSession(jsonBody: json, url: url, completion: completion)
     }
         
-    func ingredientsSession(url: URL, completion: @escaping ((Result<[Ingredient], Error>) -> Void)) {
+    func ingredientsSession(jsonBody: [String: Any], url: URL, completion: @escaping ((Result<[Ingredient], Error>) -> Void)) {
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        let jsonData = try? JSONSerialization.data(withJSONObject: jsonBody)
+        request.httpBody = jsonData
+        
         let session = URLSession.shared
-        let task = session.dataTask(with: url) { data, response, error in
+        let task = session.dataTask(with: request) { data, response, error in
             if let error = error {
                 completion(.failure(error))
             } else if let data = data {
@@ -49,5 +58,5 @@ class IngredientAPI {
 }
     
 struct IngredientAPIConsts {
-    static let URLStringIngredient = "https://escapp.icyftl.ru/ingredients/"
+    static let URLStringIngredient = "https://escapp-stage.icyftl.xyz/api/v2/ingredients/get"
 }

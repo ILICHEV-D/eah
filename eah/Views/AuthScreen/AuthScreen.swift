@@ -143,12 +143,18 @@ struct AuthScreen: View {
                                                 errorMessage = "Неправильно введенные данные"
                                             } else {
                                                 self.presentationMode.wrappedValue.dismiss()
-                                                AuthService.saveAll(token: response.response.token, name: response.response.firstName ?? "", age: response.response.age ?? 0, sex: response.response.sex ?? true)
+                                                AuthService.saveAll(
+                                                    token: response.response.token,
+                                                    refreshToken: response.response.refreshToken,
+                                                    name: response.response.user.firstName ?? "",
+                                                    age: response.response.user.age ?? 0,
+                                                    sex: response.response.user.sex ?? true
+                                                )
                                                 DispatchQueue.main.sync {
-                                                    viewModel.userName = response.response.firstName ?? ""
+                                                    viewModel.userName = response.response.user.firstName ?? ""
                                                 }
                                                 tokenState = AuthService.token
-                                                viewModel.loadFavorite()
+                                                viewModel.getLikes()
                                                 errorMessage = nil
                                             }
                                         case .failure(let error):
@@ -187,6 +193,10 @@ struct AuthScreen: View {
                                     errorMessage = "Пароли не совпадают"
                                     return
                                 }
+                                guard passwordQuery.count > 5 else {
+                                    errorMessage = "Пароль должен содержать больше 5 символов"
+                                    return
+                                }
                                 if loginQuery.count == 0 || passwordQuery.count == 0 {
                                     errorMessage = "Пустые поля"
                                 } else {
@@ -204,10 +214,17 @@ struct AuthScreen: View {
                                                             errorMessage = "Неправильно введенные данные"
                                                         } else {
                                                             self.presentationMode.wrappedValue.dismiss()
-                                                            AuthService.saveAll(token: response.response.token, name: response.response.firstName ?? "", age: response.response.age ?? 0, sex: response.response.sex ?? true)
-                                                            viewModel.userName = response.response.firstName ?? ""
+                                                            AuthService.saveAll(token: response.response.token,
+                                                                                refreshToken: response.response.refreshToken,
+                                                                                name: response.response.user.firstName ?? "",
+                                                                                age: response.response.user.age ?? 0,
+                                                                                sex: response.response.user.sex ?? true
+                                                            )
+                                                            DispatchQueue.main.async {
+                                                                viewModel.userName = response.response.user.firstName ?? ""
+                                                            }
                                                             tokenState = AuthService.token
-                                                            viewModel.loadFavorite()
+                                                            viewModel.getLikes()
                                                             errorMessage = nil
                                                         }
                                                     case .failure(let error):

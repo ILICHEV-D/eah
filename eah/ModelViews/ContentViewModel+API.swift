@@ -62,6 +62,42 @@ extension ContentViewModel {
         }
     }
     
+    func obtainCategories() {
+        MealAPI.shared.fetchFirstCategoriesMeals { result in
+            switch result {
+            case .success(let response):
+                DispatchQueue.main.async {
+                    self.firstCategory.append(contentsOf: response)
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+        
+        MealAPI.shared.fetchSecondCategoriesMeals{ result in
+            switch result {
+            case .success(let response):
+                DispatchQueue.main.async {
+                    self.secondCategory.append(contentsOf: response)
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+        
+        MealAPI.shared.fetchThirdsCategoriesMeals { result in
+            switch result {
+            case .success(let response):
+                DispatchQueue.main.async {
+                    self.thirdCategory.append(contentsOf: response)
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+    }
+    
+    
     func obtainAllAllIngredients() {
         IngredientAPI.shared.fetchAllIngredients { result in
             switch result {
@@ -95,23 +131,8 @@ extension ContentViewModel {
             AuthApi.getLikes(completion: { result in
                 switch result {
                 case .success(let response):
-                    if response.status == false {
-                        print(response)
-                    } else {
-                        for i in response.response {
-                            AuthApi.getMealFromUid(uid: i.recipeUid!) { result in
-                                switch result {
-                                case .success(let meal):
-                                    if !self.favoriteMeals.contains(meal) {
-                                        DispatchQueue.main.async {
-                                            self.favoriteMeals.append(meal)
-                                        }
-                                    }
-                                case .failure(let error):
-                                    print(error.localizedDescription)
-                                }
-                            }
-                        }
+                    DispatchQueue.main.async {
+                        self.favoriteMeals = response
                     }
                 case .failure(let error):
                     print(error.localizedDescription)
@@ -122,43 +143,43 @@ extension ContentViewModel {
     
     
     
-    func loadFavorite() {
-        if AuthService.token != nil {
-            AuthApi.getLikes(completion: { result in
-                switch result {
-                case .success(let response):
-                    if response.status == false {
-                        print(response)
-                    } else {
-                        for i in response.response {
-                            AuthApi.getMealFromUid(uid: i.recipeUid!) { result in
-                                switch result {
-                                case .success(let meal):
-                                    if !self.favoriteMeals.contains(meal) {
-                                        DispatchQueue.main.async {
-                                            self.favoriteMeals.append(meal)
-                                        }
-                                    }
-                                case .failure(let error):
-                                    print(error.localizedDescription)
-                                }
-                            }
-                        }
-                    }
-                case .failure(let error):
-                    print(error.localizedDescription)
-                }
-            })
-        }
-        
-        if let shopList  = UserDefaults.standard.value(forKey: "shoppingList") as? Data {
-            DispatchQueue.main.async {
-                self.shoppingList = try! PropertyListDecoder().decode([Ingredient: Int].self, from: shopList)
-                self.selectedForBuyIngredients = self.shoppingList.map({ $0.key})
-            }
-            
-        }
-    }
+//    func loadFavorite() {
+//        if AuthService.token != nil {
+//            AuthApi.getLikes(completion: { result in
+//                switch result {
+//                case .success(let response):
+//                    if response.status == false {
+//                        print(response)
+//                    } else {
+//                        for i in response.response {
+//                            AuthApi.getMealFromUid(uid: i.recipeUid!) { result in
+//                                switch result {
+//                                case .success(let meal):
+//                                    if !self.favoriteMeals.contains(meal) {
+//                                        DispatchQueue.main.async {
+//                                            self.favoriteMeals.append(meal)
+//                                        }
+//                                    }
+//                                case .failure(let error):
+//                                    print(error.localizedDescription)
+//                                }
+//                            }
+//                        }
+//                    }
+//                case .failure(let error):
+//                    print(error.localizedDescription)
+//                }
+//            })
+//        }
+//
+//        if let shopList  = UserDefaults.standard.value(forKey: "shoppingList") as? Data {
+//            DispatchQueue.main.async {
+//                self.shoppingList = try! PropertyListDecoder().decode([Ingredient: Int].self, from: shopList)
+//                self.selectedForBuyIngredients = self.shoppingList.map({ $0.key})
+//            }
+//
+//        }
+//    }
     
     func obtainRecomendationMeals() {
         if (AuthService.token != nil) {

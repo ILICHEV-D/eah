@@ -117,6 +117,116 @@ struct FirstScreen: View {
                             }
                         }.padding(.leading).padding(.bottom).padding(.trailing)
                     })
+                    
+                    
+                    // MARK: First category
+                    
+                    HStack{
+                        Text("Первая категория")
+                            .fontWeight(.semibold)
+                            .font(.system(size: 18))
+                        
+                        Spacer()
+                        
+                        NavigationLink(destination: ListOfMeals(items: viewModel.firstCategory), tag: 3, selection: $selection) {
+                            Button(action: {
+                                self.selection = 3
+                            }) {
+                                Text("Все")
+                                    .fontWeight(.medium)
+                                    .foregroundColor(Color("mainColor"))
+                                    .font(.system(size: 12))
+                            }
+                        }
+                    }.padding(.trailing).padding(.leading)
+                    
+                    ScrollView(.horizontal, showsIndicators: false, content: {
+                        HStack(spacing: 16){
+                            ForEach(viewModel.firstCategory){
+                                item in
+                                NavigationLink(
+                                    destination: MealView(item: item, fromMealPlanner: false),
+                                    label: {
+                                        Popular(item: item)
+                                    }
+                                )
+                            }
+                        }.padding(.leading).padding(.bottom).padding(.trailing)
+                    })
+                    
+                    
+                    // MARK: Second category
+                    
+                    HStack{
+                        Text("Вторая категория")
+                            .fontWeight(.semibold)
+                            .font(.system(size: 18))
+                        
+                        Spacer()
+                        
+                        NavigationLink(destination: ListOfMeals(items: viewModel.secondCategory), tag: 4, selection: $selection) {
+                            Button(action: {
+                                self.selection = 4
+                            }) {
+                                Text("Все")
+                                    .fontWeight(.medium)
+                                    .foregroundColor(Color("mainColor"))
+                                    .font(.system(size: 12))
+                            }
+                        }
+                    }.padding(.trailing).padding(.leading)
+                    
+                    ScrollView(.horizontal, showsIndicators: false, content: {
+                        HStack(spacing: 16){
+                            ForEach(viewModel.secondCategory){
+                                item in
+                                NavigationLink(
+                                    destination: MealView(item: item, fromMealPlanner: false),
+                                    label: {
+                                        Popular(item: item)
+                                    }
+                                )
+                            }
+                        }.padding(.leading).padding(.bottom).padding(.trailing)
+                    })
+                    
+                    // MARK: Third category
+                    
+                    VStack {
+                    HStack{
+                        Text("Третья категория")
+                            .fontWeight(.semibold)
+                            .font(.system(size: 18))
+                        
+                        Spacer()
+                        
+                        NavigationLink(destination: ListOfMeals(items: viewModel.thirdCategory), tag: 4, selection: $selection) {
+                            Button(action: {
+                                self.selection = 4
+                            }) {
+                                Text("Все")
+                                    .fontWeight(.medium)
+                                    .foregroundColor(Color("mainColor"))
+                                    .font(.system(size: 12))
+                            }
+                        }
+                    }.padding(.trailing).padding(.leading)
+
+                    ScrollView(.horizontal, showsIndicators: false, content: {
+                        HStack(spacing: 16){
+                            ForEach(viewModel.thirdCategory){
+                                item in
+                                NavigationLink(
+                                    destination: MealView(item: item, fromMealPlanner: false),
+                                    label: {
+                                        Popular(item: item)
+                                    }
+                                )
+                            }
+                        }.padding(.leading).padding(.bottom).padding(.trailing)
+                    })
+                    }
+                    
                 })
             }.navigationBarHidden(true)
         }.navigationViewStyle(StackNavigationViewStyle())

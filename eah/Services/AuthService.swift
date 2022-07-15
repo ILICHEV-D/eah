@@ -20,6 +20,10 @@ public final class AuthService {
         didSet {print(token ?? "")}
     }
     
+    static var refreshToken: String? {
+        didSet {print(token ?? "")}
+    }
+    
     static var name: String? {
         didSet {print(name ?? "")}
     }
@@ -35,6 +39,11 @@ public final class AuthService {
     private static func saveToken(token: String?) {
         UserDefaults.standard.set(token, forKey:"token")
         loadToken()
+    }
+    
+    private static func saveRefreshToken(token: String?) {
+        UserDefaults.standard.set(token, forKey:"refreshToken")
+        loadRefreshToken()
     }
     
     private static func saveName(name: String?) {
@@ -67,6 +76,16 @@ public final class AuthService {
         }
         else {
             print("Пользователь не авторизован")
+        }
+    }
+    
+    static func loadRefreshToken() {
+        if let tokenFromUD = UserDefaults.standard.value(forKey:"refreshToken") as? String {
+            self.refreshToken = tokenFromUD
+            print(refreshToken)
+        }
+        else {
+            print("refreshToken. Пользователь не авторизован")
         }
     }
     
@@ -105,11 +124,12 @@ public final class AuthService {
         }
     }
     
-    static func saveAll(token: String, name: String, age: Int, sex: Bool){
+    static func saveAll(token: String, refreshToken: String, name: String, age: Int, sex: Bool){
         saveName(name: name)
         saveSex(sex: sex)
         saveAge(age: age)
         saveToken(token: token)
+        saveRefreshToken(token: refreshToken)
     }
     
     static func deleteAll() {
@@ -117,7 +137,8 @@ public final class AuthService {
         saveAge(age: nil)
         saveName(name: nil)
         saveSex(sex: nil)
-        token = nil
+        saveToken(token: nil)
+        saveRefreshToken(token: nil)
     }
     
 }

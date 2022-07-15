@@ -156,18 +156,28 @@ struct AuthModel: Codable {
 }
 
 struct AuthResponse: Codable {
+    let token: String
+    let refreshToken: String
+    let user: User
+    
+    enum CodingKeys: String, CodingKey {
+        case token = "Token"
+        case refreshToken = "RefreshToken"
+        case user = "User"
+    }
+}
+
+struct User: Codable {
     let email: String
     let firstName: String?
     let age: Int?
     let sex: Bool?
-    let token: String
     
     enum CodingKeys: String, CodingKey {
         case email = "Email"
         case firstName = "FirstName"
         case age = "Age"
         case sex = "Sex"
-        case token = "Token"
     }
 }
 

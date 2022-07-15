@@ -166,3 +166,21 @@ extension View {
             .overlay(roundedRect.strokeBorder(content, lineWidth: width))
     }
 }
+
+extension URLRequest {
+    func debug() {
+        print("\(self.httpMethod!) \(self.url!)")
+        print("Headers:")
+        print(self.allHTTPHeaderFields!)
+        print("Body:")
+        print(String(data: self.httpBody ?? Data(), encoding: .utf8)!)
+    }
+}
+
+extension Data {
+    func printJSON() {
+        if let JSONString = String(data: self, encoding: String.Encoding.utf8) {
+            print(JSONString)
+        }
+    }
+}

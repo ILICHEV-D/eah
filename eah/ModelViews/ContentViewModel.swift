@@ -34,6 +34,12 @@ class ContentViewModel: ObservableObject {
         }
     }
     
+    
+    @Published var firstCategory: [Meal] = [] { didSet {print("firstCategory --> \(self.firstCategory.count)")} }
+    @Published var secondCategory: [Meal] = [] { didSet {print("secondCategory --> \(self.secondCategory.count)")} }
+    @Published var thirdCategory: [Meal] = [] { didSet {print("thirdCategory --> \(self.thirdCategory.count)")} }
+
+    
     @Published var mealWithIngredients: [Meal] = [] { didSet {print("mealWithIngredients --> \(self.mealWithIngredients.count)")} }
     @Published var mealWithIngredientsLimit: Int = 0 {
         didSet {
@@ -118,20 +124,12 @@ class ContentViewModel: ObservableObject {
     private func obtainInitialItems() {
         obtainSearchMeals()
         obtainPopularMeals()
+        obtainCategories()
         obtainAllAllIngredients()
         getLikes()
         obtainRecomendationMeals()
-        loadName()
         AuthService.loadUserImage()
-        loadFavorite()
-    }
-    
-    private func loadName() {
-        if let nameFromUD = UserDefaults.standard.value(forKey:"name") as? String {
-            self.userName = nameFromUD
-        }
-        else {
-            print("Пользователь не авторизован")
-        }
+        AuthService.loadToken()
+        AuthService.loadName()
     }
 }
